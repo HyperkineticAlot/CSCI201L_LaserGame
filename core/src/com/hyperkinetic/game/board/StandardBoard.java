@@ -11,7 +11,7 @@ public class StandardBoard extends AbstractGameBoard
     @Override
     public void create()
     {
-        for(int i = 1; i < y-1; i++)
+        for(int i = 0; i < y; i++)
         {
             for(int j = 0; j < x; j++)
             {
@@ -19,7 +19,7 @@ public class StandardBoard extends AbstractGameBoard
                 {
                     if(i == 0)
                         tiles.add(new StandardTile(AbstractBoardTile.TileType.LL_CORNER));
-                    else if(i == y-2)
+                    else if(i == y-1)
                         tiles.add(new LaserTile());
                     else
                         tiles.add(new StandardTile(AbstractBoardTile.TileType.LEFT_EDGE));
