@@ -1,4 +1,6 @@
 package com.hyperkinetic.game.entities;
 
-public class LaserEntity {
+public class LaserEntity
+{
+
 }

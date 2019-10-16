@@ -5,6 +5,11 @@ import com.badlogic.gdx.InputProcessor;
 import com.hyperkinetic.game.board.AbstractBoardTile;
 import com.hyperkinetic.game.board.AbstractGameBoard;
 
+/**
+ * Receives and processes inputs.
+ *
+ * @author cqwillia
+ */
 public class GameInputProcessor implements InputProcessor
 {
     private AbstractBoardTile rightClickDown;

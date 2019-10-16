@@ -1,3 +1,7 @@
+/**
+ * Contains the core elements of the game, including the central loop
+ * and the input processor.
+ */
 package com.hyperkinetic.game.core;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -11,13 +15,24 @@ import com.badlogic.gdx.utils.Disposable;
 import com.hyperkinetic.game.board.AbstractGameBoard;
 import com.hyperkinetic.game.board.StandardBoard;
 
+/**
+ * Implements the main game loop. Instantiated by the Launcher.
+ *
+ * @author cqwillia
+ */
 public class LaserGame extends ApplicationAdapter {
+	/**
+	 * The {@link SpriteBatch} object responsible for rendering textures onto the game canvas.
+	 */
 	private static SpriteBatch batch;
+	/**
+	 * Tracks all objects (such as Textures) that implement {@link Disposable} and need to be freed.
+	 */
 	private static Array<Disposable> disposables = new Array<>();
 
 	private AbstractGameBoard board;
 	private InputProcessor gameInputProcessor;
-	
+
 	@Override
 	public void create ()
 	{
@@ -34,7 +49,6 @@ public class LaserGame extends ApplicationAdapter {
 		batch.begin();
 		board.render(batch);
 
-
 		batch.end();
 	}
 	
@@ -48,6 +62,12 @@ public class LaserGame extends ApplicationAdapter {
 		disposables.clear();
 	}
 
+	/**
+	 * Centralized method for creating textures so they can be freed by <code>dispose()</code>.
+	 *
+	 * @param path a String representing a file path to the texture image
+	 * @return the {@link Texture} created from the image
+	 */
 	public static Texture loadTexture(String path)
 	{
 		Texture retval = new Texture(path);

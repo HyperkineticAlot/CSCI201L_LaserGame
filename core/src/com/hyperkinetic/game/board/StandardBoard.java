@@ -1,5 +1,11 @@
 package com.hyperkinetic.game.board;
 
+/**
+ * Defines the standard 8x8 laser game board with laser tiles in the upper left
+ * and lower right corners.
+ *
+ * @author cqwillia
+ */
 public class StandardBoard extends AbstractGameBoard
 {
     public StandardBoard()

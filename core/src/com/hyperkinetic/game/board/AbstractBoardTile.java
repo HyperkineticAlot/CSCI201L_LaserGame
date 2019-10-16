@@ -5,8 +5,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.hyperkinetic.game.core.LaserGame;
 import com.hyperkinetic.game.pieces.AbstractGamePiece;
 
+/**
+ * An abstract superclass describing the behaviour of tiles on the game board.
+ *
+ * @author cqwillia
+ */
 public abstract class AbstractBoardTile
 {
+    /**
+     * Defines where on the board this tile resides so it can be textured correctly.
+     */
     public enum TileType
     {
         UL_CORNER,
@@ -39,14 +47,32 @@ public abstract class AbstractBoardTile
         piece = null;
     }
 
+    /**
+     * Trigger for when a game piece is placed on this tile.
+     * @param piece the placed piece
+     */
     public void onPiecePlaced(AbstractGamePiece piece) {}
+
+    /**
+     * Trigger for when the game piece placed on this tile is rotated.
+     * @param piece the rotated piece
+     */
     public void onPieceRotated(AbstractGamePiece piece) {}
+
+    /**
+     * Trigger for when a left mouse button is clicked and released within this tile.
+     */
     public void onLeftClick() {}
+
+    /**
+     * Trigger for when a right mouse button is clicked and released within this tile.
+     */
     public void onRightClick()
     {
         if(piece != null)
         {
             piece.rotate();
+            onPieceRotated(piece);
         }
     }
 
@@ -70,6 +96,12 @@ public abstract class AbstractBoardTile
         loadRegion(basePath + getPathFromTileType(type));
     }
 
+    /**
+     * Utility function which converts a tile type into a file path.
+     *
+     * @param type the tile type
+     * @return path to the appropriate texture image
+     */
     private String getPathFromTileType(AbstractBoardTile.TileType type)
     {
         switch(type)

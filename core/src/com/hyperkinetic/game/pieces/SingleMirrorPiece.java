@@ -3,6 +3,11 @@ package com.hyperkinetic.game.pieces;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.util.Directions;
 
+/**
+ * A piece with only one mirror and three unreflective sides.
+ *
+ * @author cqwillia
+ */
 public class SingleMirrorPiece extends AbstractGamePiece
 {
     public SingleMirrorPiece()

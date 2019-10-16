@@ -1,7 +1,16 @@
 package com.hyperkinetic.game.util;
 
+/**
+ * Wrapper class containing public variables to describe the directions of lasers
+ * and mirrors. Contains common utility methods for calculating laser reflection.
+ *
+ * @author cqwillia
+ */
 public class Directions
 {
+    /**
+     * Describes the direction of lasers based on the direction of their movement.
+     */
     public enum Direction
     {
         NORTH,
@@ -10,6 +19,10 @@ public class Directions
         EAST
     }
 
+    /**
+     * Describes the direction of mirrors based on the trajectory of a vector
+     * drawn tangent to their surface.
+     */
     public enum MirrorDirection
     {
         NORTHWEST,
@@ -32,6 +45,14 @@ public class Directions
         return false;
     }*/
 
+    /**
+     * Calculates the resultant direction of a laser bouncing off of a mirror.
+     *
+     * @param mirror the {@link MirrorDirection} describing the orientation of the mirror.
+     * @param laser the {@link Direction} describing the direction of the laser.
+     * @return the direction in which the laser will travel after incidence with the mirror,
+     * or <code>null</code> if the mirror does not reflect the laser.
+     */
     public static Direction reflect(MirrorDirection mirror, Direction laser)
     {
         if(mirror == null || laser == null) return null;

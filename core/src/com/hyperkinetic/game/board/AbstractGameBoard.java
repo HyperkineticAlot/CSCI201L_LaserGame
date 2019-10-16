@@ -5,8 +5,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.pieces.AbstractGamePiece;
 
+/**
+ * A superclass for all laser gameboards. Contains code to render the gameboard as well as static
+ * functionality to track the gamestate.
+ *
+ * @author cqwillia
+ */
 public abstract class AbstractGameBoard
 {
+    /**
+     * Tracks the gameboard currently being played on for centralized modification by various game objects.
+     */
     private static AbstractGameBoard board = null;
 
     protected int x;
@@ -46,8 +55,16 @@ public abstract class AbstractGameBoard
         AbstractGameBoard.board = this;
     }
 
+    /**
+     * Abstract method which populates the board with tiles based on the board type.
+     */
     public abstract void create();
 
+    /**
+     * Renders the current game board. Called by the main game loop.
+     *
+     * @param sb the {@link SpriteBatch} responsible for drawing game objects.
+     */
     public void render(SpriteBatch sb)
     {
         // starting from the bottom left
@@ -60,6 +77,13 @@ public abstract class AbstractGameBoard
         }
     }
 
+    /**
+     * Converts a location on the virtual screen to the corresponding tile on the current game board.
+     *
+     * @param mouseX the x location on the virtual screen
+     * @param mouseY the y location on the virtal screen
+     * @return the board tile at the given location, or <code>null</code> if the mouse is outside the game board.
+     */
     public static AbstractBoardTile getTileFromLocation(int mouseX, int mouseY)
     {
         if(mouseX < board.screenX || mouseY < board.screenY
