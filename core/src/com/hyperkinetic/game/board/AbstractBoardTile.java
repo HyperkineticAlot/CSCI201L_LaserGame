@@ -2,7 +2,7 @@ package com.hyperkinetic.game.board;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.hyperkinetic.game.LaserGame;
+import com.hyperkinetic.game.core.LaserGame;
 import com.hyperkinetic.game.pieces.AbstractGamePiece;
 
 public abstract class AbstractBoardTile
@@ -21,41 +21,53 @@ public abstract class AbstractBoardTile
     }
 
     private Texture texture;
+    private AbstractGamePiece piece;
 
     public AbstractBoardTile()
     {
-        loadRegion("center.png");
+        loadRegion("board/center.png");
+        piece = null;
     }
     public AbstractBoardTile(AbstractBoardTile.TileType type)
     {
         loadRegion(type);
+        piece = null;
     }
     public AbstractBoardTile(String basePath, AbstractBoardTile.TileType type)
     {
         loadRegion(basePath, type);
+        piece = null;
     }
 
     public void onPiecePlaced(AbstractGamePiece piece) {}
     public void onPieceRotated(AbstractGamePiece piece) {}
+    public void onLeftClick() {}
+    public void onRightClick()
+    {
+        if(piece != null)
+        {
+            piece.rotate();
+        }
+    }
 
     public void render(SpriteBatch sb, int x, int y, int width, int height)
     {
         sb.draw(texture, x, y, width, height);
     }
 
-    private void loadRegion(String image)
+    protected void loadRegion(String image)
     {
         texture = LaserGame.loadTexture(image);
     }
 
     private void loadRegion(AbstractBoardTile.TileType type)
     {
-        texture = LaserGame.loadTexture(getPathFromTileType(type));
+        loadRegion(getPathFromTileType(type));
     }
 
     private void loadRegion(String basePath, AbstractBoardTile.TileType type)
     {
-        texture = LaserGame.loadTexture(basePath + getPathFromTileType(type));
+        loadRegion(basePath + getPathFromTileType(type));
     }
 
     private String getPathFromTileType(AbstractBoardTile.TileType type)

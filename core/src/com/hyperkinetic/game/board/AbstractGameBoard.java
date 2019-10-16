@@ -7,6 +7,8 @@ import com.hyperkinetic.game.pieces.AbstractGamePiece;
 
 public abstract class AbstractGameBoard
 {
+    private static AbstractGameBoard board = null;
+
     protected int x;
     protected int y;
     private int screenX;
@@ -40,6 +42,8 @@ public abstract class AbstractGameBoard
             screenY = (int)(Gdx.graphics.getHeight() * .10);
             screenX = (Gdx.graphics.getWidth() - x * tileDim) / 2;
         }
+
+        AbstractGameBoard.board = this;
     }
 
     public abstract void create();
@@ -54,5 +58,16 @@ public abstract class AbstractGameBoard
                 tiles.get(j + i * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
             }
         }
+    }
+
+    public static AbstractBoardTile getTileFromLocation(int mouseX, int mouseY)
+    {
+        if(mouseX < board.screenX || mouseY < board.screenY
+                || mouseX > board.screenX + board.x * board.tileDim || mouseY > board.screenY + board.y * board.tileDim)
+            return null;
+
+        // int j = (mouseY - screenY) / tileDim;
+        // int i = (mouseX - screenX) / tileDim;
+        return board.tiles.get((mouseY - board.screenY) / board.tileDim + ((mouseX - board.screenX) / board.tileDim) * board.x);
     }
 }

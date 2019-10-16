@@ -1,7 +1,8 @@
-package com.hyperkinetic.game;
+package com.hyperkinetic.game.core;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,12 +16,15 @@ public class LaserGame extends ApplicationAdapter {
 	private static Array<Disposable> disposables = new Array<>();
 
 	private AbstractGameBoard board;
+	private InputProcessor gameInputProcessor;
 	
 	@Override
 	public void create ()
 	{
 		board = new StandardBoard();
 		batch = new SpriteBatch();
+		gameInputProcessor = new GameInputProcessor();
+		Gdx.input.setInputProcessor(gameInputProcessor);
 	}
 
 	@Override
@@ -29,6 +33,8 @@ public class LaserGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		board.render(batch);
+
+
 		batch.end();
 	}
 	
