@@ -25,7 +25,7 @@ public abstract class AbstractBoardTile
         RIGHT_EDGE,
         LL_CORNER,
         LOWER_EDGE,
-        LR_CORNER,
+        LR_CORNER
     }
 
     private Texture texture;
