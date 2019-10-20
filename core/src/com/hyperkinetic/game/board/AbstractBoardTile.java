@@ -25,7 +25,7 @@ public abstract class AbstractBoardTile
         RIGHT_EDGE,
         LL_CORNER,
         LOWER_EDGE,
-        LR_CORNER
+        LR_CORNER,
     }
 
     private Texture texture;
@@ -45,6 +45,15 @@ public abstract class AbstractBoardTile
     {
         loadRegion(basePath, type);
         piece = null;
+    }
+
+    /**
+     * Getter of the game piece
+     *
+     * @return the piece placed on this tile
+     */
+    public AbstractGamePiece getPiece() {
+        return piece;
     }
 
     /**
@@ -71,7 +80,7 @@ public abstract class AbstractBoardTile
     {
         if(piece != null)
         {
-            piece.rotate();
+            piece.rotateRight();
             onPieceRotated(piece);
         }
     }
