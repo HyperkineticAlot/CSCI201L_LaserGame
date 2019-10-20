@@ -48,6 +48,15 @@ public abstract class AbstractBoardTile
     }
 
     /**
+     * Getter of the game piece
+     *
+     * @return the piece placed on this tile
+     */
+    public AbstractGamePiece getPiece() {
+        return piece;
+    }
+
+    /**
      * Trigger for when a game piece is placed on this tile.
      * @param piece the placed piece
      */
@@ -71,7 +80,7 @@ public abstract class AbstractBoardTile
     {
         if(piece != null)
         {
-            piece.rotate();
+            piece.rotateRight();
             onPieceRotated(piece);
         }
     }

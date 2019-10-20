@@ -9,7 +9,7 @@ import com.hyperkinetic.game.pieces.AbstractGamePiece;
  * A superclass for all laser gameboards. Contains code to render the gameboard as well as static
  * functionality to track the gamestate.
  *
- * @author cqwillia
+ * @author cqwillia briannlz
  */
 public abstract class AbstractGameBoard
 {
@@ -56,6 +56,42 @@ public abstract class AbstractGameBoard
     }
 
     /**
+     * Getter of the x-dimension of the board
+     *
+     * @return the x-dimension of te current board
+     */
+    public int getX() {
+        return x;
+    }
+
+    /**
+     * Getter of the y-dimension of the board
+     *
+     * @return the y-dimension of te current board
+     */
+    public int getY() {
+        return y;
+    }
+
+    /**
+     * Getter of the tiles array
+     *
+     * @return the tiles array of te current board
+     */
+    public Array<AbstractBoardTile> getTiles() {
+        return tiles;
+    }
+
+    /**
+     * Getter of the pieces array
+     *
+     * @return the pieces array of te current board
+     */
+    public Array<AbstractGamePiece> getPieces() {
+        return pieces;
+    }
+
+    /**
      * Abstract method which populates the board with tiles based on the board type.
      */
     public abstract void create();
@@ -81,7 +117,7 @@ public abstract class AbstractGameBoard
      * Converts a location on the virtual screen to the corresponding tile on the current game board.
      *
      * @param mouseX the x location on the virtual screen
-     * @param mouseY the y location on the virtal screen
+     * @param mouseY the y location on the virtual screen
      * @return the board tile at the given location, or <code>null</code> if the mouse is outside the game board.
      */
     public static AbstractBoardTile getTileFromLocation(int mouseX, int mouseY)
@@ -93,5 +129,37 @@ public abstract class AbstractGameBoard
         // int j = (mouseY - screenY) / tileDim;
         // int i = (mouseX - screenX) / tileDim;
         return board.tiles.get((mouseY - board.screenY) / board.tileDim + ((mouseX - board.screenX) / board.tileDim) * board.x);
+    }
+
+    /**
+     * Converts a coordinate to the corresponding tile on the current game board.
+     *
+     * @param x the x location on the board
+     * @param y the y location on the board
+     * @return the board tile at the given location,
+     * or <code>null</code> if the coordinate is invalid.
+     */
+    public static AbstractBoardTile getTileFromCoordinate(int x, int y)
+    {
+        if (x < 0 || y < 0 || x >= board.x || y >= board.y) {
+            return null;
+        }
+        return (board.tiles.get(y * board.y + x));
+    }
+
+    /**
+     * Converts a coordinate to the corresponding piece on the current game board.
+     *
+     * @param x the x location on the board
+     * @param y the y location on the board
+     * @return the game piece at the given location,
+     * or <code>null</code> if either the coordinate is invalid or no piece is place on that tile.
+     */
+    public static AbstractGamePiece getPieceFromCoordinate(int x, int y)
+    {
+        if (x < 0 || y < 0 || x >= board.x || y >= board.y) {
+            return null;
+        }
+        return (board.pieces.get(y * board.y + x));
     }
 }
