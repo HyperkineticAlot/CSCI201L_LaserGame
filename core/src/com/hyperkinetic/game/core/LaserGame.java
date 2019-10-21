@@ -14,6 +14,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.hyperkinetic.game.board.AbstractGameBoard;
 import com.hyperkinetic.game.board.StandardBoard;
+import com.hyperkinetic.game.playflow.GameRoom;
+import com.hyperkinetic.game.playflow.Player;
 
 /**
  * Implements the main game loop. Instantiated by the Launcher.
@@ -32,6 +34,9 @@ public class LaserGame extends ApplicationAdapter {
 
 	private AbstractGameBoard board;
 	private InputProcessor gameInputProcessor;
+	private Player playerA;
+	private Player playerB;
+	private GameRoom gameRoom;
 
 	@Override
 	public void create ()
@@ -40,6 +45,9 @@ public class LaserGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		gameInputProcessor = new GameInputProcessor();
 		Gdx.input.setInputProcessor(gameInputProcessor);
+		playerA = new Player();
+		playerB = new Player();
+		gameRoom = new GameRoom(playerA, playerB, 1, board); // trivial roomID
 	}
 
 	@Override

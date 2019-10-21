@@ -162,4 +162,12 @@ public abstract class AbstractGameBoard
         }
         return (board.pieces.get(y * board.y + x));
     }
+
+  
+    // TODO: Need a way to specify both target pieces
+    /**
+     * Abstract method which returns whether game is over based on board type
+     * returns "AWin", "BWin", "NoWin"
+     */
+    public abstract String isGameOver();
 }
