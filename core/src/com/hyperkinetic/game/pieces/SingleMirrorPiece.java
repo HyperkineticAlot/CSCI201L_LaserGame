@@ -6,17 +6,19 @@ import com.hyperkinetic.game.util.Directions;
 /**
  * A piece with only one mirror and three unreflective sides.
  *
- * @author cqwillia
+ * @author cqwillia briannlz
  */
-public class SingleMirrorPiece extends AbstractGamePiece
+public class SingleMirrorPiece extends AbstractMirrorPiece
 {
-    public SingleMirrorPiece()
+    public SingleMirrorPiece(int x, int y)
     {
+        super(x, y);
         this.orientation = Directions.MirrorDirection.NORTHWEST;
     }
 
-    public SingleMirrorPiece(Directions.MirrorDirection o)
+    public SingleMirrorPiece(int x, int y, Directions.MirrorDirection o)
     {
+        super(x, y);
         this.orientation = o;
     }
 
