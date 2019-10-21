@@ -94,4 +94,11 @@ public abstract class AbstractGameBoard
         // int i = (mouseX - screenX) / tileDim;
         return board.tiles.get((mouseY - board.screenY) / board.tileDim + ((mouseX - board.screenX) / board.tileDim) * board.x);
     }
+
+    // Need a way to specify both target pieces
+    /**
+     * Abstract method which returns whether game is over based on board type
+     * returns "AWin", "BWin", "NoWin"
+     */
+    public abstract String isGameOver();
 }
