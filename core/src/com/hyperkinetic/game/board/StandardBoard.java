@@ -11,11 +11,12 @@ public class StandardBoard extends AbstractGameBoard
     public StandardBoard()
     {
         super(8, 8);
-        create();
+        createTiles();
+        createPieces();
     }
 
     @Override
-    public void create()
+    public void createTiles()
     {
         for(int i = 0; i < y; i++)
         {
@@ -61,4 +62,22 @@ public class StandardBoard extends AbstractGameBoard
             tiles.add(new BlankTile());
         }
     }
+
+    @Override
+    public void createPieces() {
+        // populate pieces, aPieces, bPieces, place pieces on board, initiate aPharaoh, bPharaoh
+        // TODO: implement createPieces()
+    }
+
+    @Override
+    public String isGameOver() {
+        if(/*call appropriate pharaoh piece function on aPharaoh*/false) {
+            return "AWin";
+        } else if (/*call appropriate pharaoh piece function on bPharaoh*/false) {
+            return "BWin";
+        }
+        return "NoWin";
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package com.hyperkinetic.game.playflow;
 
+import com.badlogic.gdx.InputProcessor;
 import com.hyperkinetic.game.board.AbstractGameBoard;
 
 import javax.websocket.Session;
@@ -35,9 +36,9 @@ public class GameRoom extends Thread {
             }
 
             if(aTurn) { // a's turn
-                a.makeMove(board);
+                a.makeMove(board, "a");
             } else { // b's turn
-                b.makeMove(board);
+                b.makeMove(board, "b");
             }
 
             // fires laser

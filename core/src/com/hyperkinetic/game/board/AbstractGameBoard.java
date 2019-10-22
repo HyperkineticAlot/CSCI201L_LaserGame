@@ -26,10 +26,19 @@ public abstract class AbstractGameBoard
     protected Array<AbstractBoardTile> tiles;
     protected Array<AbstractGamePiece> pieces;
 
+    protected Array<AbstractGamePiece> aPieces;
+    protected Array<AbstractGamePiece> bPieces;
+    protected AbstractGamePiece aPharaoh;
+    protected AbstractGamePiece bPharaoh;
+
     public AbstractGameBoard(int x, int y)
     {
         tiles = new Array<>();
         pieces = new Array<>();
+        aPieces = new Array<>();
+        bPieces = new Array<>();
+        aPharaoh = null;
+        bPharaoh = null;
 
         int xSpace = (int)(Gdx.graphics.getWidth() * .60);
         int ySpace = (int)(Gdx.graphics.getHeight() * .80);
@@ -85,16 +94,35 @@ public abstract class AbstractGameBoard
     /**
      * Getter of the pieces array
      *
-     * @return the pieces array of te current board
+     * @return array of pieces
      */
-    public Array<AbstractGamePiece> getPieces() {
-        return pieces;
+    public Array<AbstractGamePiece> getPieces() { return pieces; }
+
+    /**
+     * Getter of the aPieces array
+     *
+     * @return array of player a's pieces of the current board
+     */
+    public Array<AbstractGamePiece> getAPieces() {
+        return aPieces;
     }
+
+    /**
+     * Getter of the bPieces array
+     *
+     * @return array of player b's pieces of the current board
+     */
+    public Array<AbstractGamePiece> getBPieces() { return bPieces; }
 
     /**
      * Abstract method which populates the board with tiles based on the board type.
      */
-    public abstract void create();
+    public abstract void createTiles();
+
+    /**
+     * Abstract method which places pieces on the board
+     */
+    public abstract void createPieces();
 
     /**
      * Renders the current game board. Called by the main game loop.
@@ -111,6 +139,9 @@ public abstract class AbstractGameBoard
                 tiles.get(j + i * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
             }
         }
+
+        // TODO: render pieces here
+
     }
 
     /**
@@ -163,11 +194,46 @@ public abstract class AbstractGameBoard
         return (board.pieces.get(y * board.y + x));
     }
 
-  
-    // TODO: Need a way to specify both target pieces
     /**
      * Abstract method which returns whether game is over based on board type
-     * returns "AWin", "BWin", "NoWin"
+     *
+     * @return "AWin" or "BWin" or "NoWin"
      */
     public abstract String isGameOver();
+
+    /**
+     *
+     * @param pID specifies which pieces to operate
+     * @param piece chosen piece to ratate left
+     * @return true if success
+     */
+    public boolean rotateLeft(String pID, AbstractGamePiece piece) {
+        // check piece returned matches pID
+        if(pID.equals("a")) {
+            //
+        } else {
+            //
+        }
+        piece.rotateLeft();
+        return true;
+    }
+
+    /**
+     *
+     * @param pID specifies which pieces to operate
+     * @param piece chosen piece to ratate right
+     * @return true if success
+     */
+    public boolean rotateRight(String pID, AbstractGamePiece piece) {
+        // check piece returned matches pID
+        if(pID.equals("a")) {
+            //
+        } else {
+            //
+        }
+        piece.rotateRight();
+        return true;
+    }
+
+    // TODO: implement move operations
 }
