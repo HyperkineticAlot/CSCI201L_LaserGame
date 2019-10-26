@@ -41,7 +41,7 @@ public class GameRoom extends Thread {
                 b.makeMove(board, "b");
             }
 
-            // fires laser
+            // fires laser, update board & pieces on board
             if(aTurn) { // a's turn -> fires a's laser
                 // calls appropriate LaserEntity function
             } else { // b's turn -> fires b's laser

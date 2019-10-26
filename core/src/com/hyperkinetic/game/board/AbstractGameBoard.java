@@ -202,38 +202,46 @@ public abstract class AbstractGameBoard
     public abstract String isGameOver();
 
     /**
+     * left rotate a selected piece on board
      *
      * @param pID specifies which pieces to operate
-     * @param piece chosen piece to ratate left
+     * @param piece chosen piece to ratate left, matches pID
      * @return true if success
      */
-    public boolean rotateLeft(String pID, AbstractGamePiece piece) {
-        // check piece returned matches pID
-        if(pID.equals("a")) {
-            //
-        } else {
-            //
-        }
+    public boolean pieceRotateLeft(String pID, AbstractGamePiece piece) {
         piece.rotateLeft();
+        // TODO: render new piece
         return true;
     }
 
     /**
+     * right rotate a selected piece on board
      *
      * @param pID specifies which pieces to operate
-     * @param piece chosen piece to ratate right
+     * @param piece chosen piece to ratate right, matches pID
      * @return true if success
      */
-    public boolean rotateRight(String pID, AbstractGamePiece piece) {
-        // check piece returned matches pID
-        if(pID.equals("a")) {
-            //
-        } else {
-            //
-        }
+    public boolean pieceRotateRight(String pID, AbstractGamePiece piece) {
         piece.rotateRight();
+        // TODO: render new piece
         return true;
     }
 
-    // TODO: implement move operations
+    /**
+     * move a selected on board
+     *
+     * @param pID specifies which pieces to operate
+     * @param piece chosen piece to move, matches pID
+     * @param x new x location
+     * @param y new y location
+     * @return true if success
+     */
+    public boolean pieceMove(String pID, AbstractGamePiece piece, int x, int y) {
+        piece.pickUpPiece(this);
+        piece.setX(x);
+        piece.setY(y);
+        piece.placePiece(this);
+        // TODO: render new piece
+        return true;
+    }
 }

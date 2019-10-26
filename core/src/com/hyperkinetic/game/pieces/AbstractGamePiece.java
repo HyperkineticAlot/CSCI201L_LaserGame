@@ -19,6 +19,13 @@ public abstract class AbstractGamePiece
         this.y = y;
     }
 
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
     /**
      * Transforms the orientation of this piece appropriately for one quarter turn.
      */

@@ -34,7 +34,7 @@ public class GameSocket {
 
     @OnMessage
     public void onMessage(String message, Session session) {
-        GameRoom gameRoom = gameRoomMap.get(session.getID());
+        GameRoom gameRoom = gameRoomMap.get(session.getId());
         // TODO: handles sending message
     }
 
@@ -53,15 +53,15 @@ public class GameSocket {
             }
         }
         // delete from gameRooms
-        GameRoom gameRoom = gameRoomMap.get(session.getID());
+        GameRoom gameRoom = gameRoomMap.get(session.getId());
         try{
             if(gameRoom!=null) {
                 gameRoom.a.remove();
                 gameRoom.b.remove();
             }
             // delete from gameRoomMap
-            gameRoomMap.remove(session.getID());
-        } catch (IOException e) {
+            gameRoomMap.remove(session.getId());
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
