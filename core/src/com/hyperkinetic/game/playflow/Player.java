@@ -87,9 +87,12 @@ public class Player {
         // make a valid move
         while(true) {
             // get input from gameInputProcessor
+            // get legal moves for selected piece
+            // verify selected move is legal
             // call board movement methods
             if(/*is a valid move*/false) {
-                // Ex. board.rotate(pID, piece);
+                // Ex. board.pieceRotateLeft(pID, piece);
+                // Ex. board.pieceMove(pID, piece, x, y);
                 break;
             }
         }

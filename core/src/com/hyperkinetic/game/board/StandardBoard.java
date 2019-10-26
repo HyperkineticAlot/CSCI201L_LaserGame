@@ -79,5 +79,4 @@ public class StandardBoard extends AbstractGameBoard
         return "NoWin";
     }
 
-
 }
