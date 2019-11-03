@@ -66,6 +66,10 @@ public class StandardBoard extends AbstractGameBoard
     @Override
     public void createPieces() {
         // populate pieces, aPieces, bPieces, place pieces on board, initiate aPharaoh, bPharaoh
+        for(int i = 0 ; i < x * y; i++)
+        {
+            pieces.add(null);
+        }
         // TODO: implement createPieces()
     }
 
