@@ -141,7 +141,9 @@ public abstract class AbstractGameBoard
         }
 
         // TODO: render pieces here
-
+        for(AbstractGamePiece piece : pieces) {
+            piece.render(sb);
+        }
     }
 
     /**
