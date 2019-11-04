@@ -45,8 +45,8 @@ public class LaserGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		gameInputProcessor = new GameInputProcessor();
 		Gdx.input.setInputProcessor(gameInputProcessor);
-		playerA = new Player(gameInputProcessor);
-		playerB = new Player(gameInputProcessor);
+		playerA = new Player();
+		playerB = new Player();
 		gameRoom = new GameRoom(playerA, playerB,1, board); // trivial roomID
 	}
 

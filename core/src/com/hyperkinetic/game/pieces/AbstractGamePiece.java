@@ -1,5 +1,6 @@
 package com.hyperkinetic.game.pieces;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.board.AbstractBoardTile;
 import com.hyperkinetic.game.board.AbstractGameBoard;
@@ -102,4 +103,5 @@ public abstract class AbstractGamePiece
         return retval;
     }
 
+    public abstract void render(SpriteBatch sb);
 }

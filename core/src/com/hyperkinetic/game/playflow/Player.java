@@ -14,30 +14,25 @@ public class Player {
     public String playerName;
     public boolean isGuest = false;
     public boolean isAI = false;
-    InputProcessor gameInputProcessor = null;
 
     /**
      * if not signed in, play as guest
-     * @param gameInputProcessor
      */
-    public Player(InputProcessor gameInputProcessor) {
+    public Player() {
         this.s = null;
         this.playerID = "-1";
         this.playerName = "Guest";
         this.isGuest = true;
-        this.gameInputProcessor = gameInputProcessor;
     }
 
     /**
      * verify player identity in database, and get playerName
      * @param s Session object the player is assigned
      * @param playerID playerID of this player
-     * @param gameInputProcessor
      */
-    public Player(Session s, String playerID, InputProcessor gameInputProcessor) {
+    public Player(Session s, String playerID) {
         this.s = s;
         this.playerID = playerID;
-        this.gameInputProcessor = gameInputProcessor;
         // TODO: get playerName from database
     }
 
@@ -86,9 +81,9 @@ public class Player {
     public boolean makeMove(AbstractGameBoard board, String pID) {
         // make a valid move
         while(true) {
-            // get input from gameInputProcessor
-            // get legal moves for selected piece
-            // verify selected move is legal
+            // TODO: get input from gameInputProcessor
+            // TODO: get legal moves for selected piece
+            // TODO: verify selected move is legal
             // call board movement methods
             if(/*is a valid move*/false) {
                 // Ex. board.pieceRotateLeft(pID, piece);

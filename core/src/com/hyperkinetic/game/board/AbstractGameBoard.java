@@ -143,10 +143,14 @@ public abstract class AbstractGameBoard {
         }
 
         // TODO: render pieces here
+        for(AbstractGamePiece piece : pieces) {
+            piece.render(sb);
+        }
 
         // TODO: render lasers here
         if(System.currentTimeMillis() > laserDuration + 2000)
             lasersToDraw.clear();
+      
     }
 
     /**
