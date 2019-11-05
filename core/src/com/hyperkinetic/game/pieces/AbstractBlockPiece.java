@@ -16,6 +16,10 @@ public abstract class AbstractBlockPiece extends AbstractGamePiece
         super(x, y);
     }
 
+    public Directions.Direction getOrientation() {
+        return orientation;
+    }
+
     /**
      * Transforms the orientation of this piece appropriately for one quarter turn clockwise.
      */

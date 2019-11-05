@@ -16,6 +16,9 @@ public abstract class AbstractMirrorPiece extends AbstractGamePiece
         super(x, y);
     }
 
+    public Directions.MirrorDirection getOrientation() {
+        return orientation;
+    }
 
     /**
      * Transforms the orientation of this piece appropriately for one quarter turn.

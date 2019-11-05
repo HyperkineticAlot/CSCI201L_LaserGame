@@ -19,7 +19,7 @@ import com.hyperkinetic.game.playflow.Player;
 
 /**
  * Implements the main game loop. Instantiated by the Launcher.
- *
+ * Working version for playing with oneself i.e local
  * @author cqwillia
  */
 public class LaserGame extends ApplicationAdapter {
@@ -34,6 +34,7 @@ public class LaserGame extends ApplicationAdapter {
 
 	private AbstractGameBoard board;
 	private InputProcessor gameInputProcessor;
+	// private Player player;
 	private Player playerA;
 	private Player playerB;
 	private GameRoom gameRoom;

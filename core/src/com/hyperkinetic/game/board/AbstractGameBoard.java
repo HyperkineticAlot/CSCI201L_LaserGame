@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.pieces.AbstractGamePiece;
+import com.hyperkinetic.game.pieces.LaserPiece;
 import com.hyperkinetic.game.util.Directions;
 
 /**
@@ -31,6 +32,8 @@ public abstract class AbstractGameBoard {
     protected Array<AbstractGamePiece> bPieces;
     protected AbstractGamePiece aPharaoh;
     protected AbstractGamePiece bPharaoh;
+    protected LaserPiece aLaser;
+    protected LaserPiece bLaser;
 
     private Array<Rectangle> lasersToDraw;
     private long laserDuration;
@@ -42,7 +45,10 @@ public abstract class AbstractGameBoard {
         bPieces = new Array<>();
         aPharaoh = null;
         bPharaoh = null;
+        aLaser = null;
+        bLaser = null;
         laserDuration = System.currentTimeMillis();
+        lasersToDraw = new Array<>();
 
         int xSpace = (int) (Gdx.graphics.getWidth() * .60);
         int ySpace = (int) (Gdx.graphics.getHeight() * .80);
@@ -120,6 +126,24 @@ public abstract class AbstractGameBoard {
     }
 
     /**
+     * Getter of aLaser piece
+     *
+     * @return aLaser
+     */
+    public LaserPiece getALaser() {
+        return this.aLaser;
+    }
+
+    /**
+     * Getter of bLaser piece
+     *
+     * @return bLaser
+     */
+    public LaserPiece getBLaser() {
+        return this.bLaser;
+    }
+
+    /**
      * Abstract method which populates the board with tiles based on the board type.
      */
     public abstract void createTiles();
@@ -142,15 +166,16 @@ public abstract class AbstractGameBoard {
             }
         }
 
-        // TODO: render pieces here
         for(AbstractGamePiece piece : pieces) {
-            piece.render(sb);
+            if(piece!=null) piece.render(sb);
         }
 
         // TODO: render lasers here
         if(System.currentTimeMillis() > laserDuration + 2000)
             lasersToDraw.clear();
-      
+
+        // TODO: different render function for two players i.e. opposite orientation (?)
+        // TODO: create 3D display - gradually shrink render size (?)
     }
 
     /**
@@ -210,44 +235,90 @@ public abstract class AbstractGameBoard {
     /**
      * left rotate a selected piece on board
      *
-     * @param pID   specifies which pieces to operate
-     * @param piece chosen piece to ratate left, matches pID
+     * @param piece chosen piece to ratate left
      * @return true if success
      */
-    public boolean pieceRotateLeft(String pID, AbstractGamePiece piece) {
+    public boolean pieceRotateLeft(AbstractGamePiece piece) {
         piece.rotateLeft();
-        // TODO: render new piece
         return true;
     }
 
     /**
      * right rotate a selected piece on board
      *
-     * @param pID   specifies which pieces to operate
      * @param piece chosen piece to ratate right, matches pID
      * @return true if success
      */
-    public boolean pieceRotateRight(String pID, AbstractGamePiece piece) {
+    public boolean pieceRotateRight(AbstractGamePiece piece) {
         piece.rotateRight();
-        // TODO: render new piece
         return true;
     }
 
     /**
      * move a selected on board
      *
-     * @param pID   specifies which pieces to operate
      * @param piece chosen piece to move, matches pID
      * @param x     new x location
      * @param y     new y location
      * @return true if success
      */
-    public boolean pieceMove(String pID, AbstractGamePiece piece, int x, int y) {
+    public boolean pieceMove(AbstractGamePiece piece, int x, int y) {
         piece.pickUpPiece(this);
         piece.setX(x);
         piece.setY(y);
         piece.placePiece(this);
         return true;
+    }
+
+    /**
+     *
+     * @param pID 'a', 'b' specifies whose turn this is
+     * @param piece selected piece to move
+     * @param move selected movement: 'L', 'R', 'W', 'S', 'A', 'D' or invalid character
+     * @return
+     */
+    public boolean isValidMove(String pID, AbstractGamePiece piece, String move) {
+        if(pID.equals('a')){
+            boolean inA = false;
+            for(AbstractGamePiece p : aPieces){
+                if(p==piece) {
+                    inA = true;
+                    break;
+                }
+            }
+            if(!inA) return false;
+        } else if(pID.equals('b')){
+            boolean inB = false;
+            for(AbstractGamePiece p : bPieces) {
+                if (p == piece) {
+                    inB = true;
+                    break;
+                }
+            }
+            if(!inB) return false;
+        }
+        int x = piece.getX();
+        int y = piece.getY();
+        if(move.equals('L') || move.equals('R')) {
+            return true;
+        } else if(move.equals('W')) {
+            if(getTileFromCoordinate(x, y+1)!=null && getPieceFromCoordinate(x, y+1)==null) {
+                return true;
+            }
+        } else if(move.equals('S')) {
+            if(getTileFromCoordinate(x, y-1)!=null && getPieceFromCoordinate(x, y-1)==null) {
+                return true;
+            }
+        } else if(move.equals('A')) {
+            if(getTileFromCoordinate(x-1, y)!=null && getPieceFromCoordinate(x-1, y)==null) {
+                return true;
+            }
+        } else if(move.equals('D')) {
+            if(getTileFromCoordinate(x+1, y)!=null && getPieceFromCoordinate(x+1, y)==null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -278,8 +349,20 @@ public abstract class AbstractGameBoard {
 
         if(newDirections == null)
         {
-            //destroy the piece
+            // destroy the piece
             pieces.set(startY * x + startX, null);
+            for(int i=0;i<aPieces.size;++i){
+                if(aPieces.get(i)==thisPiece){
+                    aPieces.removeIndex(i);
+                    break;
+                }
+            }
+            for(int i=0;i<bPieces.size;++i){
+                if(bPieces.get(i)==thisPiece){
+                    bPieces.removeIndex(i);
+                    break;
+                }
+            }
             thisTile.setPiece(null);
             thisTile.onPieceDestroyed(thisPiece);
             return;
