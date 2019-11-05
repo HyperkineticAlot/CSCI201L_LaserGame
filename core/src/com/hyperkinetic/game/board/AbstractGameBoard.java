@@ -1,9 +1,11 @@
 package com.hyperkinetic.game.board;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.hyperkinetic.game.core.LaserGame;
 import com.hyperkinetic.game.pieces.AbstractGamePiece;
 import com.hyperkinetic.game.pieces.LaserPiece;
 import com.hyperkinetic.game.util.Directions;
@@ -19,6 +21,7 @@ public abstract class AbstractGameBoard {
      * Tracks the gameboard currently being played on for centralized modification by various game objects.
      */
     private static AbstractGameBoard board = null;
+    private static Texture laserTexture = LaserGame.loadTexture("board/laser.png");
 
     protected int x;
     protected int y;
@@ -174,6 +177,10 @@ public abstract class AbstractGameBoard {
         if(System.currentTimeMillis() > laserDuration + 2000)
             lasersToDraw.clear();
 
+        for(Rectangle laser : lasersToDraw)
+        {
+            sb.draw(laserTexture, laser.x, laser.y, laser.width, laser.height);
+        }
         // TODO: different render function for two players i.e. opposite orientation (?)
         // TODO: create 3D display - gradually shrink render size (?)
     }
