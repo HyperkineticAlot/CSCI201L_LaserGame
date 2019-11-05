@@ -27,6 +27,15 @@ public abstract class AbstractGamePiece
     public void setY(int y) {
         this.y = y;
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
     /**
      * Transforms the orientation of this piece appropriately for one quarter turn.
      */
@@ -69,7 +78,8 @@ public abstract class AbstractGamePiece
      * @param b the game board that contains this piece
      */
     public AbstractGamePiece pickUpPiece(AbstractGameBoard b) {
-        return b.getPieces().removeIndex(this.y*b.getY() + this.x);
+        b.getPieces().set(this.y*b.getY() + this.x,null);
+        return this;
     }
 
     /**
@@ -78,7 +88,7 @@ public abstract class AbstractGamePiece
      * @param b the game board that contains this piece
      */
     public void placePiece(AbstractGameBoard b) {
-        b.getPieces().insert(this.y*b.getY() + this.x, this);
+        b.getPieces().set(this.y*b.getY() + this.x, this);
     }
 
     /**
