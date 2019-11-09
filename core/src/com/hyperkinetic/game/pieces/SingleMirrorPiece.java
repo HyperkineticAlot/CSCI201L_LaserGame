@@ -25,11 +25,11 @@ public class SingleMirrorPiece extends AbstractMirrorPiece
     @Override
     public Array<Directions.Direction> acceptLaser(Directions.Direction laserDirection)
     {
-        Directions.Direction result = Directions.reflect(this.orientation, laserDirection);
-        if(result == null) return null;
+        Directions.Direction dir = Directions.reflect(this.orientation, laserDirection);
+        if(dir == null) return null;
 
-        Array<Directions.Direction> retval = new Array<>();
-        retval.add(result);
-        return retval;
+        Array<Directions.Direction> reflectedLaserDirection = new Array<>();
+        reflectedLaserDirection.add(dir);
+        return reflectedLaserDirection;
     }
 }

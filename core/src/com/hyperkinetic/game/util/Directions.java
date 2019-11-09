@@ -50,6 +50,7 @@ public class Directions
      *
      * @param mirror the {@link MirrorDirection} describing the orientation of the mirror.
      * @param laser the {@link Direction} describing the direction of the laser.
+     *              note: if laser = south, it means coming from north, going to south
      * @return the direction in which the laser will travel after incidence with the mirror,
      * or <code>null</code> if the mirror does not reflect the laser.
      */
