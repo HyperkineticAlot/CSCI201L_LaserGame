@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.pieces.AbstractGamePiece;
-import com.hyperkinetic.game.pieces.LaserPiece;
 import com.hyperkinetic.game.util.Directions;
 
 /**
@@ -32,8 +31,8 @@ public abstract class AbstractGameBoard {
     protected Array<AbstractGamePiece> bPieces;
     protected AbstractGamePiece aPharaoh;
     protected AbstractGamePiece bPharaoh;
-    protected LaserPiece aLaser;
-    protected LaserPiece bLaser;
+    protected AbstractGamePiece aLaser;
+    protected AbstractGamePiece bLaser;
 
     private Array<Rectangle> lasersToDraw;
     private long laserDuration;
@@ -130,7 +129,7 @@ public abstract class AbstractGameBoard {
      *
      * @return aLaser
      */
-    public LaserPiece getALaser() {
+    public AbstractGamePiece getALaser() {
         return this.aLaser;
     }
 
@@ -139,7 +138,7 @@ public abstract class AbstractGameBoard {
      *
      * @return bLaser
      */
-    public LaserPiece getBLaser() {
+    public AbstractGamePiece getBLaser() {
         return this.bLaser;
     }
 

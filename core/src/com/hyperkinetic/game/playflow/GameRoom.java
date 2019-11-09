@@ -1,12 +1,7 @@
 package com.hyperkinetic.game.playflow;
 
-import com.badlogic.gdx.InputProcessor;
 import com.hyperkinetic.game.board.AbstractGameBoard;
-import com.hyperkinetic.game.pieces.AbstractGamePiece;
-import com.hyperkinetic.game.pieces.LaserPiece;
 import com.hyperkinetic.game.util.Directions;
-
-import javax.websocket.Session;
 
 /**
  * GameRoom class, implements basic game flow - this version only supports local mode
@@ -33,7 +28,7 @@ public class GameRoom extends Thread {
     @Override
     public void run() {
         // TODO: add sendMessage calls to GameSocket
-        while(!aWon && !bWon) {
+        /*while(!aWon && !bWon) {
             // if both disconnect
             if(!a.isConnected() && !b.isConnected()) {
                 // delete this GameRoom
@@ -86,6 +81,6 @@ public class GameRoom extends Thread {
                 bTurn = !bTurn;
             }
 
-        }
+        }*/
     }
 }
