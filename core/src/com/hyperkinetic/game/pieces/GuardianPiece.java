@@ -1,5 +1,6 @@
 package com.hyperkinetic.game.pieces;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.util.Directions;
 import com.hyperkinetic.game.util.Status;
@@ -42,5 +43,10 @@ public class GuardianPiece extends AbstractBlockPiece {
         }
 
         return null; // laser not reflected
+    }
+
+    @Override
+    public void render(SpriteBatch sb) {
+
     }
 }

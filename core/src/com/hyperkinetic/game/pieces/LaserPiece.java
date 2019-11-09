@@ -1,9 +1,10 @@
 package com.hyperkinetic.game.pieces;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.util.Directions;
 
-// Sphinx can only rotate
+// can only rotate
 public class LaserPiece extends AbstractBlockPiece{
     public LaserPiece(int x, int y) {
         super(x, y);
@@ -12,6 +13,11 @@ public class LaserPiece extends AbstractBlockPiece{
     @Override
     public Array<Directions.Direction> acceptLaser(Directions.Direction laserDirection) {
         return null;
+    }
+
+    @Override
+    public void render(SpriteBatch sb) {
+
     }
 
 }
