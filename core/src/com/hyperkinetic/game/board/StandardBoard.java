@@ -10,7 +10,7 @@ public class StandardBoard extends AbstractGameBoard
 {
     public StandardBoard()
     {
-        super(8, 8);
+        super(10, 8);
         createTiles();
         createPieces();
     }
@@ -55,29 +55,27 @@ public class StandardBoard extends AbstractGameBoard
                 }
             }
         }
-
-        tiles.add(new LaserTile());
-        for(int j = 1; j < x; j++)
-        {
-            tiles.add(new BlankTile());
-        }
     }
 
     @Override
     public void createPieces() {
-        // populate pieces, aPieces, bPieces, place pieces on board, initiate aPharaoh, bPharaoh
-        // TODO: implement createPieces()
+        // populate pieces, aPieces, bPieces, place pieces on board, initiate aPharaoh, bPharaoh, aLaser, bLaser
+        for(int i = 0 ; i < x * y; i++)
+        {
+            pieces.add(null);
+        }
+        // TODO: set non-null elements of pieces to associate piece objects
     }
 
     @Override
     public String isGameOver() {
-        if(/*call appropriate pharaoh piece function on aPharaoh*/false) {
+        // TODO: import associate pharaoh methods
+        if(/*call isAlive() of aPharaoh*/false) {
             return "AWin";
-        } else if (/*call appropriate pharaoh piece function on bPharaoh*/false) {
+        } else if (/*call isAlive() of bPharaoh*/false) {
             return "BWin";
         }
         return "NoWin";
     }
-
 
 }

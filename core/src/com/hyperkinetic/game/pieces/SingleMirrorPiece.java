@@ -1,5 +1,6 @@
 package com.hyperkinetic.game.pieces;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.util.Directions;
 
@@ -31,5 +32,19 @@ public class SingleMirrorPiece extends AbstractMirrorPiece
         Array<Directions.Direction> reflectedLaserDirection = new Array<>();
         reflectedLaserDirection.add(dir);
         return reflectedLaserDirection;
+    }
+
+    @Override
+    public void render(SpriteBatch sb) {
+        // render single mirror piece here
+        if(orientation == Directions.MirrorDirection.NORTHEAST) {
+            // TODO: load appropriate asset
+        } else if(orientation == Directions.MirrorDirection.NORTHWEST) {
+            // TODO: load appropriate asset
+        } else if(orientation == Directions.MirrorDirection.SOUTHEAST) {
+            // TODO: load appropriate asset
+        } else {
+            // TODO: load appropriate asset
+        }
     }
 }

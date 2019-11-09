@@ -14,30 +14,25 @@ public class Player {
     public String playerName;
     public boolean isGuest = false;
     public boolean isAI = false;
-    InputProcessor gameInputProcessor = null;
 
     /**
      * if not signed in, play as guest
-     * @param gameInputProcessor
      */
-    public Player(InputProcessor gameInputProcessor) {
+    public Player() {
         this.s = null;
         this.playerID = "-1";
         this.playerName = "Guest";
         this.isGuest = true;
-        this.gameInputProcessor = gameInputProcessor;
     }
 
     /**
      * verify player identity in database, and get playerName
      * @param s Session object the player is assigned
      * @param playerID playerID of this player
-     * @param gameInputProcessor
      */
-    public Player(Session s, String playerID, InputProcessor gameInputProcessor) {
+    public Player(Session s, String playerID) {
         this.s = s;
         this.playerID = playerID;
-        this.gameInputProcessor = gameInputProcessor;
         // TODO: get playerName from database
     }
 
@@ -86,12 +81,54 @@ public class Player {
     public boolean makeMove(AbstractGameBoard board, String pID) {
         // make a valid move
         while(true) {
-            // get input from gameInputProcessor
-            // call board movement methods
-            if(/*is a valid move*/false) {
-                // Ex. board.rotate(pID, piece);
-                break;
+            // TODO: get input from gameInputProcessor: left click - select piece
+            // TODO: get legal moves for selected piece
+            // TODO: get input from gameInputProcessor: L - rotate left, R - rotate right, Arrows - move
+            /* Ex:
+            // pseudo code to get input
+            AbstractGamePiece piece = GameInputProcessor.getPieceFromTouchUp();
+            while(piece!=null) { // get one piece selected
+                piece = GameInputProcessor.getPieceFromTouchUp();
             }
+            String move = GameInputProcessor.getKeyBoardInput();
+            while(move!=null) { // get one input movement
+                move = GameInputProcessor.getKeyBoardInput();
+            }
+
+            // real code to move selected piece
+            if(!board.isValidMove(pID,piece,move)) {
+                continue;
+            } else { // call board move method
+                if(move=='L') {
+                    board.pieceRotateLeft(piece);
+                    break;
+                } else if(move=='R') {
+                    board.pieceRotateRight(piece);
+                    break;
+                } else if(move=='W') {
+                    int x = piece.getX();
+                    int y = piece.getY()+1;
+                    board.pieceMove(piece, x, y);
+                    break;
+                } else if(move=='S') {
+                    int x = piece.getX();
+                    int y = piece.getY()-1;
+                    board.pieceMove(piece, x, y);
+                    break;
+                } else if(move=='A') {
+                    int x = piece.getX()-1;
+                    int y = piece.getY();
+                    board.pieceMove(piece, x, y);
+                    break;
+                } else if(move=='D') {
+                    int x = piece.getX()+1;
+                    int y = piece.getY();
+                    board.pieceMove(piece, x, y);
+                    break;
+                }
+            }
+            */
+            if(false) break; // delete this line
         }
         return true;
     }

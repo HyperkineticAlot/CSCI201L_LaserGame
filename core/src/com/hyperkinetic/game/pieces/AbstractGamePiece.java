@@ -1,5 +1,6 @@
 package com.hyperkinetic.game.pieces;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.board.AbstractBoardTile;
 import com.hyperkinetic.game.board.AbstractGameBoard;
@@ -17,6 +18,22 @@ public abstract class AbstractGamePiece
     public AbstractGamePiece(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     /**
@@ -61,7 +78,8 @@ public abstract class AbstractGamePiece
      * @param b the game board that contains this piece
      */
     public AbstractGamePiece pickUpPiece(AbstractGameBoard b) {
-        return b.getPieces().removeIndex(this.y*b.getY() + this.x);
+        b.getPieces().set(this.y*b.getY() + this.x,null);
+        return this;
     }
 
     /**
@@ -70,7 +88,7 @@ public abstract class AbstractGamePiece
      * @param b the game board that contains this piece
      */
     public void placePiece(AbstractGameBoard b) {
-        b.getPieces().insert(this.y*b.getY() + this.x, this);
+        b.getPieces().set(this.y*b.getY() + this.x, this);
     }
 
     /**
@@ -95,4 +113,5 @@ public abstract class AbstractGamePiece
         return retval;
     }
 
+    public abstract void render(SpriteBatch sb);
 }

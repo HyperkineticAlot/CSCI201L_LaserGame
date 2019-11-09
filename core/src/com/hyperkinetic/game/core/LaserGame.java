@@ -19,7 +19,7 @@ import com.hyperkinetic.game.playflow.Player;
 
 /**
  * Implements the main game loop. Instantiated by the Launcher.
- *
+ * Working version for playing with oneself i.e local
  * @author cqwillia
  */
 public class LaserGame extends ApplicationAdapter {
@@ -34,6 +34,7 @@ public class LaserGame extends ApplicationAdapter {
 
 	private AbstractGameBoard board;
 	private InputProcessor gameInputProcessor;
+	// private Player player;
 	private Player playerA;
 	private Player playerB;
 	private GameRoom gameRoom;
@@ -45,15 +46,17 @@ public class LaserGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		gameInputProcessor = new GameInputProcessor();
 		Gdx.input.setInputProcessor(gameInputProcessor);
-		playerA = new Player(gameInputProcessor);
-		playerB = new Player(gameInputProcessor);
+		playerA = new Player();
+		playerB = new Player();
 		gameRoom = new GameRoom(playerA, playerB,1, board); // trivial roomID
 	}
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClearColor(100, 100, 100, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		// camera.update();
 		batch.begin();
 		board.render(batch);
 

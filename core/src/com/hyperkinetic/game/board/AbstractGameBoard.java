@@ -1,9 +1,13 @@
 package com.hyperkinetic.game.board;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.hyperkinetic.game.core.LaserGame;
 import com.hyperkinetic.game.pieces.AbstractGamePiece;
+import com.hyperkinetic.game.util.Directions;
 
 /**
  * A superclass for all laser gameboards. Contains code to render the gameboard as well as static
@@ -11,12 +15,12 @@ import com.hyperkinetic.game.pieces.AbstractGamePiece;
  *
  * @author cqwillia briannlz
  */
-public abstract class AbstractGameBoard
-{
+public abstract class AbstractGameBoard {
     /**
      * Tracks the gameboard currently being played on for centralized modification by various game objects.
      */
     private static AbstractGameBoard board = null;
+    private static Texture laserTexture = LaserGame.loadTexture("board/laser.png");
 
     protected int x;
     protected int y;
@@ -30,34 +34,39 @@ public abstract class AbstractGameBoard
     protected Array<AbstractGamePiece> bPieces;
     protected AbstractGamePiece aPharaoh;
     protected AbstractGamePiece bPharaoh;
+    protected AbstractGamePiece aLaser;
+    protected AbstractGamePiece bLaser;
 
-    public AbstractGameBoard(int x, int y)
-    {
+    private Array<Rectangle> lasersToDraw;
+    private long laserDuration;
+
+    public AbstractGameBoard(int x, int y) {
         tiles = new Array<>();
         pieces = new Array<>();
         aPieces = new Array<>();
         bPieces = new Array<>();
         aPharaoh = null;
         bPharaoh = null;
+        aLaser = null;
+        bLaser = null;
+        laserDuration = System.currentTimeMillis();
+        lasersToDraw = new Array<>();
 
-        int xSpace = (int)(Gdx.graphics.getWidth() * .60);
-        int ySpace = (int)(Gdx.graphics.getHeight() * .80);
+        int xSpace = (int) (Gdx.graphics.getWidth() * .60);
+        int ySpace = (int) (Gdx.graphics.getHeight() * .80);
         this.x = x;
         this.y = y;
 
         double boardRatio = ((double) x / y);
         double screenRatio = ((double) Gdx.graphics.getWidth() / Gdx.graphics.getHeight());
 
-        if(boardRatio > screenRatio)
-        {
+        if (boardRatio > screenRatio) {
             tileDim = xSpace / x;
-            screenX = (int)(Gdx.graphics.getWidth() * .20);
+            screenX = (int) (Gdx.graphics.getWidth() * .20);
             screenY = (Gdx.graphics.getHeight() - y * tileDim) / 2;
-        }
-        else
-        {
+        } else {
             tileDim = ySpace / y;
-            screenY = (int)(Gdx.graphics.getHeight() * .10);
+            screenY = (int) (Gdx.graphics.getHeight() * .10);
             screenX = (Gdx.graphics.getWidth() - x * tileDim) / 2;
         }
 
@@ -96,7 +105,9 @@ public abstract class AbstractGameBoard
      *
      * @return array of pieces
      */
-    public Array<AbstractGamePiece> getPieces() { return pieces; }
+    public Array<AbstractGamePiece> getPieces() {
+        return pieces;
+    }
 
     /**
      * Getter of the aPieces array
@@ -112,7 +123,27 @@ public abstract class AbstractGameBoard
      *
      * @return array of player b's pieces of the current board
      */
-    public Array<AbstractGamePiece> getBPieces() { return bPieces; }
+    public Array<AbstractGamePiece> getBPieces() {
+        return bPieces;
+    }
+
+    /**
+     * Getter of aLaser piece
+     *
+     * @return aLaser
+     */
+    public AbstractGamePiece getALaser() {
+        return this.aLaser;
+    }
+
+    /**
+     * Getter of bLaser piece
+     *
+     * @return bLaser
+     */
+    public AbstractGamePiece getBLaser() {
+        return this.bLaser;
+    }
 
     /**
      * Abstract method which populates the board with tiles based on the board type.
@@ -129,19 +160,28 @@ public abstract class AbstractGameBoard
      *
      * @param sb the {@link SpriteBatch} responsible for drawing game objects.
      */
-    public void render(SpriteBatch sb)
-    {
+    public void render(SpriteBatch sb) {
         // starting from the bottom left
-        for(int i = 0; i < y; i++)
-        {
-            for(int j = 0; j < x; j++)
-            {
+        for (int i = 0; i < y; i++) {
+            for (int j = 0; j < x; j++) {
                 tiles.get(j + i * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
             }
         }
 
-        // TODO: render pieces here
+        for(AbstractGamePiece piece : pieces) {
+            if(piece!=null) piece.render(sb);
+        }
 
+        // TODO: render lasers here
+        if(System.currentTimeMillis() > laserDuration + 2000)
+            lasersToDraw.clear();
+
+        for(Rectangle laser : lasersToDraw)
+        {
+            sb.draw(laserTexture, laser.x, laser.y, laser.width, laser.height);
+        }
+        // TODO: different render function for two players i.e. opposite orientation (?)
+        // TODO: create 3D display - gradually shrink render size (?)
     }
 
     /**
@@ -151,9 +191,8 @@ public abstract class AbstractGameBoard
      * @param mouseY the y location on the virtual screen
      * @return the board tile at the given location, or <code>null</code> if the mouse is outside the game board.
      */
-    public static AbstractBoardTile getTileFromLocation(int mouseX, int mouseY)
-    {
-        if(mouseX < board.screenX || mouseY < board.screenY
+    public static AbstractBoardTile getTileFromLocation(int mouseX, int mouseY) {
+        if (mouseX < board.screenX || mouseY < board.screenY
                 || mouseX > board.screenX + board.x * board.tileDim || mouseY > board.screenY + board.y * board.tileDim)
             return null;
 
@@ -170,8 +209,7 @@ public abstract class AbstractGameBoard
      * @return the board tile at the given location,
      * or <code>null</code> if the coordinate is invalid.
      */
-    public static AbstractBoardTile getTileFromCoordinate(int x, int y)
-    {
+    public static AbstractBoardTile getTileFromCoordinate(int x, int y) {
         if (x < 0 || y < 0 || x >= board.x || y >= board.y) {
             return null;
         }
@@ -186,12 +224,11 @@ public abstract class AbstractGameBoard
      * @return the game piece at the given location,
      * or <code>null</code> if either the coordinate is invalid or no piece is place on that tile.
      */
-    public static AbstractGamePiece getPieceFromCoordinate(int x, int y)
-    {
+    public static AbstractGamePiece getPieceFromCoordinate(int x, int y) {
         if (x < 0 || y < 0 || x >= board.x || y >= board.y) {
             return null;
         }
-        return (board.pieces.get(y * board.y + x));
+        return (board.pieces.get(y * board.x + x));
     }
 
     /**
@@ -202,38 +239,168 @@ public abstract class AbstractGameBoard
     public abstract String isGameOver();
 
     /**
+     * left rotate a selected piece on board
      *
-     * @param pID specifies which pieces to operate
      * @param piece chosen piece to ratate left
      * @return true if success
      */
-    public boolean rotateLeft(String pID, AbstractGamePiece piece) {
-        // check piece returned matches pID
-        if(pID.equals("a")) {
-            //
-        } else {
-            //
-        }
+    public boolean pieceRotateLeft(AbstractGamePiece piece) {
         piece.rotateLeft();
         return true;
     }
 
     /**
+     * right rotate a selected piece on board
      *
-     * @param pID specifies which pieces to operate
-     * @param piece chosen piece to ratate right
+     * @param piece chosen piece to ratate right, matches pID
      * @return true if success
      */
-    public boolean rotateRight(String pID, AbstractGamePiece piece) {
-        // check piece returned matches pID
-        if(pID.equals("a")) {
-            //
-        } else {
-            //
-        }
+    public boolean pieceRotateRight(AbstractGamePiece piece) {
         piece.rotateRight();
         return true;
     }
 
-    // TODO: implement move operations
+    /**
+     * move a selected on board
+     *
+     * @param piece chosen piece to move, matches pID
+     * @param x     new x location
+     * @param y     new y location
+     * @return true if success
+     */
+    public boolean pieceMove(AbstractGamePiece piece, int x, int y) {
+        piece.pickUpPiece(this);
+        piece.setX(x);
+        piece.setY(y);
+        piece.placePiece(this);
+        return true;
+    }
+
+    /**
+     *
+     * @param pID 'a', 'b' specifies whose turn this is
+     * @param piece selected piece to move
+     * @param move selected movement: 'L', 'R', 'W', 'S', 'A', 'D' or invalid character
+     * @return
+     */
+    public boolean isValidMove(String pID, AbstractGamePiece piece, String move) {
+        if(pID.equals('a')){
+            boolean inA = false;
+            for(AbstractGamePiece p : aPieces){
+                if(p==piece) {
+                    inA = true;
+                    break;
+                }
+            }
+            if(!inA) return false;
+        } else if(pID.equals('b')){
+            boolean inB = false;
+            for(AbstractGamePiece p : bPieces) {
+                if (p == piece) {
+                    inB = true;
+                    break;
+                }
+            }
+            if(!inB) return false;
+        }
+        int x = piece.getX();
+        int y = piece.getY();
+        if(move.equals('L') || move.equals('R')) {
+            return true;
+        } else if(move.equals('W')) {
+            if(getTileFromCoordinate(x, y+1)!=null && getPieceFromCoordinate(x, y+1)==null) {
+                return true;
+            }
+        } else if(move.equals('S')) {
+            if(getTileFromCoordinate(x, y-1)!=null && getPieceFromCoordinate(x, y-1)==null) {
+                return true;
+            }
+        } else if(move.equals('A')) {
+            if(getTileFromCoordinate(x-1, y)!=null && getPieceFromCoordinate(x-1, y)==null) {
+                return true;
+            }
+        } else if(move.equals('D')) {
+            if(getTileFromCoordinate(x+1, y)!=null && getPieceFromCoordinate(x+1, y)==null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Handles the logic and rendering of a laser being fired into a tile.
+     *
+     * @param startX the X-coordinate of the tile into which the laser is being fired
+     * @param startY the Y-coordinate of the tile into which the laser is being fired
+     * @param d the direction in which the laser is being fired into the tile
+     */
+    public void fireLaser(int startX, int startY, Directions.Direction d) {
+        laserDuration = System.currentTimeMillis();
+
+        if (startX < 0 || startY < 0 || startX > x || startY > y) return;
+
+        AbstractGamePiece thisPiece = pieces.get(startY * x + startX);
+        AbstractBoardTile thisTile = tiles.get(startY * x + startX);
+
+        if(thisPiece == null)
+        {
+            drawLaser(startX, startY, d);
+            startX += (d == Directions.Direction.EAST ? 1 : 0) + (d == Directions.Direction.WEST ? -1 : 0);
+            startY += (d == Directions.Direction.NORTH ? 1 : 0) + (d == Directions.Direction.SOUTH ? -1 : 0);
+            fireLaser(startX, startY, d);
+            return;
+        }
+
+        Array<Directions.Direction> newDirections = thisPiece.acceptLaser(d);
+
+        if(newDirections == null)
+        {
+            // destroy the piece
+            pieces.set(startY * x + startX, null);
+            for(int i=0;i<aPieces.size;++i){
+                if(aPieces.get(i)==thisPiece){
+                    aPieces.removeIndex(i);
+                    break;
+                }
+            }
+            for(int i=0;i<bPieces.size;++i){
+                if(bPieces.get(i)==thisPiece){
+                    bPieces.removeIndex(i);
+                    break;
+                }
+            }
+            thisTile.setPiece(null);
+            thisTile.onPieceDestroyed(thisPiece);
+            return;
+        }
+
+        for(Directions.Direction dir : newDirections)
+        {
+            //reflect the lasers
+            drawLaser(startX, startY, dir);
+            int newX = startX + (dir == Directions.Direction.EAST ? 1 : 0) + (dir == Directions.Direction.WEST ? -1 : 0);
+            int newY = startY + (dir == Directions.Direction.NORTH ? 1 : 0) + (dir == Directions.Direction.SOUTH ? -1 : 0);
+            fireLaser(newX, newY, dir);
+        }
+    }
+
+    private void drawLaser(int startX, int startY, Directions.Direction d)
+    {
+        if(d == Directions.Direction.NORTH)
+            lasersToDraw.add(new Rectangle(screenX + startX * tileDim + tileDim / 2F - 5,
+                                        screenY + startY * tileDim + 3 * tileDim / 2,
+                                    10, tileDim));
+        else if(d == Directions.Direction.SOUTH)
+            lasersToDraw.add(new Rectangle(screenX + startX * tileDim + tileDim / 2F - 5,
+                                        screenY + startY * tileDim + tileDim / 2F,
+                                    10, tileDim));
+        else if(d == Directions.Direction.EAST)
+            lasersToDraw.add(new Rectangle(screenX + startX * tileDim + tileDim / 2F,
+                                        screenY + startY * tileDim + tileDim / 2F - 5,
+                                        tileDim, 10));
+        else if(d == Directions.Direction.WEST)
+            lasersToDraw.add(new Rectangle(screenX + startX * tileDim - tileDim / 2F,
+                                        screenY + startY * tileDim + tileDim / 2F - 5,
+                                            tileDim, 10));
+    }
 }
