@@ -25,6 +25,9 @@ public class GameRoom extends Thread {
         this.start();
     }
 
+    /**
+     * The basic game play flow
+     */
     @Override
     public void run() {
         // TODO: add sendMessage calls to GameSocket

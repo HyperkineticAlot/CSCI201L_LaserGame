@@ -31,14 +31,30 @@ public class LaserGame extends ApplicationAdapter {
 	 * Tracks all objects (such as Textures) that implement {@link Disposable} and need to be freed.
 	 */
 	private static Array<Disposable> disposables = new Array<>();
-
+	/**
+	 * The game board that tracks current configuration and player movements.
+	 */
 	private AbstractGameBoard board;
+	/**
+	 * Input processor that handles user mouse and keyboard actions.
+	 */
 	private InputProcessor gameInputProcessor;
-	// private Player player;
+	/**
+	 * Player A of the game.
+	 */
 	private Player playerA;
+	/**
+	 * Player B of the game.
+	 */
 	private Player playerB;
+	/**
+	 * GameRoom that includes the two players of the same game.
+	 */
 	private GameRoom gameRoom;
 
+	/**
+	 * Construct the game with data members.
+	 */
 	@Override
 	public void create ()
 	{
@@ -51,6 +67,10 @@ public class LaserGame extends ApplicationAdapter {
 		gameRoom = new GameRoom(playerA, playerB,1, board); // trivial roomID
 	}
 
+
+	/**
+	 * Render and display the elements to screen.
+	 */
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(100, 100, 100, 1);
@@ -62,7 +82,11 @@ public class LaserGame extends ApplicationAdapter {
 
 		batch.end();
 	}
-	
+
+
+	/**
+	 * Dispose unused elements.
+	 */
 	@Override
 	public void dispose () {
 		batch.dispose();

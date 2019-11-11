@@ -9,14 +9,29 @@ import javax.websocket.Session;
  * Player class
  */
 public class Player {
+    /**
+     * The session that the player holds.
+     */
     private Session s;
+    /**
+     * The unique ID of a player.
+     */
     public String playerID;
+    /**
+     * Player's username.
+     */
     public String playerName;
+    /**
+     * Keep track on whether the player is a guest.
+     */
     public boolean isGuest = false;
+    /**
+     * Keep track on whether the player is a game bot.
+     */
     public boolean isAI = false;
 
     /**
-     * if not signed in, play as guest
+     * If not signed in, play as guest.
      */
     public Player() {
         this.s = null;
@@ -26,7 +41,7 @@ public class Player {
     }
 
     /**
-     * verify player identity in database, and get playerName
+     * Verify player identity in database, and get playerName.
      * @param s Session object the player is assigned
      * @param playerID playerID of this player
      */
@@ -37,7 +52,7 @@ public class Player {
     }
 
     /**
-     * player is AI with level AILevel
+     * Player is AI with level AILevel.
      * @param AILevel difficulty of AI
      */
     public Player(String AILevel) {
@@ -48,7 +63,7 @@ public class Player {
     }
 
     /**
-     * getter of Session
+     * Getter of Session.
      * @return Session of player
      */
     public Session getSession() {
@@ -63,7 +78,7 @@ public class Player {
     }
 
     /**
-     * check if player is connected
+     * Check if player is connected.
      * @return true if connected
      */
     public boolean isConnected() {
@@ -73,7 +88,7 @@ public class Player {
     }
 
     /**
-     * make a movement on board, called by GameRoom class
+     * Make a movement on board, called by GameRoom class.
      * @param board GameBoard to operate on
      * @param pID "a" or "b" signifies which pieces to operate on in board
      * @return true if a valid move is made

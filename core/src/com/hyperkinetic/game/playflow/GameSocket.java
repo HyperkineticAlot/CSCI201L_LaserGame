@@ -17,13 +17,21 @@ import java.io.IOException;
  */
 @ServerEndpoint(value="/gs")
 public class GameSocket {
-    // stores all living sessions
+    /**
+     * Stores all living sessions.
+     */
     private static Vector<Session> sessionVector = new Vector<>();
-    // stores all players in matchmaking
+    /**
+     * Stores all players in matchmaking.
+     */
     private static Vector<Player> matchingQueue = new Vector<>();
-    // stores all ongoing GameRooms
+    /**
+     * Stores all ongoing GameRooms
+     */
     private static Vector<GameRoom> gameRooms = new Vector<>();
-    // stores the mapping from sessionID to GameRooms
+    /**
+     * Stores the mapping from sessionID to GameRooms
+     */
     private static HashMap<String, GameRoom> gameRoomMap = new HashMap<>();
 
     @OnOpen
