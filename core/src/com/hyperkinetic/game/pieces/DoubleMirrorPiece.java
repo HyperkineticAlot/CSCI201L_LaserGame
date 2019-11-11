@@ -1,5 +1,6 @@
 package com.hyperkinetic.game.pieces;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.util.Directions;
 
@@ -32,6 +33,11 @@ public class DoubleMirrorPiece extends AbstractMirrorPiece {
             reflectedLaserDirection.add(reflectionDir);
         }
         return reflectedLaserDirection;
+    }
+
+    @Override
+    public void render(SpriteBatch sb) {
+
     }
 
 }

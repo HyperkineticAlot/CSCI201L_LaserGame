@@ -13,6 +13,9 @@ import com.hyperkinetic.game.util.Directions;
  */
 public abstract class AbstractGamePiece
 {
+    /**
+     * The location of the piece on the board.
+     */
     protected int x, y;
 
     public AbstractGamePiece(int x, int y) {
@@ -20,38 +23,37 @@ public abstract class AbstractGamePiece
         this.y = y;
     }
 
+    /**
+     * Modifier of the x location of the piece.
+     */
     public void setX(int x) {
         this.x = x;
     }
 
+    /**
+     * Modifier of the y location of the piece.
+     */
     public void setY(int y) {
         this.y = y;
     }
 
+    /**
+     * Getter of the x location of the piece.
+     *
+     * @return the x location of the piece
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * Getter of the y location of the piece.
+     *
+     * @return the y location of the piece
+     */
     public int getY() {
         return y;
     }
-
-    /**
-     * Transforms the orientation of this piece appropriately for one quarter turn.
-     */
-    /*public void rotate()
-    {
-        if(orientation == null) return;
-
-        if(orientation == Directions.MirrorDirection.NORTHWEST)
-            orientation = Directions.MirrorDirection.NORTHEAST;
-        else if(orientation == Directions.MirrorDirection.NORTHEAST)
-            orientation = Directions.MirrorDirection.SOUTHEAST;
-        else if(orientation == Directions.MirrorDirection.SOUTHEAST)
-            orientation = Directions.MirrorDirection.SOUTHWEST;
-        else
-            orientation = Directions.MirrorDirection.NORTHWEST;
-    }*/
 
     /**
      * Transforms the orientation of this piece appropriately for one quarter turn clockwise.
@@ -113,5 +115,10 @@ public abstract class AbstractGamePiece
         return retval;
     }
 
+    /**
+     * Render the piece above the tile.
+     *
+     * @param sb the SpriteBatch of the game
+     */
     public abstract void render(SpriteBatch sb);
 }
