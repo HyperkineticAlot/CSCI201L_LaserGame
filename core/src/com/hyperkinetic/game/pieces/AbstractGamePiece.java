@@ -87,7 +87,7 @@ public abstract class AbstractGamePiece
      * @param b the game board that contains this piece
      */
     public AbstractGamePiece pickUpPiece(AbstractGameBoard b) {
-        b.getPieces().set(this.y*b.getY() + this.x,null);
+        b.getPieces().set(this.y*b.getX() + this.x,null);
         return this;
     }
 

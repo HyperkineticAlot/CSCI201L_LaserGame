@@ -9,6 +9,7 @@ import com.hyperkinetic.game.core.LaserGame;
 import com.hyperkinetic.game.pieces.AbstractBlockPiece;
 import com.hyperkinetic.game.pieces.AbstractGamePiece;
 import com.hyperkinetic.game.pieces.LaserPiece;
+import com.hyperkinetic.game.playflow.GameMessage;
 import com.hyperkinetic.game.util.Directions;
 
 import java.util.concurrent.locks.Condition;
@@ -84,6 +85,13 @@ public abstract class AbstractGameBoard {
      * The LaserPiece of player B.
      */
     protected LaserPiece bLaser;
+
+    /**
+     * The next move to be sent to the server
+     */
+    private GameMessage nextMove;
+    private boolean moveConfirmed;
+
     /**
      * The laser that is to be drawn.
      */
@@ -104,6 +112,8 @@ public abstract class AbstractGameBoard {
         bLaser = null;
         laserDuration = System.currentTimeMillis();
         lasersToDraw = new Array<>();
+        nextMove = null;
+        moveConfirmed = false;
 
         int xSpace = (int) (Gdx.graphics.getWidth() * .60);
         int ySpace = (int) (Gdx.graphics.getHeight() * .80);
@@ -196,6 +206,16 @@ public abstract class AbstractGameBoard {
      */
     public LaserPiece getBLaser() {
         return this.bLaser;
+    }
+
+    public GameMessage getNextMove()
+    {
+        if(moveConfirmed)
+        {
+            moveConfirmed = false;
+            return nextMove;
+        }
+        else return null;
     }
 
     /**
@@ -300,6 +320,14 @@ public abstract class AbstractGameBoard {
         } else {
             pieceMove(piece,nX,nY);
         }
+
+        GameMessage move = new GameMessage(GameMessage.messageType.PLAYER_MOVE);
+        move.x = x;
+        move.y = y;
+        move.moveType = moveType;
+        move.moveX = nX;
+        move.moveY = nY;
+        this.nextMove = move;
     }
 
     /**
@@ -421,6 +449,8 @@ public abstract class AbstractGameBoard {
             int newY = startY + (dir == Directions.Direction.NORTH ? 1 : 0) + (dir == Directions.Direction.SOUTH ? -1 : 0);
             fireLaser(newX, newY, dir);
         }
+
+        moveConfirmed = true;
     }
 
     /**
