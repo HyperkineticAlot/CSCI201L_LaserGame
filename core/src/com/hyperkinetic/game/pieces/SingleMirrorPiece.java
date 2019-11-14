@@ -26,25 +26,16 @@ public class SingleMirrorPiece extends AbstractMirrorPiece
     @Override
     public Array<Directions.Direction> acceptLaser(Directions.Direction laserDirection)
     {
-        Directions.Direction result = Directions.reflect(this.orientation, laserDirection);
-        if(result == null) return null;
+        Directions.Direction dir = Directions.reflect(this.orientation, laserDirection);
+        if(dir == null) return null;
 
-        Array<Directions.Direction> retval = new Array<>();
-        retval.add(result);
-        return retval;
+        Array<Directions.Direction> reflectedLaserDirection = new Array<>();
+        reflectedLaserDirection.add(dir);
+        return reflectedLaserDirection;
     }
 
     @Override
     public void render(SpriteBatch sb) {
-        // render single mirror piece here
-        if(orientation == Directions.MirrorDirection.NORTHEAST) {
-            // TODO: load appropriate asset
-        } else if(orientation == Directions.MirrorDirection.NORTHWEST) {
-            // TODO: load appropriate asset
-        } else if(orientation == Directions.MirrorDirection.SOUTHEAST) {
-            // TODO: load appropriate asset
-        } else {
-            // TODO: load appropriate asset
-        }
+
     }
 }

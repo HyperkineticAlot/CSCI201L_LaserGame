@@ -11,16 +11,22 @@ import java.util.Random;
  * Player class
  */
 public class Player {
+
     public String playerID;
+
     public boolean isGuest = false;
+    /**
+     * Keep track on whether the player is a game bot.
+     */
     public boolean isAI = false;
 
     /**
-     * if not signed in, play as guest
+     * If not signed in, play as guest.
      */
     public Player(String hostname, int port) {
         this.playerID = "Guest";
         this.isGuest = true;
+
         try {
             System.out.println("Trying to connect to "+hostname+":"+port);
             Socket s = new Socket(hostname,port);
@@ -28,10 +34,11 @@ public class Player {
         } catch(IOException e){
             System.out.println(e.getMessage());
         }
+
     }
 
     /**
-     * make a movement on board, called by GameRoom class
+     * Make a movement on board, called by GameRoom class.
      * @param board GameBoard to operate on
      * @param pID "a" or "b" signifies which pieces to operate on in board
      * @return true if a valid move is made

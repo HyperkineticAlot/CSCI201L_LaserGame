@@ -28,7 +28,13 @@ public abstract class AbstractBoardTile
         LR_CORNER
     }
 
+    /**
+     * The texture of the board tile.
+     */
     private Texture texture;
+    /**
+     * The piece that sits on the tile.
+     */
     private AbstractGamePiece piece;
 
     public AbstractBoardTile()
@@ -56,6 +62,10 @@ public abstract class AbstractBoardTile
         return piece;
     }
 
+    /**
+     * Replace the current piece on this tile by a different piece.
+     * @param p the piece that is to be placed on the tile
+     */
     public void setPiece(AbstractGamePiece p)
     {
         piece = p;
@@ -73,6 +83,10 @@ public abstract class AbstractBoardTile
      */
     public void onPieceRotated(AbstractGamePiece piece) {}
 
+    /**
+     * Trigger for when the game piece is removed from this tile.
+     * @param piece the rotated piece
+     */
     public void onPieceDestroyed(AbstractGamePiece piece) {}
 
     /**
@@ -92,21 +106,42 @@ public abstract class AbstractBoardTile
         }
     }
 
+    /**
+     * Render the tile, using the draw method of SpriteBatch class.
+     * @param sb the board SpriteBatch
+     * @param x the x-coordinate of tile
+     * @param y the y-coordinate of tile
+     * @param width the width(dimention) of the tile
+     * @param height the height(dimension) of the tile
+     */
     public void render(SpriteBatch sb, int x, int y, int width, int height)
     {
         sb.draw(texture, x, y, width, height);
     }
 
+    /**
+     * Load the texture on the tile using the path of image.
+     * @param image the path of image
+     */
     protected void loadRegion(String image)
     {
         texture = LaserGame.loadTexture(image);
     }
 
+    /**
+     * Load the texture on the tile using the type of image.
+     * @param type the type of the tile
+     */
     private void loadRegion(AbstractBoardTile.TileType type)
     {
         loadRegion(getPathFromTileType(type));
     }
 
+    /**
+     * Load the texture on the tile using a base path and the type of tile.
+     * @param basePath the base path of image
+     * @param type the type of the tile
+     */
     private void loadRegion(String basePath, AbstractBoardTile.TileType type)
     {
         loadRegion(basePath + getPathFromTileType(type));

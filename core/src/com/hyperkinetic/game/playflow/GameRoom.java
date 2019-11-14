@@ -94,6 +94,7 @@ public class GameRoom {
     public void fireLaser(){
         // laser firing called by updateBoard
     }
+
         /*while(!aWon && !bWon) {
             // if both disconnect
             if(!a.isConnected() && !b.isConnected()) {

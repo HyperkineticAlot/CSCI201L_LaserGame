@@ -1,9 +1,12 @@
 package com.hyperkinetic.game.board;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.hyperkinetic.game.core.LaserGame;
+import com.hyperkinetic.game.pieces.AbstractBlockPiece;
 import com.hyperkinetic.game.pieces.AbstractGamePiece;
 import com.hyperkinetic.game.util.Directions;
 
@@ -12,37 +15,82 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * A superclass for all laser gameboards. Contains code to render the gameboard as well as static
- * functionality to track the gamestate.
+ * A superclass for all laser game boards. Contains code to render the game board as well as static
+ * functionality to track the game state.
  *
  * @author cqwillia briannlz
  */
 public abstract class AbstractGameBoard {
     /**
-     * Tracks the gameboard currently being played on for centralized modification by various game objects.
+     * Tracks the game board currently being played on for centralized modification by various game objects.
      */
     private static AbstractGameBoard board = null;
+    /**
+     * Texture of the laser.
+     */
+    private static Texture laserTexture = LaserGame.loadTexture("board/laser.png");
 
+    /**
+     * X-dimension of the board.
+     */
     protected int x;
+    /**
+     * Y-dimension of the board.
+     */
     protected int y;
+    /**
+     * X-display of the screen.
+     */
     private int screenX;
+    /**
+     * Y-display of the screen.
+     */
     private int screenY;
+    /**
+     * Dimension of each tile.
+     */
     private int tileDim;
+    /**
+     * Array that includes all the tiles of the board.
+     */
     protected Array<AbstractBoardTile> tiles;
+    /**
+     * Array that includes all of the pieces on th board.
+     */
     protected Array<AbstractGamePiece> pieces;
 
+    /**
+     * Array of pieces of player A.
+     */
     protected Array<AbstractGamePiece> aPieces;
+    /**
+     * Array of pieces of player B.
+     */
     protected Array<AbstractGamePiece> bPieces;
-    protected AbstractGamePiece aPharaoh;
-    protected AbstractGamePiece bPharaoh;
-    protected AbstractGamePiece aLaser;
-    protected AbstractGamePiece bLaser;
-
+    /**
+     * The KingPiece of player A.
+     */
+    protected AbstractBlockPiece aPharaoh;
+    /**
+     * The KingPiece of player B.
+     */
+    protected AbstractBlockPiece bPharaoh;
+    /**
+     * The LaserPiece of player A.
+     */
+    protected AbstractBlockPiece aLaser;
+    /**
+     * The LaserPiece of player B.
+     */
+    protected AbstractBlockPiece bLaser;
+    /**
+     * The laser that is to be drawn.
+     */
     private Array<Rectangle> lasersToDraw;
+    /**
+     * The duration time of laser on the board.
+     */
     private long laserDuration;
-
-    // private Lock lock = new ReentrantLock();
-    // private Condition waitingForUpdate = lock.newCondition();
 
     public AbstractGameBoard(int x, int y) {
         tiles = new Array<>();
@@ -78,7 +126,7 @@ public abstract class AbstractGameBoard {
     }
 
     /**
-     * Getter of the x-dimension of the board
+     * Getter of the x-dimension of the board.
      *
      * @return the x-dimension of te current board
      */
@@ -87,7 +135,7 @@ public abstract class AbstractGameBoard {
     }
 
     /**
-     * Getter of the y-dimension of the board
+     * Getter of the y-dimension of the board.
      *
      * @return the y-dimension of te current board
      */
@@ -96,7 +144,7 @@ public abstract class AbstractGameBoard {
     }
 
     /**
-     * Getter of the tiles array
+     * Getter of the tiles array.
      *
      * @return the tiles array of te current board
      */
@@ -105,7 +153,7 @@ public abstract class AbstractGameBoard {
     }
 
     /**
-     * Getter of the pieces array
+     * Getter of the pieces array.
      *
      * @return array of pieces
      */
@@ -114,7 +162,7 @@ public abstract class AbstractGameBoard {
     }
 
     /**
-     * Getter of the aPieces array
+     * Getter of the aPieces array.
      *
      * @return array of player a's pieces of the current board
      */
@@ -123,7 +171,7 @@ public abstract class AbstractGameBoard {
     }
 
     /**
-     * Getter of the bPieces array
+     * Getter of the bPieces array.
      *
      * @return array of player b's pieces of the current board
      */
@@ -132,7 +180,7 @@ public abstract class AbstractGameBoard {
     }
 
     /**
-     * Getter of aLaser piece
+     * Getter of aLaser piece.
      *
      * @return aLaser
      */
@@ -141,7 +189,7 @@ public abstract class AbstractGameBoard {
     }
 
     /**
-     * Getter of bLaser piece
+     * Getter of bLaser piece.
      *
      * @return bLaser
      */
@@ -155,7 +203,7 @@ public abstract class AbstractGameBoard {
     public abstract void createTiles();
 
     /**
-     * Abstract method which places pieces on the board
+     * Abstract method which places pieces on the board.
      */
     public abstract void createPieces();
 
@@ -180,6 +228,10 @@ public abstract class AbstractGameBoard {
         if(System.currentTimeMillis() > laserDuration + 2000)
             lasersToDraw.clear();
 
+        for(Rectangle laser : lasersToDraw)
+        {
+            sb.draw(laserTexture, laser.x, laser.y, laser.width, laser.height);
+        }
         // TODO: different render function for two players i.e. opposite orientation (?)
         // TODO: create 3D display - gradually shrink render size (?)
     }
@@ -232,7 +284,7 @@ public abstract class AbstractGameBoard {
     }
 
     /**
-     * Abstract method which returns whether game is over based on board type
+     * Abstract method which returns whether game is over based on board type.
      *
      * @return "AWin" or "BWin" or "NoWin"
      */
@@ -250,7 +302,7 @@ public abstract class AbstractGameBoard {
     }
 
     /**
-     * left rotate a selected piece on board
+     * Left-rotate a selected piece on the board.
      *
      * @param piece chosen piece to ratate left
      * @return true if success
@@ -261,7 +313,7 @@ public abstract class AbstractGameBoard {
     }
 
     /**
-     * right rotate a selected piece on board
+     * Right-rotate a selected piece on the board.
      *
      * @param piece chosen piece to ratate right, matches pID
      * @return true if success
@@ -272,7 +324,7 @@ public abstract class AbstractGameBoard {
     }
 
     /**
-     * move a selected on board
+     * Move a selected piece on the board.
      *
      * @param piece chosen piece to move, matches pID
      * @param x     new x location
@@ -288,9 +340,9 @@ public abstract class AbstractGameBoard {
     }
 
     /**
+     * Check whether the movement of a player on a piece is valid.
      *
      * @param pID 'a', 'b' specifies whose turn this is
-     * @return true if valid move
      */
     public boolean isValidMove(String pID, int x, int y, String moveType, int nX, int nY) {
         AbstractGamePiece piece = getPieceFromCoordinate(x,y);
@@ -387,6 +439,13 @@ public abstract class AbstractGameBoard {
         }
     }
 
+    /**
+     * Helper function for <code>fireLaser()</code>
+     *
+     * @param startX the X-coordinate of the tile into which the laser is being fired
+     * @param startY the Y-coordinate of the tile into which the laser is being fired
+     * @param d the direction in which the laser is being fired into the tile
+     */
     private void drawLaser(int startX, int startY, Directions.Direction d)
     {
         if(d == Directions.Direction.NORTH)
