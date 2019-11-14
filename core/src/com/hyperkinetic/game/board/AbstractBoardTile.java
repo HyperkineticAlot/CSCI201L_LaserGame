@@ -48,6 +48,20 @@ public abstract class AbstractBoardTile
     }
 
     /**
+     * Getter of the game piece
+     *
+     * @return the piece placed on this tile
+     */
+    public AbstractGamePiece getPiece() {
+        return piece;
+    }
+
+    public void setPiece(AbstractGamePiece p)
+    {
+        piece = p;
+    }
+
+    /**
      * Trigger for when a game piece is placed on this tile.
      * @param piece the placed piece
      */
@@ -58,6 +72,8 @@ public abstract class AbstractBoardTile
      * @param piece the rotated piece
      */
     public void onPieceRotated(AbstractGamePiece piece) {}
+
+    public void onPieceDestroyed(AbstractGamePiece piece) {}
 
     /**
      * Trigger for when a left mouse button is clicked and released within this tile.
@@ -71,7 +87,7 @@ public abstract class AbstractBoardTile
     {
         if(piece != null)
         {
-            piece.rotate();
+            piece.rotateRight();
             onPieceRotated(piece);
         }
     }
