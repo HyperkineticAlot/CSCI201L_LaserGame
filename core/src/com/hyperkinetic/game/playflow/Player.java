@@ -3,73 +3,31 @@ package com.hyperkinetic.game.playflow;
 import com.badlogic.gdx.InputProcessor;
 import com.hyperkinetic.game.board.AbstractGameBoard;
 
-import javax.websocket.Session;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.Random;
 
 /**
  * Player class
  */
 public class Player {
-    private Session s;
     public String playerID;
-    public String playerName;
     public boolean isGuest = false;
     public boolean isAI = false;
 
     /**
      * if not signed in, play as guest
      */
-    public Player() {
-        this.s = null;
-        this.playerID = "-1";
-        this.playerName = "Guest";
+    public Player(String hostname, int port) {
+        this.playerID = "Guest";
         this.isGuest = true;
-    }
-
-    /**
-     * verify player identity in database, and get playerName
-     * @param s Session object the player is assigned
-     * @param playerID playerID of this player
-     */
-    public Player(Session s, String playerID) {
-        this.s = s;
-        this.playerID = playerID;
-        // TODO: get playerName from database
-    }
-
-    /**
-     * player is AI with level AILevel
-     * @param AILevel difficulty of AI
-     */
-    public Player(String AILevel) {
-        this.s = null;
-        this.playerID = "-2";
-        this.playerName = AILevel + " Bot";
-        this.isAI = true;
-    }
-
-    /**
-     * getter of Session
-     * @return Session of player
-     */
-    public Session getSession() {
-        return this.s;
-    }
-
-    /**
-     * remove player Session
-     */
-    public void remove() {
-        this.s = null;
-    }
-
-    /**
-     * check if player is connected
-     * @return true if connected
-     */
-    public boolean isConnected() {
-        if(isAI) return true;
-        if(isGuest) return true;
-        return s != null;
+        try {
+            System.out.println("Trying to connect to "+hostname+":"+port);
+            Socket s = new Socket(hostname,port);
+            System.out.println("Player "+playerID+" is connected to "+hostname+":"+port);
+        } catch(IOException e){
+            System.out.println(e.getMessage());
+        }
     }
 
     /**

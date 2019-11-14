@@ -1,33 +1,99 @@
 package com.hyperkinetic.game.playflow;
 
+import java.net.*;
 import com.hyperkinetic.game.board.AbstractGameBoard;
-import com.hyperkinetic.game.util.Directions;
+import com.hyperkinetic.game.board.StandardBoard;
 
 /**
  * GameRoom class, implements basic game flow - this version only supports local mode
  */
-public class GameRoom extends Thread {
-    public Player a;
-    public Player b;
-    public boolean aTurn = true; // player a goes first
+public class GameRoom {
+    private ServerThread a;
+    private ServerThread b;
+    private String aID;
+    private String bID;
+    private String roomID;
+    private AbstractGameBoard board;
+    private GameServer gs;
+    public boolean isOver = false;
+    public boolean aTurn = true;
     public boolean bTurn = false;
-    public boolean aWon = false;
-    public boolean bWon = false;
-    public int roomID;
-    public AbstractGameBoard board;
-    // public GameSocket gs;
 
-    public GameRoom(Player a, Player b, int roomID, AbstractGameBoard board) {
-        this.a = a;
-        this.b = b;
+    public GameRoom(String roomID, GameServer gs, Socket as, Socket bs) {
         this.roomID = roomID;
-        this.board = board;
-        this.start();
+        this.aID = roomID+":A";
+        this.bID = roomID+":B";
+        this.gs = gs;
+        this.board = new StandardBoard();
+
+        a = new ServerThread(as,this, board, aTurn,aID);
+        b = new ServerThread(bs,this, board, bTurn,bID);
+
+        GameMessage gm = new GameMessage(GameMessage.messageType.ROOM_CREATE);
+        gm.roomID = roomID;
+        gm.playerID = aID;
+        gm.player2ID = bID;
+        gs.readMessage(gm);
     }
 
-    @Override
-    public void run() {
-        // TODO: add sendMessage calls to GameSocket
+    public void broadCast(String message) {
+        // broadcast message to both PlayerThreads
+        a.sendMessage(message);
+        b.sendMessage(message);
+    }
+
+    public void handleMoveAttempt(String pID,int x,int y,String moveType,int nX,int nY){
+        // validate move, send move_success/failure message to server
+        if((pID.equals(aID) && aTurn) || (pID.equals(bID) && bTurn)) {
+            if(board.isValidMove((aTurn) ? "a" : "b",x,y,moveType,nX,nY)) {
+                GameMessage gm = new GameMessage(GameMessage.messageType.MOVE_SUCCESS);
+                gm.roomID = roomID;
+                gm.playerID = pID;
+                gm.x = x;
+                gm.y = y;
+                gm.moveType = moveType;
+                gm.moveX = nX;
+                gm.moveY = nY;
+                gs.readMessage(gm);
+            }
+        } else if((pID.equals(aID) && bTurn) || (pID.equals(bID) && aTurn)) {
+            // move attempt invalid - wrong turn
+            GameMessage gm = new GameMessage(GameMessage.messageType.MOVE_FAILURE);
+            gm.roomID = roomID;
+            gm.playerID = pID;
+            gm.x = x;
+            gm.y = y;
+            gm.moveType = moveType;
+            gm.moveX = nX;
+            gm.moveY = nY;
+            gm.errorMessage = "move attempt has wrong turn";
+            gs.readMessage(gm);
+        }
+    }
+
+    public void updateBoard(String pID,int x,int y,String moveType,int nX,int nY) {
+        // update board, send updated board object to both PlayerThread, send switch turn message to server
+        board.update(x,y,moveType,nX,nY);
+        //
+
+    }
+
+    public void handleTurn(String pID){
+        // change turn to player pID, send updated turn to both PlayerThread
+        if(pID.equals(aID)){
+            aTurn = true;
+            bTurn = false;
+
+        } else {
+            aTurn = false;
+            bTurn = true;
+        }
+        //
+    }
+
+    public void fireLaser(){
+        // laser firing called by updateBoard
+    }
         /*while(!aWon && !bWon) {
             // if both disconnect
             if(!a.isConnected() && !b.isConnected()) {
@@ -82,5 +148,4 @@ public class GameRoom extends Thread {
             }
 
         }*/
-    }
 }

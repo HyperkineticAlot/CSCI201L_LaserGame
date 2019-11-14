@@ -7,6 +7,10 @@ import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.pieces.AbstractGamePiece;
 import com.hyperkinetic.game.util.Directions;
 
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * A superclass for all laser gameboards. Contains code to render the gameboard as well as static
  * functionality to track the gamestate.
@@ -36,6 +40,9 @@ public abstract class AbstractGameBoard {
 
     private Array<Rectangle> lasersToDraw;
     private long laserDuration;
+
+    // private Lock lock = new ReentrantLock();
+    // private Condition waitingForUpdate = lock.newCondition();
 
     public AbstractGameBoard(int x, int y) {
         tiles = new Array<>();
@@ -231,13 +238,24 @@ public abstract class AbstractGameBoard {
      */
     public abstract String isGameOver();
 
+    public synchronized void update(int x,int y,String moveType,int nX,int nY){
+        AbstractGamePiece piece = getPieceFromCoordinate(x,y);
+        if(moveType.equals("rotateL")) {
+            pieceRotateLeft(piece);
+        } else if(moveType.equals("rotateR")) {
+            pieceRotateRight(piece);
+        } else {
+            pieceMove(piece,nX,nY);
+        }
+    }
+
     /**
      * left rotate a selected piece on board
      *
      * @param piece chosen piece to ratate left
      * @return true if success
      */
-    public boolean pieceRotateLeft(AbstractGamePiece piece) {
+    private boolean pieceRotateLeft(AbstractGamePiece piece) {
         piece.rotateLeft();
         return true;
     }
@@ -248,7 +266,7 @@ public abstract class AbstractGameBoard {
      * @param piece chosen piece to ratate right, matches pID
      * @return true if success
      */
-    public boolean pieceRotateRight(AbstractGamePiece piece) {
+    private boolean pieceRotateRight(AbstractGamePiece piece) {
         piece.rotateRight();
         return true;
     }
@@ -261,7 +279,7 @@ public abstract class AbstractGameBoard {
      * @param y     new y location
      * @return true if success
      */
-    public boolean pieceMove(AbstractGamePiece piece, int x, int y) {
+    private boolean pieceMove(AbstractGamePiece piece, int x, int y) {
         piece.pickUpPiece(this);
         piece.setX(x);
         piece.setY(y);
@@ -272,12 +290,12 @@ public abstract class AbstractGameBoard {
     /**
      *
      * @param pID 'a', 'b' specifies whose turn this is
-     * @param piece selected piece to move
-     * @param move selected movement: 'L', 'R', 'W', 'S', 'A', 'D' or invalid character
-     * @return
+     * @return true if valid move
      */
-    public boolean isValidMove(String pID, AbstractGamePiece piece, String move) {
-        if(pID.equals('a')){
+    public boolean isValidMove(String pID, int x, int y, String moveType, int nX, int nY) {
+        AbstractGamePiece piece = getPieceFromCoordinate(x,y);
+        if(piece==null) return false;
+        if(pID.equals("a")){
             boolean inA = false;
             for(AbstractGamePiece p : aPieces){
                 if(p==piece) {
@@ -286,7 +304,7 @@ public abstract class AbstractGameBoard {
                 }
             }
             if(!inA) return false;
-        } else if(pID.equals('b')){
+        } else if(pID.equals("b")){
             boolean inB = false;
             for(AbstractGamePiece p : bPieces) {
                 if (p == piece) {
@@ -296,25 +314,17 @@ public abstract class AbstractGameBoard {
             }
             if(!inB) return false;
         }
-        int x = piece.getX();
-        int y = piece.getY();
-        if(move.equals('L') || move.equals('R')) {
-            return true;
-        } else if(move.equals('W')) {
-            if(getTileFromCoordinate(x, y+1)!=null && getPieceFromCoordinate(x, y+1)==null) {
-                return true;
-            }
-        } else if(move.equals('S')) {
-            if(getTileFromCoordinate(x, y-1)!=null && getPieceFromCoordinate(x, y-1)==null) {
-                return true;
-            }
-        } else if(move.equals('A')) {
-            if(getTileFromCoordinate(x-1, y)!=null && getPieceFromCoordinate(x-1, y)==null) {
-                return true;
-            }
-        } else if(move.equals('D')) {
-            if(getTileFromCoordinate(x+1, y)!=null && getPieceFromCoordinate(x+1, y)==null) {
-                return true;
+        if(moveType.equals("rotateL") || moveType.equals("rotateR")) {
+            return true; // TODO: not so for laser piece
+        } else if(moveType.equals("move")) {
+            if (getTileFromCoordinate(nX, nY) != null && getPieceFromCoordinate(nX, nY) == null) {
+                AbstractBoardTile tile = getTileFromCoordinate(nX, nY);
+                Array<AbstractBoardTile> candidates = piece.getLegalMoves(this);
+                for (AbstractBoardTile t : candidates) {
+                    if (tile == t) {
+                        return true;
+                    }
+                }
             }
         }
         return false;
