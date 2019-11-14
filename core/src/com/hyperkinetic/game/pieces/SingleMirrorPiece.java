@@ -11,15 +11,15 @@ import com.hyperkinetic.game.util.Directions;
  */
 public class SingleMirrorPiece extends AbstractMirrorPiece
 {
-    public SingleMirrorPiece(int x, int y)
+    public SingleMirrorPiece(int x, int y, boolean c)
     {
-        super(x, y);
+        super(x, y, c);
         this.orientation = Directions.MirrorDirection.NORTHWEST;
     }
 
-    public SingleMirrorPiece(int x, int y, Directions.MirrorDirection o)
+    public SingleMirrorPiece(int x, int y, boolean c, Directions.MirrorDirection o)
     {
-        super(x, y);
+        super(x, y, c);
         this.orientation = o;
     }
 

@@ -1,32 +1,81 @@
 package com.hyperkinetic.game.playflow;
 
-import com.hyperkinetic.game.board.AbstractGameBoard;
-
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 
-public class ServerThread implements Runnable {
+public class ServerThread extends Thread {
     private String playerID;
-    private GameRoom gm;
-    private AbstractGameBoard b;
-    private boolean myTurn;
+    private GameRoom room;
+    private boolean color;
+    private Socket socket;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
 
-    public ServerThread(Socket s, GameRoom gm, AbstractGameBoard b, boolean myTurn, String playerID){
-        this.gm = gm;
-        this.b = b; // change to copy
-        this.myTurn = myTurn;
+    public ServerThread(Socket s, String playerID){
         this.playerID = playerID;
+        socket = s;
+        try
+        {
+            in = new ObjectInputStream(socket.getInputStream());
+            out = new ObjectOutputStream(socket.getOutputStream());
+        }
+        catch(IOException ioe) {
+            ioe.printStackTrace();
+        }
+
     }
 
-    public void sendMessage(String message){
+    public void sendMessage(GameMessage message)
+    {
+        try
+        {
+            out.writeObject(message);
+            out.flush();
+        }
+        catch(IOException ioe)
+        {
+            System.out.println("ioe in sendMessage() of thread " + playerID);
+            ioe.printStackTrace();
+        }
+    }
 
+    public void enterGame(GameRoom gm)
+    {
+        if(this.room != null) return;
+        this.room = gm;
+    }
+
+    public void setColor(boolean color)
+    {
+        this.color = color;
+    }
+
+    public String getPlayerID()
+    {
+        return playerID;
     }
 
     @Override
     public void run() {
-        while(!gm.isOver){
-            //
+        while(!room.isOver)
+        {
+            // querying for GameMessage objects
+            try
+            {
+                GameMessage message = (GameMessage) in.readObject();
+                room.readMessage(message);
+            }
+            catch (ClassNotFoundException cnfe)
+            {
+                System.out.println("cnfe in run() of thread " + playerID);
+                cnfe.printStackTrace();
+            }
+            catch(IOException ioe)
+            {
+                System.out.println("ioe in run() of thread " + playerID);
+            }
         }
+
+        room = null;
     }
 }

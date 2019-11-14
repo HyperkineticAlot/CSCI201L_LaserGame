@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.core.LaserGame;
 import com.hyperkinetic.game.pieces.AbstractBlockPiece;
 import com.hyperkinetic.game.pieces.AbstractGamePiece;
+import com.hyperkinetic.game.pieces.LaserPiece;
 import com.hyperkinetic.game.util.Directions;
 
 import java.util.concurrent.locks.Condition;
@@ -62,11 +63,11 @@ public abstract class AbstractGameBoard {
     /**
      * Array of pieces of player A.
      */
-    protected Array<AbstractGamePiece> aPieces;
+    //protected Array<AbstractGamePiece> aPieces;
     /**
      * Array of pieces of player B.
      */
-    protected Array<AbstractGamePiece> bPieces;
+    //protected Array<AbstractGamePiece> bPieces;
     /**
      * The KingPiece of player A.
      */
@@ -78,11 +79,11 @@ public abstract class AbstractGameBoard {
     /**
      * The LaserPiece of player A.
      */
-    protected AbstractBlockPiece aLaser;
+    protected LaserPiece aLaser;
     /**
      * The LaserPiece of player B.
      */
-    protected AbstractBlockPiece bLaser;
+    protected LaserPiece bLaser;
     /**
      * The laser that is to be drawn.
      */
@@ -95,8 +96,8 @@ public abstract class AbstractGameBoard {
     public AbstractGameBoard(int x, int y) {
         tiles = new Array<>();
         pieces = new Array<>();
-        aPieces = new Array<>();
-        bPieces = new Array<>();
+        //aPieces = new Array<>();
+        //bPieces = new Array<>();
         aPharaoh = null;
         bPharaoh = null;
         aLaser = null;
@@ -166,25 +167,25 @@ public abstract class AbstractGameBoard {
      *
      * @return array of player a's pieces of the current board
      */
-    public Array<AbstractGamePiece> getAPieces() {
-        return aPieces;
-    }
+    /*public Array<AbstractGamePiece> getAPieces() {
+         return aPieces;
+    }*/
 
     /**
      * Getter of the bPieces array.
      *
      * @return array of player b's pieces of the current board
      */
-    public Array<AbstractGamePiece> getBPieces() {
+    /*public Array<AbstractGamePiece> getBPieces() {
         return bPieces;
-    }
+    }*/
 
     /**
      * Getter of aLaser piece.
      *
      * @return aLaser
      */
-    public AbstractGamePiece getALaser() {
+    public LaserPiece getALaser() {
         return this.aLaser;
     }
 
@@ -193,7 +194,7 @@ public abstract class AbstractGameBoard {
      *
      * @return bLaser
      */
-    public AbstractGamePiece getBLaser() {
+    public LaserPiece getBLaser() {
         return this.bLaser;
     }
 
@@ -344,28 +345,11 @@ public abstract class AbstractGameBoard {
      *
      * @param pID 'a', 'b' specifies whose turn this is
      */
-    public boolean isValidMove(String pID, int x, int y, String moveType, int nX, int nY) {
+    public boolean isValidMove(boolean color, int x, int y, String moveType, int nX, int nY) {
         AbstractGamePiece piece = getPieceFromCoordinate(x,y);
         if(piece==null) return false;
-        if(pID.equals("a")){
-            boolean inA = false;
-            for(AbstractGamePiece p : aPieces){
-                if(p==piece) {
-                    inA = true;
-                    break;
-                }
-            }
-            if(!inA) return false;
-        } else if(pID.equals("b")){
-            boolean inB = false;
-            for(AbstractGamePiece p : bPieces) {
-                if (p == piece) {
-                    inB = true;
-                    break;
-                }
-            }
-            if(!inB) return false;
-        }
+        if(piece.getColor() != color) return false;
+
         if(moveType.equals("rotateL") || moveType.equals("rotateR")) {
             return true; // TODO: not so for laser piece
         } else if(moveType.equals("move")) {
@@ -412,7 +396,7 @@ public abstract class AbstractGameBoard {
         {
             // destroy the piece
             pieces.set(startY * x + startX, null);
-            for(int i=0;i<aPieces.size;++i){
+            /*for(int i=0;i<aPieces.size;++i){
                 if(aPieces.get(i)==thisPiece){
                     aPieces.removeIndex(i);
                     break;
@@ -423,7 +407,7 @@ public abstract class AbstractGameBoard {
                     bPieces.removeIndex(i);
                     break;
                 }
-            }
+            }*/
             thisTile.setPiece(null);
             thisTile.onPieceDestroyed(thisPiece);
             return;

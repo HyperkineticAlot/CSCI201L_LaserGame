@@ -8,8 +8,8 @@ import com.hyperkinetic.game.util.Status;
 public class GuardianPiece extends AbstractBlockPiece {
 
     public Status.PieceStatus status;
-    public GuardianPiece(int x, int y) {
-        super(x, y);
+    public GuardianPiece(int x, int y, boolean c) {
+        super(x, y, c);
     }
 
     @Override

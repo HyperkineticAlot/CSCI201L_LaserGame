@@ -17,10 +17,15 @@ public abstract class AbstractGamePiece
      * The location of the piece on the board.
      */
     protected int x, y;
+    /**
+     * The color of the piece. True = white, false = black.
+     */
+    protected boolean color;
 
-    public AbstractGamePiece(int x, int y) {
+    public AbstractGamePiece(int x, int y, boolean c) {
         this.x = x;
         this.y = y;
+        color = c;
     }
 
     /**
@@ -54,6 +59,8 @@ public abstract class AbstractGamePiece
     public int getY() {
         return y;
     }
+
+    public boolean getColor() { return color; }
 
     /**
      * Transforms the orientation of this piece appropriately for one quarter turn clockwise.

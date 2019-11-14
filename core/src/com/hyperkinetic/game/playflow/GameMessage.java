@@ -1,5 +1,7 @@
 package com.hyperkinetic.game.playflow;
 
+import com.hyperkinetic.game.board.AbstractGameBoard;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -9,7 +11,6 @@ public class GameMessage implements Serializable {
     private String timeStamp;
     private GameMessage.messageType type;
 
-    public String roomID="";
     public String playerID="";
     public String player2ID="";
     public int x=-1;
@@ -18,6 +19,7 @@ public class GameMessage implements Serializable {
     public int moveX=-1;
     public int moveY=-1;
     public String errorMessage;
+    public AbstractGameBoard startBoard;
 
     public enum messageType implements Serializable {
         /*
@@ -33,7 +35,6 @@ public class GameMessage implements Serializable {
         PLAYER_MOVE,
         MOVE_SUCCESS,
         MOVE_FAILURE,
-        PLAYER_TURN,
         GAME_OVER,
         READY
     }
@@ -43,6 +44,7 @@ public class GameMessage implements Serializable {
         Timestamp timestamp = new Timestamp(date.getTime());
         this.timeStamp = timestamp.toString();
         this.type = type;
+        startBoard = null;
     }
 
     public GameMessage.messageType getMessageType(){
@@ -52,22 +54,20 @@ public class GameMessage implements Serializable {
     public String getMessage(){
         /*...other types of messages...*/
         if(type==messageType.PLAYER_MOVE){
-            return timeStamp+" In game room "+roomID+", "+playerID+" selects piece at "+x
+            return timeStamp+playerID+" selects piece at "+x
                     +", "+y+", moveType="+moveType+", moveX="+moveX+", moveY="+moveY+".";
-        } else if(type==messageType.PLAYER_TURN){
-            return timeStamp+" In game room "+roomID+", it's "+playerID+"'s turn.";
         } else if(type==messageType.GAME_OVER){
-            return timeStamp+" In game room "+roomID+", game is over. Winner is "+playerID+". Loser is "+player2ID;
+            return timeStamp+"Game is over. Winner is "+playerID+". Loser is "+player2ID;
         } else if(type==messageType.ROOM_CREATE){
-            return timeStamp+" Game room "+roomID+" with players "+playerID+", "+player2ID+" is created.";
+            return timeStamp+" Game room with players "+playerID+", "+player2ID+" is created.";
         } else if(type==messageType.MOVE_SUCCESS){
-            return timeStamp+" In game room "+roomID+", "+playerID+" selects piece at "+x
+            return timeStamp+playerID+" selects piece at "+x
                     +", "+y+", moveType="+moveType+", moveX="+moveX+", moveY="+moveY+" is approved.";
         } else if(type==messageType.MOVE_FAILURE){
-            return timeStamp+" In game room "+roomID+", "+playerID+" selects piece at "+x+", "+y+", moveType="
+            return timeStamp+playerID+" selects piece at "+x+", "+y+", moveType="
                     +moveType+", moveX="+moveX+", moveY="+moveY+" is disapproved because "+errorMessage;
         } else if(type==messageType.READY){
-            return timeStamp+" In game room "+roomID+", "+playerID+" is ready.";
+            return timeStamp+playerID+" is ready.";
         }
         return "";
     }
