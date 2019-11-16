@@ -79,5 +79,3 @@ public class LaserGame extends Game {
         return retval;
     }
 }
-
-
