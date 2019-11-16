@@ -9,18 +9,24 @@ import java.net.Socket;
 
 public class ClientThread extends Thread {
     private ObjectInputStream in;
-    private ObjectOutputStream out;
     private AbstractGameBoard board;
 
-    public ClientThread(Socket s, AbstractGameBoard board)
+    private Player player;
+    private Socket socket;
+
+    public ClientThread(String hostname, int port)
     {
         board = null;
         try
         {
-            in = new ObjectInputStream(s.getInputStream());
-            out = new ObjectOutputStream(s.getOutputStream());
-
+            System.out.println("Trying to connect to "+hostname+":"+port);
+            socket = new Socket(hostname, port);
+            player = new Player("guest", socket);
+            System.out.println("Player "+player.playerID+" is connected to "+hostname+":"+port);
             this.start();
+            player.start();
+
+            in = new ObjectInputStream(socket.getInputStream());
         }
         catch(IOException ioe) {
             ioe.printStackTrace();
@@ -34,14 +40,7 @@ public class ClientThread extends Thread {
 
         while(true)
         {
-            try {
-                GameMessage nextMessage = (GameMessage)in.readObject();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            // TODO: CHECK FOR SERVER PACKETS AND PROCESS
         }
     }
 }

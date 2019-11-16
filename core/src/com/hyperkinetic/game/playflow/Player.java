@@ -4,13 +4,14 @@ import com.badlogic.gdx.InputProcessor;
 import com.hyperkinetic.game.board.AbstractGameBoard;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.Random;
 
 /**
  * Player class
  */
-public class Player {
+public class Player extends Thread {
 
     public String playerID;
 
@@ -20,21 +21,32 @@ public class Player {
      */
     public boolean isAI = false;
 
+    private Socket socket;
+    private ObjectInputStream in;
+
     /**
      * If not signed in, play as guest.
      */
-    public Player(String hostname, int port) {
-        this.playerID = "Guest";
-        this.isGuest = true;
+    public Player(String playerID, Socket socket) {
+        this.playerID = playerID;
+        this.isGuest = playerID.toLowerCase().equals("guest");
+        this.socket = socket;
 
         try {
-            System.out.println("Trying to connect to "+hostname+":"+port);
-            Socket s = new Socket(hostname,port);
-            System.out.println("Player "+playerID+" is connected to "+hostname+":"+port);
-        } catch(IOException e){
-            System.out.println(e.getMessage());
+            in = new ObjectInputStream(socket.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
 
+
+    @Override
+    public void run()
+    {
+        while(true)
+        {
+            // TODO: check game board for moves and send to server
+        }
     }
 
     /**
