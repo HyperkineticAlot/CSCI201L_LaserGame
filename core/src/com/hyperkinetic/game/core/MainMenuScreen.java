@@ -22,8 +22,12 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
     private Label outputLabel;
     private Texture backgroundPic;
     private Texture titlePic;
+    private int width;
+    private int height;
 
     public MainMenuScreen (final LaserGame game) {
+        this.width = Gdx.graphics.getWidth();
+        this.height = Gdx.graphics.getHeight();
         // constructor
         this.game = game;
 
@@ -37,7 +41,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
 
         Button login = new TextButton("LOG IN", neon);
         login.setSize(200,100);
-        login.setPosition(1920/2 - 100, 1280/2);
+        login.setPosition(width/2 - 100, height/2);
         login.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -53,7 +57,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
 
         Button guest = new TextButton("GUEST", neon);
         guest.setSize(200,100);
-        guest.setPosition(1920/2 - 100, 1280/2 + 100);
+        guest.setPosition(width/2 - 100, height/2 + 100);
         guest.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -69,7 +73,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
 
         Button quit = new TextButton("QUIT", neon);
         quit.setSize(200,100);
-        quit.setPosition(1920/2 - 100, 1280/2 - 200);
+        quit.setPosition(width/2 - 100, height/2 - 200);
         quit.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -85,7 +89,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
 
         Button settings = new TextButton("SETTINGS", neon);
         settings.setSize(200,100);
-        settings.setPosition(1920/2 - 100, 1280/2 - 100);
+        settings.setPosition(width/2 - 100, height/2 - 100);
         settings.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -120,8 +124,8 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.getBatch().begin();
-        stage.getBatch().draw(backgroundPic, 0, 0, 1920, 1280);
-        stage.getBatch().draw(titlePic, 1920 / 2 - 958/ 2 , 1000);
+        stage.getBatch().draw(backgroundPic, 0, 0, width, height);
+        stage.getBatch().draw(titlePic, width / 2 - 958/ 2 , height - 4 * 86);
         stage.getBatch().end();
 
         stage.act();
