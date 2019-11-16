@@ -12,6 +12,7 @@ import com.hyperkinetic.game.board.AbstractGameBoard;
  */
 public class GameInputProcessor implements InputProcessor
 {
+    // TODO: make sure you are on the game board screen
     private AbstractBoardTile rightClickDown;
 
     public boolean keyDown (int keycode)

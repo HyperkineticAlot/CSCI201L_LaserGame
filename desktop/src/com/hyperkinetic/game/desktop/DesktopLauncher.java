@@ -9,7 +9,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "Laser Game";
 		config.width = 1920;
-		config.height = 1280;
+		config.height = 1080;
 		new LwjglApplication(new LaserGame(), config);
 	}
 }

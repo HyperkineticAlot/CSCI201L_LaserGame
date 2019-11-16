@@ -4,7 +4,6 @@ import java.net.*;
 import com.hyperkinetic.game.board.AbstractGameBoard;
 import com.hyperkinetic.game.board.StandardBoard;
 import com.hyperkinetic.game.pieces.LaserPiece;
-import com.sun.security.ntlm.Server;
 
 /**
  * GameRoom class, implements basic game flow - this version only supports local mode

@@ -101,6 +101,8 @@ public abstract class AbstractGameBoard {
      */
     private long laserDuration;
 
+    private AbstractGamePiece pickedUpPiece;
+
     public AbstractGameBoard(int x, int y) {
         tiles = new Array<>();
         pieces = new Array<>();
@@ -114,6 +116,7 @@ public abstract class AbstractGameBoard {
         lasersToDraw = new Array<>();
         nextMove = null;
         moveConfirmed = false;
+        pickedUpPiece = null;
 
         int xSpace = (int) (Gdx.graphics.getWidth() * .60);
         int ySpace = (int) (Gdx.graphics.getHeight() * .80);

@@ -34,7 +34,14 @@ public class ClientThread extends Thread {
 
         while(true)
         {
+            try {
+                GameMessage nextMessage = (GameMessage)in.readObject();
 
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
