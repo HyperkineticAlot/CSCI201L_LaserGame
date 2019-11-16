@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import javax.xml.soap.Text;
 
-public class MainMenuScreen  extends InputAdapter implements Screen {
+public class SettingsScreen  extends InputAdapter implements Screen {
     LaserGame game;
     private Stage stage;
     private SpriteBatch batch;
@@ -23,7 +23,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
     private Texture backgroundPic;
     private Texture titlePic;
 
-    public MainMenuScreen (final LaserGame game) {
+    public SettingsScreen (final LaserGame game) {
         // constructor
         this.game = game;
 
@@ -35,61 +35,13 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
 
         Skin neon = new Skin(Gdx.files.internal("skin/neon-ui.json"));
 
-        Button login = new TextButton("LOG IN", neon);
-        login.setSize(200,100);
-        login.setPosition(1920/2 - 100, 1280/2);
-        login.addListener(new InputListener(){
-            @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new LaserGameScreen(game));
-            }
-            @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
-        });
-        stage.addActor(login);
-
-
-        Button guest = new TextButton("GUEST", neon);
-        guest.setSize(200,100);
-        guest.setPosition(1920/2 - 100, 1280/2 + 100);
-        guest.addListener(new InputListener(){
-            @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new LaserGameScreen(game));
-            }
-            @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
-        });
-        stage.addActor(guest);
-
-
-        Button quit = new TextButton("QUIT", neon);
-        quit.setSize(200,100);
-        quit.setPosition(1920/2 - 100, 1280/2 - 200);
-        quit.addListener(new InputListener(){
-            @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                Gdx.app.exit();
-            }
-            @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
-        });
-        stage.addActor(quit);
-
-
-        Button settings = new TextButton("SETTINGS", neon);
+        Button settings = new TextButton("Back", neon);
         settings.setSize(200,100);
-        settings.setPosition(1920/2 - 100, 1280/2 - 100);
+        settings.setPosition(1920/2 - 100, 1280/2 - 200);
         settings.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new SettingsScreen(game));
+                game.setScreen(new MainMenuScreen(game));
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -98,16 +50,9 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         });
         stage.addActor(settings);
 
-
-        // test propose
-        outputLabel = new Label("Press a Button",neon);
-        outputLabel.setSize(100,100);
-        outputLabel.setPosition(0,500);
-        outputLabel.setAlignment(Align.center);
-        // test propose
-
-        stage.addActor(outputLabel);
     }
+
+
 
     @Override
     public void show() {
