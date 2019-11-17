@@ -390,13 +390,25 @@ public abstract class AbstractGameBoard {
      * @param sb the {@link SpriteBatch} responsible for drawing game objects.
      */
     public void render(SpriteBatch sb) {
+        // determine tiles to highlight as legal moves
+        Array<AbstractBoardTile> highlight = null;
+        if(pickedUpPiece != null) highlight = pickedUpPiece.getLegalMoves(this);
+
         // starting from the bottom left
         for (int i = 0; i < y; i++) {
             for (int j = 0; j < x; j++) {
-                if(flipBoard)
-                    tiles.get(7-j + (7-i) * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
-                else
-                    tiles.get(j + i * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
+                if(flipBoard) {
+                    if(highlight != null && highlight.contains(tiles.get(7-j + (7-i) * x), true))
+                        sb.draw(laserTexture, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
+                    else
+                        tiles.get(7 - j + (7 - i) * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
+                }
+                else {
+                    if(highlight != null && highlight.contains(tiles.get(j + i * x), true))
+                        sb.draw(laserTexture, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
+                    else
+                        tiles.get(j + i * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
+                }
             }
         }
 
