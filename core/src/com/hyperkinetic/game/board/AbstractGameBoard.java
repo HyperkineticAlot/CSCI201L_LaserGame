@@ -12,6 +12,7 @@ import com.hyperkinetic.game.pieces.LaserPiece;
 import com.hyperkinetic.game.playflow.GameMessage;
 import com.hyperkinetic.game.util.Directions;
 
+import java.util.ArrayList;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -22,6 +23,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author cqwillia briannlz
  */
+//TODO: Reorganize this file
 public abstract class AbstractGameBoard {
     /**
      * Tracks the game board currently being played on for centralized modification by various game objects.
@@ -93,6 +95,20 @@ public abstract class AbstractGameBoard {
     private boolean moveConfirmed;
 
     /**
+     * Indicates which player has the turn.
+     * If local, true means white and false means black.
+     * If online multiplayer, true means the local player has the turn.
+     * flipBoard indicates that the player is black, so the board should be rendered backwards.
+     */
+    private boolean hasTurn;
+    private boolean flipBoard;
+
+    /**
+     * Determines if this game board describes a local game.
+     */
+    private boolean local;
+
+    /**
      * The laser that is to be drawn.
      */
     private Array<Rectangle> lasersToDraw;
@@ -103,7 +119,7 @@ public abstract class AbstractGameBoard {
 
     private AbstractGamePiece pickedUpPiece;
 
-    public AbstractGameBoard(int x, int y) {
+    public AbstractGameBoard(int x, int y, boolean hasTurn) {
         tiles = new Array<>();
         pieces = new Array<>();
         //aPieces = new Array<>();
@@ -117,6 +133,8 @@ public abstract class AbstractGameBoard {
         nextMove = null;
         moveConfirmed = false;
         pickedUpPiece = null;
+        local = false;
+        this.hasTurn = this.flipBoard = hasTurn;
 
         int xSpace = (int) (Gdx.graphics.getWidth() * .60);
         int ySpace = (int) (Gdx.graphics.getHeight() * .80);
@@ -137,6 +155,121 @@ public abstract class AbstractGameBoard {
         }
 
         AbstractGameBoard.board = this;
+    }
+
+    public AbstractGameBoard(int x, int y, boolean hasTurn, boolean local)
+    {
+        this(x, y, hasTurn);
+        this.local = local;
+        this.flipBoard = false;
+    }
+
+    /**
+     * Processes a right click on the current game board at the specified screen location.
+     *
+     * @return whether or not the right click was registered
+     */
+    public static boolean rightClick(int oldX, int oldY, int newX, int newY)
+    {
+        if(!checkClickBounds(oldX, oldY, newX, newY)) return false;
+
+        // Open an informational piece / tile dialog?
+
+        return false;
+    }
+
+    /**
+     * Processes a left click on the current game board at the specified screen location.
+     *
+     * @return whether or not the left click was registered
+     */
+    public static boolean leftClick(int oldX, int oldY, int newX, int newY)
+    {
+        if(!checkClickBounds(oldX, oldY, newX, newY)) return false;
+
+        // Get the piece from the clicked tile and check that it is non-null
+        AbstractGamePiece piece = board.pieces.get(board.tiles.indexOf(getTileFromLocation(newX, newY), true));
+        if(piece == null)
+        {
+            // Try to make a move using this click
+            if(!board.makeMove(getTileFromLocation(newX, newY)))
+                return false;
+            else return true;
+        }
+
+        // Check if the piece can be picked up
+        if(!board.canPickUpPiece(piece)) return false;
+
+        // If there is a current move, undo it, and pick up the piece
+        board.undoMove();
+        board.pickedUpPiece = piece;
+
+        return true;
+    }
+
+    /**
+     * Attempts to make a piece move with the currently picked up piece onto the given tile.
+     *
+     * @param tile the tile to move the piece to
+     * @return true if the piece is moved or if the click causes the player to drop the piece
+     */
+    private boolean makeMove(AbstractBoardTile tile)
+    {
+        if(pickedUpPiece == null) return false;
+
+        // Check if the move is a rotation
+        if(tile == AbstractBoardTile.ROTATE_LEFT) {
+            // TODO: Rotate left
+        }
+        else if(tile == AbstractBoardTile.ROTATE_RIGHT) {
+            // TODO: Rotate right
+        }
+
+        // If this exact tile is within the legal moves of the piece, move it
+        if(pickedUpPiece.getLegalMoves(this).contains(tile, true))
+        {
+            int pIndex = pieces.indexOf(pickedUpPiece, true);
+            int tIndex = tiles.indexOf(tile, true);
+
+            update(pIndex % x, pIndex / x, "move",tIndex % x, tIndex / x);
+        }
+        // Otherwise, drop the piece
+        else {
+            pickedUpPiece = null;
+        }
+        return true;
+    }
+
+    private boolean canPickUpPiece(AbstractGamePiece piece)
+    {
+        // if the game is local, the piece can be picked up as long as it is the turn of the player who owns it
+        if(local)
+        {
+            return piece.getColor() == hasTurn;
+        }
+
+        // otherwise, the piece can only be picked up if it is this player's turn and this player owns the piece
+        return piece.getColor() == !flipBoard && hasTurn;
+    }
+
+    /**
+     * Checks if a pair of click screen coordinates are legitimate (within bounds and corresponding to the same tile)
+     *
+     * @return
+     */
+    private static boolean checkClickBounds(int oldX, int oldY, int newX, int newY)
+    {
+        // If any click location is off of the current board, return false
+        if(oldX < board.screenX || oldY < board.screenY || newX < board.screenX || newY < board.screenY ||
+                oldX > board.screenX + board.x * board.tileDim || oldY > board.screenY + board.y * board.tileDim ||
+                newX > board.screenX + board.x * board.tileDim || newY > board.screenY + board.y * board.tileDim)
+            return false;
+
+        // If the clicked tile is different from the released tile, return false
+        if(AbstractGameBoard.getTileFromLocation(oldX, oldY) != AbstractGameBoard.getTileFromLocation(newX, newY))
+            return false;
+
+        return true;
     }
 
     /**
@@ -240,10 +373,14 @@ public abstract class AbstractGameBoard {
         // starting from the bottom left
         for (int i = 0; i < y; i++) {
             for (int j = 0; j < x; j++) {
-                tiles.get(j + i * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
+                if(flipBoard)
+                    tiles.get(7-j + (7-i) * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
+                else
+                    tiles.get(j + i * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
             }
         }
 
+        // TODO: Don't render the picked up piece here, render it at the mouse cursor
         for(AbstractGamePiece piece : pieces) {
             if(piece!=null) piece.render(sb);
         }
@@ -256,8 +393,6 @@ public abstract class AbstractGameBoard {
         {
             sb.draw(laserTexture, laser.x, laser.y, laser.width, laser.height);
         }
-        // TODO: different render function for two players i.e. opposite orientation (?)
-        // TODO: create 3D display - gradually shrink render size (?)
     }
 
     /**
@@ -267,14 +402,23 @@ public abstract class AbstractGameBoard {
      * @param mouseY the y location on the virtual screen
      * @return the board tile at the given location, or <code>null</code> if the mouse is outside the game board.
      */
-    public static AbstractBoardTile getTileFromLocation(int mouseX, int mouseY) {
+    private static AbstractBoardTile getTileFromLocation(int mouseX, int mouseY) {
         if (mouseX < board.screenX || mouseY < board.screenY
                 || mouseX > board.screenX + board.x * board.tileDim || mouseY > board.screenY + board.y * board.tileDim)
             return null;
 
         // int j = (mouseY - screenY) / tileDim;
         // int i = (mouseX - screenX) / tileDim;
-        return board.tiles.get((mouseY - board.screenY) / board.tileDim + ((mouseX - board.screenX) / board.tileDim) * board.x);
+        int yCoord = (mouseY - board.screenY) / board.tileDim;
+        int xCoord = (mouseX - board.screenX) / board.tileDim;
+
+        if(board.flipBoard)
+        {
+            yCoord = 7 - yCoord;
+            xCoord = 7 - xCoord;
+        }
+
+        return board.tiles.get(yCoord * board.x + xCoord);
     }
 
     /**
@@ -285,11 +429,11 @@ public abstract class AbstractGameBoard {
      * @return the board tile at the given location,
      * or <code>null</code> if the coordinate is invalid.
      */
-    public static AbstractBoardTile getTileFromCoordinate(int x, int y) {
-        if (x < 0 || y < 0 || x >= board.x || y >= board.y) {
+    public AbstractBoardTile getTileFromCoordinate(int x, int y) {
+        if (x < 0 || y < 0 || x >= this.x || y >= this.y) {
             return null;
         }
-        return (board.tiles.get(y * board.y + x));
+        return (tiles.get(y * this.y + x));
     }
 
     /**
@@ -300,11 +444,11 @@ public abstract class AbstractGameBoard {
      * @return the game piece at the given location,
      * or <code>null</code> if either the coordinate is invalid or no piece is place on that tile.
      */
-    public static AbstractGamePiece getPieceFromCoordinate(int x, int y) {
-        if (x < 0 || y < 0 || x >= board.x || y >= board.y) {
+    public AbstractGamePiece getPieceFromCoordinate(int x, int y) {
+        if (x < 0 || y < 0 || x >= this.x || y >= this.y) {
             return null;
         }
-        return (board.pieces.get(y * board.x + x));
+        return (pieces.get(y * this.x + x));
     }
 
     /**
@@ -331,6 +475,22 @@ public abstract class AbstractGameBoard {
         move.moveX = nX;
         move.moveY = nY;
         this.nextMove = move;
+    }
+
+    private void undoMove()
+    {
+        if(nextMove == null) return;
+
+        AbstractGamePiece piece = getPieceFromCoordinate(nextMove.moveX, nextMove.moveY);
+        if(nextMove.moveType.equals("rotateL")) {
+            pieceRotateRight(piece);
+        } else if(nextMove.moveType.equals("rotateR")) {
+            pieceRotateLeft(piece);
+        } else {
+            pieceMove(piece, nextMove.x, nextMove.y);
+        }
+
+        nextMove = null;
     }
 
     /**
@@ -454,6 +614,7 @@ public abstract class AbstractGameBoard {
         }
 
         moveConfirmed = true;
+        hasTurn = !hasTurn;
     }
 
     /**

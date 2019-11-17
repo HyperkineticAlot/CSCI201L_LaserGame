@@ -13,7 +13,10 @@ import com.hyperkinetic.game.board.AbstractGameBoard;
 public class GameInputProcessor implements InputProcessor
 {
     // TODO: make sure you are on the game board screen
-    private AbstractBoardTile rightClickDown;
+    private int rightClickX;
+    private int rightClickY;
+    private int leftClickX;
+    private int leftClickY;
 
     public boolean keyDown (int keycode)
     {
@@ -34,8 +37,14 @@ public class GameInputProcessor implements InputProcessor
     {
         if(button == Input.Buttons.RIGHT)
         {
-            rightClickDown = AbstractGameBoard.getTileFromLocation(x, y);
+            rightClickX = x;
+            rightClickY = y;
             return true;
+        }
+        if(button == Input.Buttons.LEFT)
+        {
+            leftClickX = x;
+            leftClickY = y;
         }
         return false;
     }
@@ -44,13 +53,11 @@ public class GameInputProcessor implements InputProcessor
     {
         if(button == Input.Buttons.RIGHT)
         {
-            if(AbstractGameBoard.getTileFromLocation(x, y) == rightClickDown)
-            {
-                rightClickDown.onRightClick();
-                return true;
-            }
-
-            return false;
+            return AbstractGameBoard.rightClick(rightClickX, rightClickY, x, y);
+        }
+        if(button == Input.Buttons.LEFT)
+        {
+            return AbstractGameBoard.leftClick(leftClickX, leftClickY, x, y);
         }
         return false;
     }

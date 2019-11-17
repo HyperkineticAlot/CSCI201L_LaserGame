@@ -28,6 +28,9 @@ public abstract class AbstractBoardTile
         LR_CORNER
     }
 
+    public static final AbstractBoardTile ROTATE_LEFT = new AbstractBoardTile(){};
+    public static final AbstractBoardTile ROTATE_RIGHT = new AbstractBoardTile(){};
+
     /**
      * The texture of the board tile.
      */

@@ -46,6 +46,7 @@ public class Player extends Thread {
         while(true)
         {
             // TODO: check game board for moves and send to server
+            // WHEN THE PLAYER MAKES A MOVE, SET THE nextMove FIELD IN GAME BOARD TO NULL!!
         }
     }
 
