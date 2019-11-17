@@ -25,6 +25,14 @@ public class GameInputProcessor implements InputProcessor
 
     public boolean keyUp (int keycode)
     {
+        if(keycode == Input.Keys.Q)
+        {
+            return AbstractGameBoard.keyPressed("Q");
+        }
+        else if(keycode == Input.Keys.E)
+        {
+            return AbstractGameBoard.keyPressed("E");
+        }
         return false;
     }
 
@@ -41,7 +49,7 @@ public class GameInputProcessor implements InputProcessor
             rightClickY = y;
             return true;
         }
-        if(button == Input.Buttons.LEFT)
+        else if(button == Input.Buttons.LEFT)
         {
             leftClickX = x;
             leftClickY = y;

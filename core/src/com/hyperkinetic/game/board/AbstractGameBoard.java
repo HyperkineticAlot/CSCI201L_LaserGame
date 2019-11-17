@@ -208,6 +208,26 @@ public abstract class AbstractGameBoard {
     }
 
     /**
+     * Processes a key press on the current game board.
+     *
+     * @param key a string representing the key depressed
+     * @return whether or not the key press is registered
+     */
+    public static boolean keyPressed(String key)
+    {
+        if(key.equals("Q"))
+        {
+            return board.makeMove(AbstractBoardTile.ROTATE_LEFT);
+        }
+        else if(key.equals("E"))
+        {
+            return board.makeMove(AbstractBoardTile.ROTATE_RIGHT);
+        }
+
+        return false;
+    }
+
+    /**
      * Attempts to make a piece move with the currently picked up piece onto the given tile.
      *
      * @param tile the tile to move the piece to
