@@ -6,8 +6,8 @@ import com.hyperkinetic.game.util.Directions;
 
 // can only rotate
 public class LaserPiece extends AbstractBlockPiece{
-    public LaserPiece(int x, int y, boolean c) {
-        super(x, y, c);
+    public LaserPiece(int x, int y, boolean c, Directions.Direction o) {
+        super(x, y, c, o);
     }
 
     @Override
@@ -15,9 +15,5 @@ public class LaserPiece extends AbstractBlockPiece{
         return null;
     }
 
-    @Override
-    public void render(SpriteBatch sb) {
-
-    }
 
 }

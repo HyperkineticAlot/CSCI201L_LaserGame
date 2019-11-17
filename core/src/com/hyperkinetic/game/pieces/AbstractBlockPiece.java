@@ -12,8 +12,9 @@ public abstract class AbstractBlockPiece extends AbstractGamePiece
 {
     protected Directions.Direction orientation;
 
-    public AbstractBlockPiece(int x, int y, boolean c) {
+    public AbstractBlockPiece(int x, int y, boolean c, Directions.Direction o) {
         super(x, y, c);
+        this.orientation = o;
     }
 
     public Directions.Direction getOrientation() {

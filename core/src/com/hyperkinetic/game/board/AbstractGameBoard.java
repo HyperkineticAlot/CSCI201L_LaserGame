@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.core.LaserGame;
 import com.hyperkinetic.game.pieces.AbstractBlockPiece;
 import com.hyperkinetic.game.pieces.AbstractGamePiece;
+import com.hyperkinetic.game.pieces.KingPiece;
 import com.hyperkinetic.game.pieces.LaserPiece;
 import com.hyperkinetic.game.playflow.GameMessage;
 import com.hyperkinetic.game.util.Directions;
@@ -54,6 +55,8 @@ public abstract class AbstractGameBoard {
      * Dimension of each tile.
      */
     private int tileDim;
+    private int pieceDim;
+
     /**
      * Array that includes all the tiles of the board.
      */
@@ -74,11 +77,11 @@ public abstract class AbstractGameBoard {
     /**
      * The KingPiece of player A.
      */
-    protected AbstractBlockPiece aPharaoh;
+    protected KingPiece aPharaoh;
     /**
      * The KingPiece of player B.
      */
-    protected AbstractBlockPiece bPharaoh;
+    protected KingPiece bPharaoh;
     /**
      * The LaserPiece of player A.
      */
@@ -153,6 +156,7 @@ public abstract class AbstractGameBoard {
             screenY = (int) (Gdx.graphics.getHeight() * .10);
             screenX = (Gdx.graphics.getWidth() - x * tileDim) / 2;
         }
+        pieceDim = tileDim * 4 / 5;
 
         AbstractGameBoard.board = this;
     }
@@ -398,10 +402,10 @@ public abstract class AbstractGameBoard {
         for (int i = 0; i < y; i++) {
             for (int j = 0; j < x; j++) {
                 if(flipBoard) {
-                    if(highlight != null && highlight.contains(tiles.get(7-j + (7-i) * x), true))
+                    if(highlight != null && highlight.contains(tiles.get(x-j + (y-i) * x), true))
                         sb.draw(laserTexture, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
                     else
-                        tiles.get(7 - j + (7 - i) * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
+                        tiles.get(x - j + (y - i) * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
                 }
                 else {
                     if(highlight != null && highlight.contains(tiles.get(j + i * x), true))
@@ -413,8 +417,16 @@ public abstract class AbstractGameBoard {
         }
 
         // TODO: Don't render the picked up piece here, render it at the mouse cursor
-        for(AbstractGamePiece piece : pieces) {
-            if(piece!=null) piece.render(sb);
+        for(int i = 0; i < pieces.size; i++) {
+            AbstractGamePiece piece = pieces.get(i);
+            if(piece == pickedUpPiece)
+            {
+                piece.render(sb, Gdx.input.getX(), Gdx.input.getY(), pieceDim, pieceDim, true);
+            }
+            else if(piece!=null)
+                piece.render(sb, screenX + piece.getX() * tileDim + tileDim / 10,
+                                 screenY + piece.getY() * tileDim + tileDim / 10,
+                                 pieceDim, pieceDim);
         }
 
         // TODO: render lasers here
@@ -446,8 +458,8 @@ public abstract class AbstractGameBoard {
 
         if(board.flipBoard)
         {
-            yCoord = 7 - yCoord;
-            xCoord = 7 - xCoord;
+            yCoord = board.y - yCoord;
+            xCoord = board.x - xCoord;
         }
 
         return board.tiles.get(yCoord * board.x + xCoord);

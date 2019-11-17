@@ -12,8 +12,9 @@ public abstract class AbstractMirrorPiece extends AbstractGamePiece
 {
     protected Directions.MirrorDirection orientation;
 
-    public AbstractMirrorPiece(int x, int y, boolean c) {
+    public AbstractMirrorPiece(int x, int y, boolean c, Directions.MirrorDirection o) {
         super(x, y, c);
+        this.orientation = o;
     }
 
     public Directions.MirrorDirection getOrientation() {

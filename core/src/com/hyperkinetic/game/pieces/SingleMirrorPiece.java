@@ -13,14 +13,12 @@ public class SingleMirrorPiece extends AbstractMirrorPiece
 {
     public SingleMirrorPiece(int x, int y, boolean c)
     {
-        super(x, y, c);
-        this.orientation = Directions.MirrorDirection.NORTHWEST;
+        super(x, y, c, Directions.MirrorDirection.NORTHWEST);
     }
 
     public SingleMirrorPiece(int x, int y, boolean c, Directions.MirrorDirection o)
     {
-        super(x, y, c);
-        this.orientation = o;
+        super(x, y, c, o);
     }
 
     @Override
@@ -32,10 +30,5 @@ public class SingleMirrorPiece extends AbstractMirrorPiece
         Array<Directions.Direction> reflectedLaserDirection = new Array<>();
         reflectedLaserDirection.add(dir);
         return reflectedLaserDirection;
-    }
-
-    @Override
-    public void render(SpriteBatch sb) {
-
     }
 }

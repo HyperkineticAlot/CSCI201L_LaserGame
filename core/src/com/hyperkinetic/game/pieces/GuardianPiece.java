@@ -8,8 +8,8 @@ import com.hyperkinetic.game.util.Status;
 public class GuardianPiece extends AbstractBlockPiece {
 
     public Status.PieceStatus status;
-    public GuardianPiece(int x, int y, boolean c) {
-        super(x, y, c);
+    public GuardianPiece(int x, int y, boolean c, Directions.Direction o) {
+        super(x, y, c, o);
     }
 
     @Override
@@ -45,8 +45,4 @@ public class GuardianPiece extends AbstractBlockPiece {
         return null; // laser not reflected
     }
 
-    @Override
-    public void render(SpriteBatch sb) {
-
-    }
 }

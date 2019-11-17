@@ -3,10 +3,11 @@ package com.hyperkinetic.game.pieces;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.util.Directions;
+import com.sun.jdi.Mirror;
 
 public class DoubleMirrorPiece extends AbstractMirrorPiece {
-    public DoubleMirrorPiece(int x, int y, boolean c) {
-        super(x, y, c);
+    public DoubleMirrorPiece(int x, int y, boolean c, Directions.MirrorDirection orientation) {
+        super(x, y, c, orientation);
     }
 
     @Override
@@ -35,9 +36,5 @@ public class DoubleMirrorPiece extends AbstractMirrorPiece {
         return reflectedLaserDirection;
     }
 
-    @Override
-    public void render(SpriteBatch sb) {
-
-    }
 
 }

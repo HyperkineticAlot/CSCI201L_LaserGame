@@ -1,5 +1,6 @@
 package com.hyperkinetic.game.pieces;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.board.AbstractBoardTile;
@@ -22,10 +23,13 @@ public abstract class AbstractGamePiece
      */
     protected boolean color;
 
+    private Texture texture;
+
     public AbstractGamePiece(int x, int y, boolean c) {
         this.x = x;
         this.y = y;
         color = c;
+        loadRegion("pieces/singlemirror.png");
     }
 
     /**
@@ -127,5 +131,35 @@ public abstract class AbstractGamePiece
      *
      * @param sb the SpriteBatch of the game
      */
-    public abstract void render(SpriteBatch sb);
+    public void render(SpriteBatch sb, int x, int y, int width, int height)
+    {
+        render(sb, x, y, width, height, false);
+    }
+
+    public void render(SpriteBatch sb, int x, int y, int width, int height, boolean pickedUp)
+    {
+        if(pickedUp)
+        {
+            width *= 2;
+            height *= 2;
+        }
+
+        sb.draw(texture, x, y, width, height);
+    }
+
+    protected void loadRegion(String image)
+    {
+        //TODO
+    }
+
+    protected void loadRegion(Class pieceType)
+    {
+        //TODO
+    }
+
+    private static String getPathFromPieceType(Class pieceType)
+    {
+        //TODO
+        return "pieces/singlemirror.png";
+    }
 }
