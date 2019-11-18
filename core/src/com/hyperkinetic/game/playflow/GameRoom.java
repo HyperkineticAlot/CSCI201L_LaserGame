@@ -9,11 +9,29 @@ import com.hyperkinetic.game.pieces.LaserPiece;
  * GameRoom class, implements basic game flow - this version only supports local mode
  */
 public class GameRoom {
+    /**
+     * Thread of player a on the server
+     */
     private ServerThread aThread;
+    /**
+     * Thread of player b on the server
+     */
     private ServerThread bThread;
+    /**
+     * The game board that the two players are playing with
+     */
     private AbstractGameBoard board;
+    /**
+     * A reference of the game server
+     */
     private GameServer gs;
+    /**
+     * Variable that keeps track of player's turn
+     */
     private boolean turn; //who's turn is it. Player A = White = True, Player B = Black = False
+    /**
+     * Variable that keeps track of whether the game is over
+     */
     public boolean isOver = false;
 
     public GameRoom(GameServer gs, ServerThread a, ServerThread b) {
@@ -36,12 +54,20 @@ public class GameRoom {
         broadcast(gm);
     }
 
+    /**
+     * Broadcast the message to both two clients.
+     * @param message the message to be broadcast to each client
+     */
     public void broadcast(GameMessage message) {
         // broadcast message to both PlayerThreads
         aThread.sendMessage(message);
         bThread.sendMessage(message);
     }
 
+    /**
+     * Validate move, send move success/failure message to server.
+     * @param move the move to be validated
+     */
     public synchronized void handleMoveAttempt(GameMessage move){
         if(move.getMessageType() != GameMessage.messageType.PLAYER_MOVE) return;
 
@@ -85,6 +111,14 @@ public class GameRoom {
         }
     }
 
+    /**
+     * Update the board on the server, send the board and switch message to both players.
+     * @param x the x coordinate of the piece that is to be updated
+     * @param y the y coordinate of the piece that is to be updated
+     * @param moveType the type of the move, rotated or moved to a new location
+     * @param nX the new x coordinate of the piece
+     * @param nY the new y coordinate of the piece
+     */
     public synchronized void updateBoard(int x,int y,String moveType,int nX,int nY) {
         // update board, send updated board object to both PlayerThread, send switch turn message to server
         board.update(x,y,moveType,nX,nY);
@@ -95,16 +129,27 @@ public class GameRoom {
         turn = !turn;
     }
 
+    /**
+     * Read the message from the server.
+     * @param message the message from the server
+     */
     public void readMessage(GameMessage message)
     {
 
     }
 
+    /**
+     * Get the player ID of the active player.
+     * @return the player ID of the active player
+     */
     private String getActivePlayerID()
     {
         return turn ? aThread.getPlayerID() : bThread.getPlayerID();
     }
 
+    /**
+     * Player fires the laser, end and switch the turn.
+     */
     public void fireLaser(){
         // laser firing called by updateBoard
     }

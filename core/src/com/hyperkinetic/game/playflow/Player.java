@@ -17,7 +17,7 @@ public class Player extends Thread {
 
     public boolean isGuest = false;
     /**
-     * Keep track on whether the player is a game bot.
+     * Keeps track on whether the player is a game bot.
      */
     public boolean isAI = false;
 
@@ -39,7 +39,9 @@ public class Player extends Thread {
         }
     }
 
-
+    /**
+     * Player constantly checks the game board for moves and send to server
+     */
     @Override
     public void run()
     {

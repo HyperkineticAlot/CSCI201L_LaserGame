@@ -16,20 +16,39 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class GameServer {
-    // server info
+    /**
+     * Hostname of the server
+     */
     private static final String host = "localhost";
+    /**
+     * Port number of the server
+     */
     private static final int port = 8000;
-    // database info
+    /**
+     * Database connection URL
+     */
     private static final String url = "mysql://localhost:3306/finalproject";
+    /**
+     * Database username
+     */
     private static final String user = "root";
+    /**
+     * Database password
+     */
     private static final String pwd = "root";
-    // stores all player sockets in matchmaking
+    /**
+     * Stores all player sockets in matchmaking
+     */
     private static Vector<ServerThread> matchingQueue = new Vector<>();
-    // stores player sockets in login
+    /**
+     * Stores player sockets in login
+     */
     private static Vector<Socket> loginQueue = new Vector<>();
     // stores mapping from playerID to sockets
     // private static ConcurrentHashMap<String,Socket> playerIdMap = new ConcurrentHashMap<>();
-    // stores mapping from playerID to GameRooms
+    /**
+     * stores mapping from playerID to GameRooms
+     */
     private static Vector<GameRoom> gameRooms = new Vector<>();
 
     public static void main(String[] args){
@@ -87,6 +106,10 @@ public class GameServer {
         }
     }
 
+    /**
+     * Checks if the server is successfully connected to the database.
+     * @return true if the connection is success, false otherwise
+     */
     public boolean checkConnection() {
         boolean success = false;
         try{
@@ -98,6 +121,12 @@ public class GameServer {
         return success;
     }
 
+    /**
+     * Get a connection to the database.
+     * @return the connection to the database
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
     public static Connection getConnection() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection conn = DriverManager.getConnection("jdbc:"+url+"?user="+user+"&password="+pwd);
