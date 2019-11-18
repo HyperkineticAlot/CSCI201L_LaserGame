@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import javax.xml.soap.Text;
+//import javax.xml.soap.Text;
 
 public class SettingsScreen  extends InputAdapter implements Screen {
     LaserGame game;

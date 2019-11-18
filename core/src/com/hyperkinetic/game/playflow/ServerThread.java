@@ -25,6 +25,10 @@ public class ServerThread extends Thread {
 
     }
 
+    /**
+     * Send the message object to output
+     * @param message the message to be sent
+     */
     public void sendMessage(GameMessage message)
     {
         try
@@ -39,22 +43,37 @@ public class ServerThread extends Thread {
         }
     }
 
+    /**
+     * Set the gameRoom that this thread runs
+     * @param gm
+     */
     public void enterGame(GameRoom gm)
     {
         if(this.room != null) return;
         this.room = gm;
     }
 
+    /**
+     * Setter of the color
+     * @param color
+     */
     public void setColor(boolean color)
     {
         this.color = color;
     }
 
+    /**
+     * Getter of the playerID
+     * @return
+     */
     public String getPlayerID()
     {
         return playerID;
     }
 
+    /**
+     * Constantly read message from the game room
+     */
     @Override
     public void run() {
         while(!room.isOver)
