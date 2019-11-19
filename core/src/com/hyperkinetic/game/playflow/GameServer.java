@@ -6,8 +6,8 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
-import java.util.HashMap;
 import java.sql.*;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -41,13 +41,12 @@ public class GameServer {
         if(!checkConnection()) return;
         try {
             ServerSocket ss = new ServerSocket(port);
-            // TODO: add actual match making logic
 
             while(true) {
                 Socket s = ss.accept();
                 loginQueue.add(s);
 
-                // logging users in the queue
+                // TODO: implement actual logging with sql
                 for(Socket login : loginQueue)
                 {
                     BufferedReader pwReader = new BufferedReader(new InputStreamReader(login.getInputStream()));
@@ -57,6 +56,7 @@ public class GameServer {
                         ServerThread loggedUser = new ServerThread(login, line.split(",")[0]);
                         matchingQueue.add(loggedUser);
                     }
+                    // TODO: delete login from loginQueue: separate Login thread (?)
                 }
 
                 // first come first served matchmaking
@@ -92,8 +92,10 @@ public class GameServer {
         try{
             Connection conn = GameServer.getConnection();
             success = true;
-        } catch(ClassNotFoundException | SQLException e){
-            System.out.println("Unable to connect to database: "+e.getMessage());
+        } catch(ClassNotFoundException e){
+            System.out.println("ClassNotFound error in checkConnection(): "+e.getMessage());
+        } catch(SQLException e){
+            System.out.println("SQL error in checkConnection(): "+e.getMessage());
         }
         return success;
     }
@@ -102,5 +104,86 @@ public class GameServer {
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection conn = DriverManager.getConnection("jdbc:"+url+"?user="+user+"&password="+pwd);
         return conn;
+    }
+
+    /**
+     * Update records for both players after one game is over.
+     *
+     * @param gm GameMessage
+     * @return true if update is complete & successful
+     */
+    public boolean updateDatabase(GameMessage gm){
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        if(gm.getMessageType()==GameMessage.messageType.GAME_OVER){
+            String winner = gm.playerID;
+            String loser = gm.player2ID;
+            try{
+                conn = getConnection();
+                ps = conn.prepareStatement("");
+                rs = ps.executeQuery();
+                // TODO: query USER table for userID & update RECORD table accordingly
+            } catch(ClassNotFoundException e){
+                System.out.println("ClassNotFound error in updateDatabase(): "+e.getMessage());
+            } catch(SQLException e){
+                System.out.println("SQL error in updateDatabase(): "+e.getMessage());
+            } finally {
+                try {
+                    if(rs!=null) rs.close();
+                    if(ps!=null) ps.close();
+                    if(conn!=null) conn.close();
+                } catch(SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Query/update the database for login, register, stats_request
+     *
+     * @param gm GameMessage
+     * @return a responsive GameMessage object
+     */
+    public GameMessage queryDatabase(GameMessage gm){
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try{
+            conn = getConnection();
+            ps = conn.prepareStatement("");
+            rs = ps.executeQuery();
+            if(gm.getMessageType()==GameMessage.messageType.LOGIN_ATTEMPT){
+                String playerID = gm.playerID;
+                String password = gm.password;
+                // TODO: query USER table to login player
+            } else if(gm.getMessageType()==GameMessage.messageType.ACCOUNT_CREATE){
+                String playerID = gm.playerID;
+                String password = gm.password;
+                // TODO: append to USER table & RECORD table the new player
+            } else if(gm.getMessageType()==GameMessage.messageType.ACCOUNT_STATS_REQUEST){
+                String playerID = gm.playerID;
+                // TODO: query USER table for userID & query RECORED table accordingly
+            }
+        } catch(ClassNotFoundException e){
+            System.out.println("ClassNotFound error in queryDatabase(): "+e.getMessage());
+        } catch(SQLException e){
+            System.out.println("SQL error in queryDatabase(): "+e.getMessage());
+        } finally {
+            try {
+                if(rs!=null) rs.close();
+                if(ps!=null) ps.close();
+                if(conn!=null) conn.close();
+            } catch(SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return null;
+    }
+
+    public void deleteRoom(GameRoom gr){
+        this.gameRooms.remove(gr);
     }
 }

@@ -2,9 +2,10 @@ package com.hyperkinetic.game.playflow;
 
 import com.badlogic.gdx.InputProcessor;
 import com.hyperkinetic.game.board.AbstractGameBoard;
+import com.sun.security.ntlm.Client;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Random;
 
@@ -14,100 +15,56 @@ import java.util.Random;
 public class Player extends Thread {
 
     public String playerID;
-
-    public boolean isGuest = false;
-    /**
-     * Keep track on whether the player is a game bot.
-     */
-    public boolean isAI = false;
+    private ClientThread ct;
 
     private Socket socket;
-    private ObjectInputStream in;
+    private ObjectOutputStream out;
+    private AbstractGameBoard board;
+
 
     /**
      * If not signed in, play as guest.
      */
-    public Player(String playerID, Socket socket) {
-        this.playerID = playerID;
-        this.isGuest = playerID.toLowerCase().equals("guest");
+    public Player(Socket socket, ClientThread ct) {
+        this.ct = ct;
         this.socket = socket;
-
+        this.board = null;
         try {
-            in = new ObjectInputStream(socket.getInputStream());
+            out = new ObjectOutputStream(socket.getOutputStream());
+            // this.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public void setBoard(AbstractGameBoard board){
+        this.board = board;
+    }
+
+    public void setPlayerID(String playerID){
+        this.playerID = playerID;
+    }
 
     @Override
     public void run()
     {
         while(true)
         {
-            // TODO: check game board for moves and send to server
             // WHEN THE PLAYER MAKES A MOVE, SET THE nextMove FIELD IN GAME BOARD TO NULL!!
-        }
-    }
-
-    /**
-     * Make a movement on board, called by GameRoom class.
-     * @param board GameBoard to operate on
-     * @param pID "a" or "b" signifies which pieces to operate on in board
-     * @return true if a valid move is made
-     */
-    public boolean makeMove(AbstractGameBoard board, String pID) {
-        // make a valid move
-        while(true) {
-            // TODO: get input from gameInputProcessor: left click - select piece
-            // TODO: get legal moves for selected piece
-            // TODO: get input from gameInputProcessor: L - rotate left, R - rotate right, Arrows - move
-            /* Ex:
-            // pseudo code to get input
-            AbstractGamePiece piece = GameInputProcessor.getPieceFromTouchUp();
-            while(piece!=null) { // get one piece selected
-                piece = GameInputProcessor.getPieceFromTouchUp();
-            }
-            String move = GameInputProcessor.getKeyBoardInput();
-            while(move!=null) { // get one input movement
-                move = GameInputProcessor.getKeyBoardInput();
-            }
-
-            // real code to move selected piece
-            if(!board.isValidMove(pID,piece,move)) {
-                continue;
-            } else { // call board move method
-                if(move=='L') {
-                    board.pieceRotateLeft(piece);
-                    break;
-                } else if(move=='R') {
-                    board.pieceRotateRight(piece);
-                    break;
-                } else if(move=='W') {
-                    int x = piece.getX();
-                    int y = piece.getY()+1;
-                    board.pieceMove(piece, x, y);
-                    break;
-                } else if(move=='S') {
-                    int x = piece.getX();
-                    int y = piece.getY()-1;
-                    board.pieceMove(piece, x, y);
-                    break;
-                } else if(move=='A') {
-                    int x = piece.getX()-1;
-                    int y = piece.getY();
-                    board.pieceMove(piece, x, y);
-                    break;
-                } else if(move=='D') {
-                    int x = piece.getX()+1;
-                    int y = piece.getY();
-                    board.pieceMove(piece, x, y);
-                    break;
+            // ONLY SET NEXT MOVE WHEN FIRING LASER
+            if(board==null){
+                System.out.println("Still in game queue...");
+            } else {
+                GameMessage nextMove = board.getNextMove();
+                if(nextMove!=null){
+                    try{
+                        out.writeObject(nextMove);
+                        out.flush();
+                    } catch(IOException ioe){
+                        ioe.printStackTrace();
+                    }
                 }
             }
-            */
-            if(false) break; // delete this line
         }
-        return true;
     }
 }

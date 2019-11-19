@@ -34,7 +34,7 @@ public class ServerThread extends Thread {
         }
         catch(IOException ioe)
         {
-            System.out.println("ioe in sendMessage() of thread " + playerID);
+            System.out.println("ioe in sendMessage() of ServerThread " + playerID);
             ioe.printStackTrace();
         }
     }
@@ -67,12 +67,12 @@ public class ServerThread extends Thread {
             }
             catch (ClassNotFoundException cnfe)
             {
-                System.out.println("cnfe in run() of thread " + playerID);
+                System.out.println("cnfe in run() of ServerThread " + playerID);
                 cnfe.printStackTrace();
             }
             catch(IOException ioe)
             {
-                System.out.println("ioe in run() of thread " + playerID);
+                System.out.println("ioe in run() of ServerThread " + playerID);
             }
         }
 

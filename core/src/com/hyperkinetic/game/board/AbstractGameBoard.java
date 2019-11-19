@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.core.LaserGame;
-import com.hyperkinetic.game.pieces.AbstractBlockPiece;
 import com.hyperkinetic.game.pieces.AbstractGamePiece;
 import com.hyperkinetic.game.pieces.KingPiece;
 import com.hyperkinetic.game.pieces.LaserPiece;
@@ -67,14 +66,6 @@ public abstract class AbstractGameBoard {
     protected Array<AbstractGamePiece> pieces;
 
     /**
-     * Array of pieces of player A.
-     */
-    //protected Array<AbstractGamePiece> aPieces;
-    /**
-     * Array of pieces of player B.
-     */
-    //protected Array<AbstractGamePiece> bPieces;
-    /**
      * The KingPiece of player A.
      */
     protected KingPiece aPharaoh;
@@ -125,8 +116,6 @@ public abstract class AbstractGameBoard {
     public AbstractGameBoard(int x, int y, boolean hasTurn) {
         tiles = new Array<>();
         pieces = new Array<>();
-        //aPieces = new Array<>();
-        //bPieces = new Array<>();
         aPharaoh = null;
         bPharaoh = null;
         aLaser = null;
@@ -333,24 +322,6 @@ public abstract class AbstractGameBoard {
     }
 
     /**
-     * Getter of the aPieces array.
-     *
-     * @return array of player a's pieces of the current board
-     */
-    /*public Array<AbstractGamePiece> getAPieces() {
-         return aPieces;
-    }*/
-
-    /**
-     * Getter of the bPieces array.
-     *
-     * @return array of player b's pieces of the current board
-     */
-    /*public Array<AbstractGamePiece> getBPieces() {
-        return bPieces;
-    }*/
-
-    /**
      * Getter of aLaser piece.
      *
      * @return aLaser
@@ -366,6 +337,15 @@ public abstract class AbstractGameBoard {
      */
     public LaserPiece getBLaser() {
         return this.bLaser;
+    }
+
+    /**
+     * Getter of laser piece according to hasTurn.
+     *
+     * @return active laser
+     */
+    public LaserPiece getActiveLaser() {
+        return (hasTurn) ? this.aLaser : this.bLaser;
     }
 
     public GameMessage getNextMove()
@@ -521,7 +501,7 @@ public abstract class AbstractGameBoard {
         this.nextMove = move;
     }
 
-    private void undoMove()
+    public synchronized void undoMove()
     {
         if(nextMove == null) return;
 
@@ -578,7 +558,6 @@ public abstract class AbstractGameBoard {
     /**
      * Check whether the movement of a player on a piece is valid.
      *
-     * @param pID 'a', 'b' specifies whose turn this is
      */
     public boolean isValidMove(boolean color, int x, int y, String moveType, int nX, int nY) {
         AbstractGamePiece piece = getPieceFromCoordinate(x,y);

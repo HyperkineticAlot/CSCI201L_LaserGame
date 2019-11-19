@@ -4,6 +4,7 @@ import java.net.*;
 import com.hyperkinetic.game.board.AbstractGameBoard;
 import com.hyperkinetic.game.board.StandardBoard;
 import com.hyperkinetic.game.pieces.LaserPiece;
+import com.hyperkinetic.game.playflow.GameMessage.messageType;
 
 /**
  * GameRoom class, implements basic game flow - this version only supports local mode
@@ -18,22 +19,29 @@ public class GameRoom {
 
     public GameRoom(GameServer gs, ServerThread a, ServerThread b) {
         this.gs = gs;
-        this.board = new StandardBoard();
+        this.board = new StandardBoard(true);
         turn = true; // white (a) plays first
 
         aThread = a;
         bThread = b;
-        aThread.setColor(true);
-        bThread.setColor(false);
+        // aThread.setColor(true);
+        // bThread.setColor(false);
+        aThread.enterGame(this);
+        bThread.enterGame(this);
         aThread.start();
         bThread.start();
 
-        GameMessage gm = new GameMessage(GameMessage.messageType.ROOM_CREATE);
-        gm.startBoard = board;
-        gm.playerID = aThread.getPlayerID();
-        gm.player2ID = bThread.getPlayerID();
+        GameMessage gm1 = new GameMessage(messageType.ROOM_CREATE);
+        gm1.startBoard = new StandardBoard(true);
+        gm1.playerID = aThread.getPlayerID();
+        gm1.player2ID = bThread.getPlayerID();
+        aThread.sendMessage(gm1);
 
-        broadcast(gm);
+        GameMessage gm2 = new GameMessage(messageType.ROOM_CREATE);
+        gm2.startBoard = new StandardBoard(false);
+        gm2.playerID = aThread.getPlayerID();
+        gm2.player2ID = bThread.getPlayerID();
+        bThread.sendMessage(gm2);
     }
 
     public void broadcast(GameMessage message) {
@@ -42,13 +50,13 @@ public class GameRoom {
         bThread.sendMessage(message);
     }
 
-    public synchronized void handleMoveAttempt(GameMessage move){
-        if(move.getMessageType() != GameMessage.messageType.PLAYER_MOVE) return;
+    public void handleMoveAttempt(GameMessage move){
+        if(move.getMessageType() != messageType.PLAYER_MOVE) return;
 
         // validate move, send move_success/failure message to server
         if(move.playerID.equals(getActivePlayerID())) {
             if(board.isValidMove(turn, move.x, move.y, move.moveType, move.moveX, move.moveY)) {
-                GameMessage gm = new GameMessage(GameMessage.messageType.MOVE_SUCCESS);
+                GameMessage gm = new GameMessage(messageType.MOVE_SUCCESS);
                 gm.playerID = getActivePlayerID();
                 gm.x = move.x;
                 gm.y = move.y;
@@ -61,7 +69,7 @@ public class GameRoom {
             }
             else
             {
-                GameMessage fail = new GameMessage(GameMessage.messageType.MOVE_FAILURE);
+                GameMessage fail = new GameMessage(messageType.MOVE_FAILURE);
                 fail.playerID = getActivePlayerID();
                 fail.x = move.x;
                 fail.y = move.y;
@@ -73,7 +81,7 @@ public class GameRoom {
             }
         } else {
             // move attempt invalid - wrong turn
-            GameMessage gm = new GameMessage(GameMessage.messageType.MOVE_FAILURE);
+            GameMessage gm = new GameMessage(messageType.MOVE_FAILURE);
             gm.playerID = move.playerID;
             gm.x = move.x;
             gm.y = move.y;
@@ -85,19 +93,45 @@ public class GameRoom {
         }
     }
 
-    public synchronized void updateBoard(int x,int y,String moveType,int nX,int nY) {
-        // update board, send updated board object to both PlayerThread, send switch turn message to server
+    public void updateBoard(int x,int y,String moveType,int nX,int nY) {
+        // update board
         board.update(x,y,moveType,nX,nY);
+        // LaserPiece laser = board.getActiveLaser();
+        // board.fireLaser(laser.getX(),laser.getY(),laser.getOrientation());
         LaserPiece aLaser = board.getALaser();
         LaserPiece bLaser = board.getBLaser();
         if(turn) board.fireLaser(aLaser.getX(), aLaser.getY(), aLaser.getOrientation());
         else board.fireLaser(bLaser.getX(), bLaser.getY(), bLaser.getOrientation());
         turn = !turn;
+
+        String res = board.isGameOver();
+        if(res.equals("AWin")){
+            GameMessage gm = new GameMessage(messageType.GAME_OVER);
+            gm.playerID = aThread.getPlayerID();
+            gm.player2ID = bThread.getPlayerID();
+            gs.updateDatabase(gm);
+            broadcast(gm);
+            clear();
+        } else if(res.equals("BWin")){
+            GameMessage gm = new GameMessage(messageType.GAME_OVER);
+            gm.playerID = bThread.getPlayerID();
+            gm.player2ID = aThread.getPlayerID();
+            gs.updateDatabase(gm);
+            broadcast(gm);
+            clear();
+        }
     }
 
     public void readMessage(GameMessage message)
     {
-
+        if(message.getMessageType()==messageType.PLAYER_MOVE){
+            handleMoveAttempt(message);
+        } else if(message.getMessageType()==messageType.READY){
+            // TODO: check for connection
+        } else if(message.getMessageType()==messageType.ACCOUNT_STATS_REQUEST){
+            GameMessage gm = gs.queryDatabase(message);
+            broadcast(gm);
+        }
     }
 
     private String getActivePlayerID()
@@ -105,62 +139,7 @@ public class GameRoom {
         return turn ? aThread.getPlayerID() : bThread.getPlayerID();
     }
 
-    public void fireLaser(){
-        // laser firing called by updateBoard
+    public void clear(){
+        gs.deleteRoom(this);
     }
-
-        /*while(!aWon && !bWon) {
-            // if both disconnect
-            if(!aThread.isConnected() && !bThread.isConnected()) {
-                // delete this GameRoom
-                GameSocket.delete(this);
-                return;
-            }
-
-            if(aTurn) { // aThread's turn
-                aThread.makeMove(board, "aThread");
-            } else { // bThread's turn
-                bThread.makeMove(board, "bThread");
-            }
-
-            // fires laser, update board & pieces on board
-            LaserPiece laserPiece = null;
-            if(aTurn) {
-                laserPiece = board.getALaser();
-            } else {
-                laserPiece = board.getBLaser();
-            }
-            Directions.Direction dir = laserPiece.getOrientation();
-            int x = laserPiece.getX();
-            int y = laserPiece.getY();
-            if(dir == Directions.Direction.NORTH) {
-                x = x;
-                y = y - 1;
-            }
-            else if(dir == Directions.Direction.EAST) {
-                x = x + 1;
-                y = y;
-            }
-            else if(dir == Directions.Direction.SOUTH) {
-                x = x;
-                y = y + 1;
-            }
-            else {
-                x = x - 1;
-                y = y;
-            }
-            board.fireLaser(x,y,dir);
-
-            String res = board.isGameOver();
-            if(res.equals("AWin")) {
-                aWon = true;
-            } else if(res.equals("BWin")) {
-                bWon = true;
-            } else {
-                // game continues
-                aTurn = !aTurn;
-                bTurn = !bTurn;
-            }
-
-        }*/
 }
