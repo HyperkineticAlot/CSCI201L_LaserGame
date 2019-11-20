@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.hyperkinetic.game.board.AbstractGameBoard;
 import com.hyperkinetic.game.board.StandardBoard;
 import com.hyperkinetic.game.playflow.ClientThread;
+import com.hyperkinetic.game.playflow.GameRoom;
 
 public class LaserGameScreen implements Screen {
 
@@ -36,7 +37,7 @@ public class LaserGameScreen implements Screen {
         game = aGame;
         stage = new Stage(new ScreenViewport());
         // board = new StandardBoard();
-        ClientThread localPlayer = new ClientThread("localhost",8000,true,false);
+        ClientThread localPlayer = new ClientThread("localhost", GameRoom.PORT,true,false);
         batch = new SpriteBatch();
     }
 

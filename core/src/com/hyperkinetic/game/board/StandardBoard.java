@@ -14,7 +14,7 @@ public class StandardBoard extends AbstractGameBoard
 {
     public StandardBoard(boolean hasTurn)
     {
-        super(10, 8, hasTurn);
+        super(10, 8,hasTurn);
         createTiles();
         createPieces();
     }

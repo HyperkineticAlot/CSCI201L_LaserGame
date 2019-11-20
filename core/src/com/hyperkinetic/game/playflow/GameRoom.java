@@ -10,18 +10,20 @@ import com.hyperkinetic.game.playflow.GameMessage.messageType;
  * GameRoom class, implements basic game flow - this version only supports local mode
  */
 public class GameRoom {
+    public static final int PORT = 8000;
+
     /**
      * Thread of player a on the server
      */
-    private ServerThread aThread;
+    protected ServerThread aThread;
     /**
      * Thread of player b on the server
      */
-    private ServerThread bThread;
+    protected ServerThread bThread;
     /**
      * The game board that the two players are playing with
      */
-    private AbstractGameBoard board;
+    protected AbstractGameBoard board;
     /**
      * A reference of the game server
      */
@@ -29,7 +31,7 @@ public class GameRoom {
     /**
      * Variable that keeps track of player's turn
      */
-    private boolean turn; //who's turn is it. Player A = White = True, Player B = Black = False
+    protected boolean turn; //who's turn is it. Player A = White = True, Player B = Black = False
     /**
      * Variable that keeps track of whether the game is over
      */
@@ -37,7 +39,6 @@ public class GameRoom {
 
     public GameRoom(GameServer gs, ServerThread a, ServerThread b) {
         this.gs = gs;
-        this.board = new StandardBoard(true);
         turn = true; // white (a) plays first
 
         aThread = a;
@@ -48,6 +49,8 @@ public class GameRoom {
         bThread.enterGame(this);
         aThread.start();
         bThread.start();
+
+        this.board = new StandardBoard(true);
 
         GameMessage gm1 = new GameMessage(messageType.ROOM_CREATE);
         gm1.startBoard = new StandardBoard(true);
@@ -60,6 +63,13 @@ public class GameRoom {
         gm2.playerID = aThread.getPlayerID();
         gm2.player2ID = bThread.getPlayerID();
         bThread.sendMessage(gm2);
+    }
+
+    protected GameRoom()
+    {
+        turn = true;
+        aThread = null;
+        bThread = null;
     }
 
     /**

@@ -12,11 +12,6 @@ import com.hyperkinetic.game.pieces.LaserPiece;
 import com.hyperkinetic.game.playflow.GameMessage;
 import com.hyperkinetic.game.util.Directions;
 
-import java.util.ArrayList;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 /**
  * A superclass for all laser game boards. Contains code to render the game board as well as static
  * functionality to track the game state.
@@ -166,7 +161,8 @@ public abstract class AbstractGameBoard {
     {
         this(x, y, hasTurn);
         this.local = local;
-        this.flipBoard = false;
+        if(local)
+            this.flipBoard = false;
     }
 
     /**
