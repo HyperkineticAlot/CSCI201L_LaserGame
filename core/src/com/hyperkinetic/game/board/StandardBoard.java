@@ -144,10 +144,9 @@ public class StandardBoard extends AbstractGameBoard
 
     @Override
     public String isGameOver() {
-        // TODO: import associate pharaoh methods
-        if(/*call isAlive() of aPharaoh*/false) {
+        if(bPharaoh==null) {
             return "AWin";
-        } else if (/*call isAlive() of bPharaoh*/false) {
+        } else if (aPharaoh==null) {
             return "BWin";
         }
         return "NoWin";

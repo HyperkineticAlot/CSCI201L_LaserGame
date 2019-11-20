@@ -6,8 +6,7 @@ public abstract class SinglePlayerBoard extends AbstractGameBoard
 
     public SinglePlayerBoard(int x, int y, boolean hasTurn)
     {
-        super(x, y);
-        this.hasTurn = hasTurn;
+        super(x, y, hasTurn);
     }
 
     @Override
@@ -21,12 +20,10 @@ public abstract class SinglePlayerBoard extends AbstractGameBoard
         SinglePlayerBoard retval = new SinglePlayerBoard(board.x, board.y, turn)
         {
             @Override
-            public String isGameOver()
-            {
-                // TODO: import associate pharaoh methods
-                if(/*call isAlive() of aPharaoh*/false) {
+            public String isGameOver() {
+                if(bPharaoh==null) {
                     return "AWin";
-                } else if (/*call isAlive() of bPharaoh*/false) {
+                } else if (aPharaoh==null) {
                     return "BWin";
                 }
                 return "NoWin";

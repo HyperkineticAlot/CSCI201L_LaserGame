@@ -58,7 +58,7 @@ public class LaserGameCopy extends ApplicationAdapter {
 	@Override
 	public void create ()
 	{
-		board = new StandardBoard();
+		// board = new StandardBoard();
 		batch = new SpriteBatch();
 		gameInputProcessor = new GameInputProcessor();
 		Gdx.input.setInputProcessor(gameInputProcessor);
