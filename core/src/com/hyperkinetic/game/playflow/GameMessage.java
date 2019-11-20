@@ -39,7 +39,9 @@ public class GameMessage implements Serializable {
         MOVE_SUCCESS,
         MOVE_FAILURE,
         GAME_OVER,
-        READY
+
+        READY,
+        COPY
     }
 
     public GameMessage(GameMessage.messageType type){
@@ -87,6 +89,8 @@ public class GameMessage implements Serializable {
             return timeStamp+" User "+playerID+" is requesting his records.";
         } else if(type==messageType.ACCOUNT_STATS_RESPONSE){
             return timeStamp+" User "+playerID+"'s records: "+records+".";
+        } else if(type==messageType.COPY){
+            return timeStamp+" Server responds to "+playerID+"'s ready message.";
         }
         return "";
     }

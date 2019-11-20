@@ -50,7 +50,7 @@ public class GameRoom {
         bThread.sendMessage(message);
     }
 
-    public void handleMoveAttempt(GameMessage move){
+    private void handleMoveAttempt(GameMessage move){
         if(move.getMessageType() != messageType.PLAYER_MOVE) return;
 
         // validate move, send move_success/failure message to server
@@ -93,7 +93,7 @@ public class GameRoom {
         }
     }
 
-    public void updateBoard(int x,int y,String moveType,int nX,int nY) {
+    private void updateBoard(int x,int y,String moveType,int nX,int nY) {
         // update board
         board.update(x,y,moveType,nX,nY);
         // LaserPiece laser = board.getActiveLaser();
@@ -111,6 +111,8 @@ public class GameRoom {
             gm.player2ID = bThread.getPlayerID();
             gs.updateDatabase(gm);
             broadcast(gm);
+            isOver = true;
+
             clear();
         } else if(res.equals("BWin")){
             GameMessage gm = new GameMessage(messageType.GAME_OVER);
@@ -118,7 +120,22 @@ public class GameRoom {
             gm.player2ID = aThread.getPlayerID();
             gs.updateDatabase(gm);
             broadcast(gm);
+            isOver = true;
+
             clear();
+        }
+    }
+
+    private void handleReady(GameMessage message){
+        if(message.getMessageType()!=messageType.READY) return;
+
+        String playerID = message.playerID;
+        GameMessage copy = new GameMessage(messageType.COPY);
+        copy.playerID = playerID;
+        if(playerID.equals(aThread.getPlayerID())){
+            aThread.sendMessage(copy);
+        } else {
+            bThread.sendMessage(copy);
         }
     }
 
@@ -127,7 +144,7 @@ public class GameRoom {
         if(message.getMessageType()==messageType.PLAYER_MOVE){
             handleMoveAttempt(message);
         } else if(message.getMessageType()==messageType.READY){
-            // TODO: check for connection
+            handleReady(message);
         } else if(message.getMessageType()==messageType.ACCOUNT_STATS_REQUEST){
             GameMessage gm = gs.queryDatabase(message);
             broadcast(gm);

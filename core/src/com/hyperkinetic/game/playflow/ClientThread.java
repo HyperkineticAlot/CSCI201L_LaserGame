@@ -6,6 +6,7 @@ import com.hyperkinetic.game.pieces.LaserPiece;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 public class ClientThread extends Thread {
     private ObjectInputStream in;
@@ -65,21 +66,24 @@ public class ClientThread extends Thread {
                             board.undoMove();
                         }
                     } else if(message.getMessageType()==GameMessage.messageType.GAME_OVER){
-                        if(message.playerID.equals(playerID)){ // wins - display stats (?)
-                            // TODO: handle client win
-                        } else { // loses - display stats (?)
+                        if(message.playerID.equals(playerID)){ // wins - update LaserGameScreen status
+                            // TODO: handle client win (display stats?)
+                            System.out.println(playerID+" has won!");
+                        } else { // loses - update LaserGameScreen status
                             // TODO: handle client loss
+                            System.out.println(playerID+" has lost.");
                         }
-                    } else if(message.getMessageType()==GameMessage.messageType.LOGIN_SUCCESS){
-                        //
-                    } else if(message.getMessageType()==GameMessage.messageType.LOGIN_FAILURE){
-                        //
-                    } else if(message.getMessageType()==GameMessage.messageType.ACCOUNT_CREATE_SUCCESS){
-                        //
-                    } else if(message.getMessageType()==GameMessage.messageType.ACCOUNT_CREATE_FAILURE){
-                        //
                     } else if(message.getMessageType()==GameMessage.messageType.ACCOUNT_STATS_RESPONSE){
-                        //
+                        String records = message.records;
+                        if(message.playerID.equals(playerID)){
+                            // TODO: display records in a nicely fashion
+                            System.out.println(playerID+"'s current stats: "+records);
+                        }
+                    } else if(message.getMessageType()==GameMessage.messageType.COPY){
+                        if(message.playerID.equals(playerID)){
+                            // TODO: track connection status
+                            System.out.println("One handshake complete - connection maintained...");
+                        }
                     }
                 }
             }
@@ -95,3 +99,14 @@ public class ClientThread extends Thread {
         }
     }
 }
+
+// account login/register messaging
+/*else if(message.getMessageType()==GameMessage.messageType.LOGIN_SUCCESS){
+    // updates LaserGame state/Player state (?)
+} else if(message.getMessageType()==GameMessage.messageType.LOGIN_FAILURE){
+    //
+} else if(message.getMessageType()==GameMessage.messageType.ACCOUNT_CREATE_SUCCESS){
+    //
+} else if(message.getMessageType()==GameMessage.messageType.ACCOUNT_CREATE_FAILURE){
+    //
+} */

@@ -47,6 +47,7 @@ public class GameServer {
                 loginQueue.add(s);
 
                 // TODO: implement actual logging with sql
+                // TODO: keep track of connected logged-in ServerThreads (?)
                 for(Socket login : loginQueue)
                 {
                     BufferedReader pwReader = new BufferedReader(new InputStreamReader(login.getInputStream()));

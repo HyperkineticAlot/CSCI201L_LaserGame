@@ -43,7 +43,7 @@ public class LaserGame extends Game {
     private GameRoom gameRoom;
 
     public void create() {
-        board = new StandardBoard();
+        // board = new StandardBoard();
         batch = new SpriteBatch();
         gameInputProcessor = new GameInputProcessor();
         Gdx.input.setInputProcessor(gameInputProcessor);

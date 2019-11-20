@@ -57,8 +57,18 @@ public class Player extends Thread {
             } else {
                 GameMessage nextMove = board.getNextMove();
                 if(nextMove!=null){
+                    nextMove.playerID = playerID;
                     try{
                         out.writeObject(nextMove);
+                        out.flush();
+                    } catch(IOException ioe){
+                        ioe.printStackTrace();
+                    }
+                } else {
+                    GameMessage readyMessage = new GameMessage(GameMessage.messageType.READY);
+                    readyMessage.playerID = playerID;
+                    try{
+                        out.writeObject(readyMessage);
                         out.flush();
                     } catch(IOException ioe){
                         ioe.printStackTrace();
