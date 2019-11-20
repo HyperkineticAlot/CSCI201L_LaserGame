@@ -420,7 +420,7 @@ public abstract class AbstractGameBoard {
         // TODO: Don't render the picked up piece here, render it at the mouse cursor
         for(int i = 0; i < pieces.size; i++) {
             AbstractGamePiece piece = pieces.get(i);
-            if(piece == pickedUpPiece)
+            if(pickedUpPiece != null && piece == pickedUpPiece)
             {
                 piece.render(sb, Gdx.input.getX(), Gdx.input.getY(), pieceDim, pieceDim, false, true);
             }

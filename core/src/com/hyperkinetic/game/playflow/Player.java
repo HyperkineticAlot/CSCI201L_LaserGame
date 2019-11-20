@@ -2,7 +2,6 @@ package com.hyperkinetic.game.playflow;
 
 import com.badlogic.gdx.InputProcessor;
 import com.hyperkinetic.game.board.AbstractGameBoard;
-import com.sun.security.ntlm.Client;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;

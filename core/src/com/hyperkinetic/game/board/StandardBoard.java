@@ -69,7 +69,9 @@ public class StandardBoard extends AbstractGameBoard
 
     @Override
     public void createPieces() {
-        pieces = new Array<>(x * y);
+        pieces = new Array<>();
+        for(int i = 0; i < x * y; i++)
+            pieces.add(null);
 
         // populate pieces, aPieces, bPieces, place pieces on board, initiate aPharaoh, bPharaoh, aLaser, bLaser
         // i = row, j = column, starting at 0 in the lower left corner

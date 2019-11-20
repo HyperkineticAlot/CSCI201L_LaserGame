@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.board.AbstractBoardTile;
 import com.hyperkinetic.game.board.AbstractGameBoard;
+import com.hyperkinetic.game.core.LaserGame;
 import com.hyperkinetic.game.util.Directions;
 
 /**
@@ -153,7 +154,7 @@ public abstract class AbstractGamePiece
 
     protected void loadRegion(String image)
     {
-        //TODO
+        texture = LaserGame.loadTexture(image);
     }
 
     protected void loadRegion(Class pieceType)

@@ -14,6 +14,7 @@ public class SingleMirrorPiece extends AbstractMirrorPiece
     public SingleMirrorPiece(int x, int y, boolean c)
     {
         super(x, y, c, Directions.MirrorDirection.NORTHWEST);
+        System.out.println();
     }
 
     public SingleMirrorPiece(int x, int y, boolean c, Directions.MirrorDirection o)

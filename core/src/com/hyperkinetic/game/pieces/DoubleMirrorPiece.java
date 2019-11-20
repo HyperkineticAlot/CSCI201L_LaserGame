@@ -3,7 +3,6 @@ package com.hyperkinetic.game.pieces;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.util.Directions;
-import com.sun.jdi.Mirror;
 
 public class DoubleMirrorPiece extends AbstractMirrorPiece {
     public DoubleMirrorPiece(int x, int y, boolean c, Directions.MirrorDirection orientation) {
