@@ -430,7 +430,7 @@ public abstract class AbstractGameBoard {
                     if(highlight != null && highlight.contains(tiles.get(x-j + (y-i) * x), true))
                         sb.draw(laserTexture, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
                     else
-                        tiles.get(x - j + (y - i) * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
+                        tiles.get(x - j + (y - i) * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim, true);
                 }
                 else {
                     if(highlight != null && highlight.contains(tiles.get(j + i * x), true))
@@ -446,12 +446,12 @@ public abstract class AbstractGameBoard {
             AbstractGamePiece piece = pieces.get(i);
             if(piece == pickedUpPiece)
             {
-                piece.render(sb, Gdx.input.getX(), Gdx.input.getY(), pieceDim, pieceDim, true);
+                piece.render(sb, Gdx.input.getX(), Gdx.input.getY(), pieceDim, pieceDim, false, true);
             }
             else if(piece!=null)
                 piece.render(sb, screenX + piece.getX() * tileDim + tileDim / 10,
                                  screenY + piece.getY() * tileDim + tileDim / 10,
-                                 pieceDim, pieceDim);
+                                 pieceDim, pieceDim, flipBoard);
         }
 
         // TODO: render lasers here
@@ -460,6 +460,12 @@ public abstract class AbstractGameBoard {
 
         for(Rectangle laser : lasersToDraw)
         {
+            if(flipBoard)
+            {
+                laser.x = Gdx.graphics.getWidth() - laser.x - laser.width;
+                laser.y = Gdx.graphics.getHeight() - laser.y - laser.height;
+            }
+
             sb.draw(laserTexture, laser.x, laser.y, laser.width, laser.height);
         }
     }

@@ -14,6 +14,8 @@ import com.hyperkinetic.game.util.Directions;
  */
 public abstract class AbstractGamePiece
 {
+    private static final int IMG_DIM = 300;
+
     /**
      * The location of the piece on the board.
      */
@@ -133,18 +135,20 @@ public abstract class AbstractGamePiece
      */
     public void render(SpriteBatch sb, int x, int y, int width, int height)
     {
-        render(sb, x, y, width, height, false);
+        render(sb, x, y, width, height, false, false);
     }
 
-    public void render(SpriteBatch sb, int x, int y, int width, int height, boolean pickedUp)
+    public void render(SpriteBatch sb, int x, int y, int width, int height, boolean flipped)
     {
-        if(pickedUp)
-        {
-            width *= 2;
-            height *= 2;
-        }
+        render(sb, x, y, width, height, flipped, false);
+    }
 
-        sb.draw(texture, x, y, width, height);
+    public void render(SpriteBatch sb, int x, int y, int width, int height, boolean flipped, boolean pickedUp)
+    {
+        int scale = pickedUp ? 2 : 1;
+
+        sb.draw(texture, x, y, width/2F, height/2F, width, height, scale, scale, 0, 0, 0, IMG_DIM, IMG_DIM, flipped, flipped);
+
     }
 
     protected void loadRegion(String image)
