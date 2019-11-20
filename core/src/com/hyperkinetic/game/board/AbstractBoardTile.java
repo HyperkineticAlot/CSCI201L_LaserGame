@@ -12,6 +12,8 @@ import com.hyperkinetic.game.pieces.AbstractGamePiece;
  */
 public abstract class AbstractBoardTile
 {
+    private static final int IMG_DIM = 300;
+
     /**
      * Defines where on the board this tile resides so it can be textured correctly.
      */
@@ -119,7 +121,12 @@ public abstract class AbstractBoardTile
      */
     public void render(SpriteBatch sb, int x, int y, int width, int height)
     {
-        sb.draw(texture, x, y, width, height);
+        render(sb, x, y, width, height, false);
+    }
+
+    public void render(SpriteBatch sb, int x, int y, int width, int height, boolean flipped)
+    {
+        sb.draw(texture, x, y, width/2F, height/2F, width, height, 1, 1, 0, 0, 0, IMG_DIM, IMG_DIM, flipped, flipped);
     }
 
     /**

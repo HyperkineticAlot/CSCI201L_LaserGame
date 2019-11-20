@@ -16,7 +16,7 @@ public class Player extends Thread {
 
     public String playerID;
     private ClientThread ct;
-
+  
     private Socket socket;
     private ObjectOutputStream out;
     private AbstractGameBoard board;
@@ -45,6 +45,9 @@ public class Player extends Thread {
         this.playerID = playerID;
     }
 
+    /**
+     * Player constantly checks the game board for moves and send to server
+     */
     @Override
     public void run()
     {

@@ -9,14 +9,26 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 
 public class ClientThread extends Thread {
+    /**
+     * Input from the server
+     */
     private ObjectInputStream in;
+    /**
+     * A reference to the game board
+     */
     private AbstractGameBoard board;
 
     public String playerID;
     public boolean isGuest;
     public boolean isAI;
 
+    /**
+     * The player thread that is hold by the client
+     */
     private Player player;
+    /**
+     * The socket of the player
+     */
     private Socket socket;
 
     public ClientThread(String hostname, int port, boolean isGuest, boolean isAI)
@@ -39,6 +51,9 @@ public class ClientThread extends Thread {
         }
     }
 
+    /**
+     * Receive the start-of-game message and constantly check for server packets and process
+     */
     @Override
     public void run()
     {

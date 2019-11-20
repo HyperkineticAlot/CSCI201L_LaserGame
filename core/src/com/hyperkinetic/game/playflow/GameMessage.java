@@ -52,10 +52,18 @@ public class GameMessage implements Serializable {
         startBoard = null;
     }
 
+    /**
+     * Getter of the type of the message
+     * @return type of this message
+     */
     public GameMessage.messageType getMessageType(){
         return this.type;
     }
 
+    /**
+     * Gets the string format of a message.
+     * @return the string format of this message
+     */
     public String getMessage(){
         /*...other types of messages...*/
         if(type==messageType.PLAYER_MOVE){

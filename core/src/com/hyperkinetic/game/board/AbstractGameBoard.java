@@ -54,6 +54,9 @@ public abstract class AbstractGameBoard {
      * Dimension of each tile.
      */
     private int tileDim;
+    /**
+     * Dimension of each piece
+     */
     private int pieceDim;
 
     /**
@@ -86,6 +89,9 @@ public abstract class AbstractGameBoard {
      * The next move to be sent to the server
      */
     private GameMessage nextMove;
+    /**
+     * Variable that keeps track of whether the move is confirmed
+     */
     private boolean moveConfirmed;
 
     /**
@@ -95,6 +101,9 @@ public abstract class AbstractGameBoard {
      * flipBoard indicates that the player is black, so the board should be rendered backwards.
      */
     private boolean hasTurn;
+    /**
+     * Variable that keeps track of whether the board is flipped
+     */
     private boolean flipBoard;
 
     /**
@@ -111,6 +120,9 @@ public abstract class AbstractGameBoard {
      */
     private long laserDuration;
 
+    /**
+     * Variable that stores the piece that is currently picked up
+     */
     private AbstractGamePiece pickedUpPiece;
 
     public AbstractGameBoard(int x, int y, boolean hasTurn) {
@@ -253,6 +265,11 @@ public abstract class AbstractGameBoard {
         return true;
     }
 
+    /**
+     * Checks whether a piece could be picked up based on the turn and the owner of the piece
+     * @param piece the piece to be checked
+     * @return true if the piece could be picked up, false otherwise
+     */
     private boolean canPickUpPiece(AbstractGamePiece piece)
     {
         // if the game is local, the piece can be picked up as long as it is the turn of the player who owns it
@@ -268,7 +285,11 @@ public abstract class AbstractGameBoard {
     /**
      * Checks if a pair of click screen coordinates are legitimate (within bounds and corresponding to the same tile)
      *
-     * @return
+     * @param oldX the x coordinate of mouse-down
+     * @param oldY the y coordinate of mouse-down
+     * @param newX the x coordinate of mouse-up
+     * @param newY the y coordinate of mouse-up
+     * @return true if the click is valid, false otherwise
      */
     private static boolean checkClickBounds(int oldX, int oldY, int newX, int newY)
     {
@@ -348,6 +369,10 @@ public abstract class AbstractGameBoard {
         return (hasTurn) ? this.aLaser : this.bLaser;
     }
 
+    /**
+     * Get the confirmed next move.
+     * @return the message of next move
+     */
     public GameMessage getNextMove()
     {
         if(moveConfirmed)
@@ -385,7 +410,7 @@ public abstract class AbstractGameBoard {
                     if(highlight != null && highlight.contains(tiles.get(x-j + (y-i) * x), true))
                         sb.draw(laserTexture, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
                     else
-                        tiles.get(x - j + (y - i) * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
+                        tiles.get(x - j + (y - i) * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim, true);
                 }
                 else {
                     if(highlight != null && highlight.contains(tiles.get(j + i * x), true))
@@ -401,12 +426,12 @@ public abstract class AbstractGameBoard {
             AbstractGamePiece piece = pieces.get(i);
             if(piece == pickedUpPiece)
             {
-                piece.render(sb, Gdx.input.getX(), Gdx.input.getY(), pieceDim, pieceDim, true);
+                piece.render(sb, Gdx.input.getX(), Gdx.input.getY(), pieceDim, pieceDim, false, true);
             }
             else if(piece!=null)
                 piece.render(sb, screenX + piece.getX() * tileDim + tileDim / 10,
                                  screenY + piece.getY() * tileDim + tileDim / 10,
-                                 pieceDim, pieceDim);
+                                 pieceDim, pieceDim, flipBoard);
         }
 
         // TODO: render lasers here
@@ -415,6 +440,12 @@ public abstract class AbstractGameBoard {
 
         for(Rectangle laser : lasersToDraw)
         {
+            if(flipBoard)
+            {
+                laser.x = Gdx.graphics.getWidth() - laser.x - laser.width;
+                laser.y = Gdx.graphics.getHeight() - laser.y - laser.height;
+            }
+
             sb.draw(laserTexture, laser.x, laser.y, laser.width, laser.height);
         }
     }
@@ -482,6 +513,14 @@ public abstract class AbstractGameBoard {
      */
     public abstract String isGameOver();
 
+    /**
+     * Update the board configuration
+     * @param x the x coordinate of the piece that is to be updated
+     * @param y the y coordinate of the piece that is to be updated
+     * @param moveType the type of the move, rotated or moved to a new location
+     * @param nX the new x coordinate of the piece
+     * @param nY the new y coordinate of the piece
+     */
     public synchronized void update(int x,int y,String moveType,int nX,int nY){
         AbstractGamePiece piece = getPieceFromCoordinate(x,y);
         if(moveType.equals("rotateL")) {
@@ -558,6 +597,13 @@ public abstract class AbstractGameBoard {
     /**
      * Check whether the movement of a player on a piece is valid.
      *
+     * @param color the
+     * @param x
+     * @param y
+     * @param moveType
+     * @param nX
+     * @param nY
+     * @return
      */
     public boolean isValidMove(boolean color, int x, int y, String moveType, int nX, int nY) {
         AbstractGamePiece piece = getPieceFromCoordinate(x,y);
