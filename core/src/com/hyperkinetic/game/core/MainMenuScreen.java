@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 //import javax.xml.soap.Text;
 
@@ -24,14 +26,19 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
     private Texture titlePic;
     private int width;
     private int height;
-
+    private OrthographicCamera camera;
     public MainMenuScreen (final LaserGame game) {
         this.width = Gdx.graphics.getWidth();
         this.height = Gdx.graphics.getHeight();
         // constructor
         this.game = game;
 
-        stage = new Stage(new ScreenViewport());
+        // to make background and button scope resizable
+        camera = new OrthographicCamera(width, height);
+        camera.setToOrtho(false,width, height);
+        stage = new Stage(new StretchViewport(width, height, camera));
+
+
         batch = new SpriteBatch();
 
         backgroundPic = new Texture(Gdx.files.internal("LaserGameWithTitle.png"));
@@ -41,25 +48,9 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         neon.getFont("font").getData().setScale(1.20f, 1.20f);
 
 
-        Button login = new TextButton("LOG IN", neon);
-        login.setSize(200,100);
-        login.setPosition(width/2 - 100, height/2);
-        login.addListener(new InputListener(){
-            @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new LogInScreen(game));
-            }
-            @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
-        });
-        stage.addActor(login);
-
-
         Button guest = new TextButton("GUEST", neon);
-        guest.setSize(200,100);
-        guest.setPosition(width/2 - 100, height/2 + 100);
+        guest.setSize((float)(width / 9.6),(float)(height / 10.8));
+        guest.setPosition(width/2 - (float)(width / 9.6) / 2, height/2 + (float)(height / 10.8));
         guest.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -73,25 +64,25 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         stage.addActor(guest);
 
 
-        Button quit = new TextButton("QUIT", neon);
-        quit.setSize(200,100);
-        quit.setPosition(width/2 - 100, height/2 - 200);
-        quit.addListener(new InputListener(){
+        Button login = new TextButton("LOG IN", neon);
+        login.setSize((float)(width / 9.6),(float)(height / 10.8));
+        login.setPosition(width / 2 - (float)(width / 9.6) / 2, height / 2);
+        login.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                Gdx.app.exit();
+                game.setScreen(new LogInScreen(game));
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 return true;
             }
         });
-        stage.addActor(quit);
+        stage.addActor(login);
 
 
         Button settings = new TextButton("SETTINGS", neon);
-        settings.setSize(200,100);
-        settings.setPosition(width/2 - 100, height/2 - 100);
+        settings.setSize((float)(width / 9.6),(float)(height / 10.8));
+        settings.setPosition(width/2 - (float)(width / 9.6) / 2, height/2 - (float)(height / 10.8));
         settings.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -105,6 +96,21 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         });
         stage.addActor(settings);
 
+
+        Button quit = new TextButton("QUIT", neon);
+        quit.setSize((float)(width / 9.6),(float)(height / 10.8));
+        quit.setPosition(width/2 - (float)(width / 9.6) / 2, height / 2 - 2 * (float)(height / 10.8));
+        quit.addListener(new InputListener(){
+            @Override
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                Gdx.app.exit();
+            }
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+        stage.addActor(quit);
 
         // test propose
         outputLabel = new Label("Press a Button",neon);
@@ -123,7 +129,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(255,255,255, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.getBatch().begin();
@@ -133,11 +139,12 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
 
         stage.act();
         stage.draw();
+
     }
 
     @Override
     public void resize(int width, int height) {
-
+        stage.getViewport().update(width, height, false);
     }
 
     @Override
