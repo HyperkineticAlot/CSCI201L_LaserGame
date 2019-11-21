@@ -195,6 +195,7 @@ public class GameServer {
                     retval = new GameMessage(GameMessage.messageType.LOGIN_FAILURE);
                     retval.errorMessage = "The username does not exist. ";
                 }
+                retval.playerID = playerID;
             } else if(gm.getMessageType()==GameMessage.messageType.REGISTER_ATTEMPT){
                 String playerID = gm.playerID;
                 String password = gm.password;
@@ -208,8 +209,11 @@ public class GameServer {
                     // register success
                     st.execute("INSERT INTO USER (userName, passWord) VALUES ('"
                             + playerID + "', '" + password + "')");
+                    st.execute("INSERT INTO RECORD (userID, numPlayed, numWin, numLoss) VALUES ("
+                            + playerID + "', '" + "'0', '0', '0')");
                     retval = new GameMessage(GameMessage.messageType.REGISTER_SUCCESS);
                 }
+                retval.playerID = playerID;
             } else if(gm.getMessageType()==GameMessage.messageType.STATS_REQUEST){
                 String playerID = gm.playerID;
                 rs = st.executeQuery("SELECT * FROM RECORD WHERE userID = '" + playerID + "'");
@@ -219,6 +223,7 @@ public class GameServer {
                     retval.numWin = rs.getInt("numWin");
                     retval.numLoss = rs.getInt("numLoss");
                 }
+                retval.playerID = playerID;
             }
         } catch(ClassNotFoundException e){
             System.out.println("ClassNotFound error in queryDatabase(): "+e.getMessage());
