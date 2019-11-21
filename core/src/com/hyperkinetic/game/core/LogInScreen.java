@@ -48,9 +48,16 @@ public class LogInScreen  extends InputAdapter implements Screen {
         neon.getFont("font").getData().setScale(1.20f, 1.20f);
 
         final TextField username = new TextField("", neon);
-        username.setPosition(width / 2,height / 2);
+        username.setPosition(width / 2 - (float)(width / 9.6) / 2 ,height / 2);
         username.setSize((float)(width / 9.6), (float)(height / 21.6) );
-        TextField password = new TextField("", neon);
+
+        final TextField password = new TextField("", neon);
+        //password.setStyle();
+        password.setPasswordMode(true);
+        password.setPasswordCharacter('*');
+        password.setPosition(width / 2 - (float)(width / 9.6) / 2,height / 2 - (float)(height / 21.6));
+        password.setSize((float)(width / 9.6), (float)(height / 21.6) );
+
 
         Button settings = new TextButton("LOG IN", neon);
         settings.setSize(200,100);
@@ -59,6 +66,7 @@ public class LogInScreen  extends InputAdapter implements Screen {
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println(username.getText());
+                System.out.println(password.getText());
                 //game.setScreen(new MainMenuScreen(game));
             }
             @Override
@@ -68,6 +76,7 @@ public class LogInScreen  extends InputAdapter implements Screen {
         });
         stage.addActor(settings);
         stage.addActor(username);
+        stage.addActor(password);
     }
 
 
