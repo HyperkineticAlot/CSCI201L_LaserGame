@@ -422,7 +422,7 @@ public abstract class AbstractGameBoard {
             AbstractGamePiece piece = pieces.get(i);
             if(pickedUpPiece != null && piece == pickedUpPiece)
             {
-                piece.render(sb, Gdx.input.getX(), Gdx.input.getY(), pieceDim, pieceDim, false, true);
+                piece.render(sb, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), pieceDim, pieceDim, false, true);
             }
             else if(piece!=null)
                 piece.render(sb, screenX + piece.getX() * tileDim + tileDim / 10,

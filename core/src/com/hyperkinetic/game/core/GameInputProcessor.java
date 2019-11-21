@@ -1,5 +1,6 @@
 package com.hyperkinetic.game.core;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.hyperkinetic.game.board.AbstractBoardTile;
@@ -61,11 +62,13 @@ public class GameInputProcessor implements InputProcessor
     {
         if(button == Input.Buttons.RIGHT)
         {
-            return AbstractGameBoard.rightClick(rightClickX, rightClickY, x, y);
+            return AbstractGameBoard.rightClick(rightClickX, Gdx.graphics.getHeight() - rightClickY,
+                                                x, Gdx.graphics.getHeight() - y);
         }
         if(button == Input.Buttons.LEFT)
         {
-            return AbstractGameBoard.leftClick(leftClickX, leftClickY, x, y);
+            return AbstractGameBoard.leftClick(leftClickX, Gdx.graphics.getHeight() - leftClickY,
+                                               x, Gdx.graphics.getHeight() - y);
         }
         return false;
     }
