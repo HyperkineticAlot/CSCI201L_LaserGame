@@ -34,10 +34,12 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         stage = new Stage(new ScreenViewport());
         batch = new SpriteBatch();
 
-        backgroundPic = new Texture(Gdx.files.internal("tempBackground.png"));
-        titlePic = new Texture(Gdx.files.internal("LaserGameTitle.png"));
+        backgroundPic = new Texture(Gdx.files.internal("LaserGameWithTitle.png"));
+        //titlePic = new Texture(Gdx.files.internal("LaserGameTitle.png"));
 
         Skin neon = new Skin(Gdx.files.internal("skin/neon-ui.json"));
+        neon.getFont("font").getData().setScale(1.20f, 1.20f);
+
 
         Button login = new TextButton("LOG IN", neon);
         login.setSize(200,100);
@@ -45,7 +47,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         login.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new LaserGameScreen(game));
+                game.setScreen(new LogInScreen(game));
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -126,7 +128,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
 
         stage.getBatch().begin();
         stage.getBatch().draw(backgroundPic, 0, 0, width, height);
-        stage.getBatch().draw(titlePic, width / 2 - 958/ 2 , height - 4 * 86);
+        //stage.getBatch().draw(titlePic, width / 2 - 958/ 2 , height - 4 * 86);
         stage.getBatch().end();
 
         stage.act();
