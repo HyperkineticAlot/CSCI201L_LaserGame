@@ -42,8 +42,10 @@ public class LaserGame extends Game {
      */
     private GameRoom gameRoom;
 
+
     public void create() {
         // board = new StandardBoard();
+
         batch = new SpriteBatch();
         gameInputProcessor = new GameInputProcessor();
         Gdx.input.setInputProcessor(gameInputProcessor);
@@ -51,6 +53,9 @@ public class LaserGame extends Game {
         //playerB = new Player();
         //gameRoom = new GameRoom(playerA, playerB,1, board); // trivial roomID
         this.setScreen(new MainMenuScreen(this));
+
+
+
     }
 
     public void render() {
@@ -78,4 +83,6 @@ public class LaserGame extends Game {
         disposables.add(retval);
         return retval;
     }
+
+
 }
