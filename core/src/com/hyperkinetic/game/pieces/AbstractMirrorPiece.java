@@ -3,6 +3,8 @@ package com.hyperkinetic.game.pieces;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.util.Directions;
 
+import static com.hyperkinetic.game.util.Directions.MirrorDirection.NORTHWEST;
+
 /**
  * Abstract superclass describing the behaviour of a mirror piece.
  *
@@ -45,14 +47,14 @@ public abstract class AbstractMirrorPiece extends AbstractGamePiece
     {
         if(orientation == null) return;
 
-        if(orientation == Directions.MirrorDirection.NORTHWEST)
+        if(orientation == NORTHWEST)
             orientation = Directions.MirrorDirection.NORTHEAST;
         else if(orientation == Directions.MirrorDirection.NORTHEAST)
             orientation = Directions.MirrorDirection.SOUTHEAST;
         else if(orientation == Directions.MirrorDirection.SOUTHEAST)
             orientation = Directions.MirrorDirection.SOUTHWEST;
         else
-            orientation = Directions.MirrorDirection.NORTHWEST;
+            orientation = NORTHWEST;
     }
 
     /**
@@ -62,10 +64,10 @@ public abstract class AbstractMirrorPiece extends AbstractGamePiece
     {
         if(orientation == null) return;
 
-        if(orientation == Directions.MirrorDirection.NORTHWEST)
+        if(orientation == NORTHWEST)
             orientation = Directions.MirrorDirection.SOUTHWEST;
         else if(orientation == Directions.MirrorDirection.NORTHEAST)
-            orientation = Directions.MirrorDirection.NORTHWEST;
+            orientation = NORTHWEST;
         else if(orientation == Directions.MirrorDirection.SOUTHEAST)
             orientation = Directions.MirrorDirection.NORTHEAST;
         else
@@ -81,4 +83,21 @@ public abstract class AbstractMirrorPiece extends AbstractGamePiece
      */
     public abstract Array<Directions.Direction> acceptLaser(Directions.Direction laserDirection);
 
+    @Override
+    protected float getRotation()
+    {
+        switch(orientation)
+        {
+            case NORTHWEST:
+                return 0F;
+            case SOUTHWEST:
+                return 90F;
+            case SOUTHEAST:
+                return 180F;
+            case NORTHEAST:
+                return 270F;
+        }
+
+        return 0F;
+    }
 }

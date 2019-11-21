@@ -148,7 +148,7 @@ public abstract class AbstractGamePiece
     {
         int scale = pickedUp ? 2 : 1;
 
-        sb.draw(texture, x, y, width/2F, height/2F, width, height, scale, scale, 0, 0, 0, IMG_DIM, IMG_DIM, flipped, flipped);
+        sb.draw(texture, x, y, width/2F, height/2F, width, height, scale, scale, getRotation(), 0, 0, IMG_DIM, IMG_DIM, flipped, flipped);
 
     }
 
@@ -167,4 +167,6 @@ public abstract class AbstractGamePiece
         //TODO
         return "pieces/singlemirror.png";
     }
+
+    protected abstract float getRotation();
 }

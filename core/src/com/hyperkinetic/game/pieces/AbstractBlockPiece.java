@@ -64,4 +64,21 @@ public abstract class AbstractBlockPiece extends AbstractGamePiece
      */
     public abstract Array<Directions.Direction> acceptLaser(Directions.Direction laserDirection);
 
+    @Override
+    protected float getRotation()
+    {
+        switch(orientation)
+        {
+            case NORTH:
+                return 0F;
+            case WEST:
+                return 90F;
+            case SOUTH:
+                return 180F;
+            case EAST:
+                return 270F;
+        }
+
+        return 0F;
+    }
 }
