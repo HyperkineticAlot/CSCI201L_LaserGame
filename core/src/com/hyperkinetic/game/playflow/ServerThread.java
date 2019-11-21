@@ -4,16 +4,19 @@ import java.io.*;
 import java.net.Socket;
 
 public class ServerThread extends Thread {
+    private GameServer gs;
     private String playerID;
     private GameRoom room;
     private boolean color;
+    private boolean loggedIn;
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
-    public ServerThread(Socket s, String playerID){
+    public ServerThread(Socket s, GameServer gs){
         this.playerID = playerID;
         socket = s;
+        this.gs = gs;
         try
         {
             in = new ObjectInputStream(socket.getInputStream());
@@ -76,6 +79,45 @@ public class ServerThread extends Thread {
      */
     @Override
     public void run() {
+        while (!loggedIn) {
+            try {
+                GameMessage message = (GameMessage) in.readObject();
+                if (message.getMessageType() == GameMessage.messageType.LOGIN_ATTEMPT) {
+                    GameMessage loginMessage = gs.queryDatabase(message);
+                    if (loginMessage.getMessageType() == GameMessage.messageType.LOGIN_SUCCESS) {
+                        // Login success
+                        // TODO send message to client and change this and client player id
+
+                        loggedIn = true;
+                    }
+                    else {
+                        // Login failed
+                        // TODO display error message
+                    }
+
+                }
+                else if (message.getMessageType() == GameMessage.messageType.REGISTER_ATTEMPT) {
+                    GameMessage registerMessage = gs.queryDatabase(message);
+                    if (registerMessage.getMessageType() == GameMessage.messageType.REGISTER_SUCCESS) {
+                        // Register success and automatically login
+                        // TODO send message to client and change this and client player id
+
+                        loggedIn = true;
+                    }
+                    else {
+                        // Login failed
+                        // TODO display error message
+                    }
+                }
+            }
+            catch (ClassNotFoundException cnfe) {
+                System.out.println("cnfe in run() of ServerThread " + playerID);
+                cnfe.printStackTrace();
+            }
+            catch(IOException ioe) {
+                System.out.println("ioe in run() of ServerThread " + playerID);
+            }
+        }
         while(!room.isOver)
         {
             // querying for GameMessage objects
