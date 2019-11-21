@@ -6,7 +6,6 @@ import com.hyperkinetic.game.pieces.LaserPiece;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 
 public class ClientThread extends Thread {
     /**
@@ -88,11 +87,13 @@ public class ClientThread extends Thread {
                             // TODO: handle client loss
                             System.out.println(playerID+" has lost.");
                         }
-                    } else if(message.getMessageType()==GameMessage.messageType.ACCOUNT_STATS_RESPONSE){
-                        String records = message.records;
+                    } else if(message.getMessageType()==GameMessage.messageType.STATS_RESPONSE){
+                        int numPlayed = message.numPlayed;
+                        int numWin = message.numWin;
+                        int numLoss = message.numLoss;
                         if(message.playerID.equals(playerID)){
                             // TODO: display records in a nicely fashion
-                            System.out.println(playerID+"'s current stats: "+records);
+                            System.out.println(playerID+" has played: " + numPlayed + "games. Wins: " + numWin + "; Losses: " + numLoss + ".");
                         }
                     } else if(message.getMessageType()==GameMessage.messageType.COPY){
                         if(message.playerID.equals(playerID)){

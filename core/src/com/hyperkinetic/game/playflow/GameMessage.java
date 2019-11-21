@@ -22,17 +22,19 @@ public class GameMessage implements Serializable {
     public AbstractGameBoard startBoard;
 
     public String password;
-    public String records;
+    public int numPlayed;
+    public int numWin;
+    public int numLoss;
 
     public enum messageType implements Serializable {
         LOGIN_ATTEMPT,
         LOGIN_SUCCESS,
         LOGIN_FAILURE,
-        ACCOUNT_CREATE,
-        ACCOUNT_CREATE_SUCCESS,
-        ACCOUNT_CREATE_FAILURE,
-        ACCOUNT_STATS_REQUEST,
-        ACCOUNT_STATS_RESPONSE,
+        REGISTER_ATTEMPT,
+        REGISTER_SUCCESS,
+        REGISTER_FAILURE,
+        STATS_REQUEST,
+        STATS_RESPONSE,
 
         ROOM_CREATE,
         PLAYER_MOVE,
@@ -87,16 +89,16 @@ public class GameMessage implements Serializable {
             return timeStamp+" User "+playerID+" is successfully logged in.";
         } else if(type==messageType.LOGIN_FAILURE){
             return timeStamp+" User "+playerID+" is not logged in with error "+errorMessage+".";
-        } else if(type==messageType.ACCOUNT_CREATE){
+        } else if(type==messageType.REGISTER_ATTEMPT){
             return timeStamp+" User "+playerID+" wants to create an account with password "+password+".";
-        } else if(type==messageType.ACCOUNT_CREATE_SUCCESS){
+        } else if(type==messageType.REGISTER_SUCCESS){
             return timeStamp+" User "+playerID+"  has successfully created an account.";
-        } else if(type==messageType.ACCOUNT_CREATE_FAILURE){
+        } else if(type==messageType.REGISTER_FAILURE){
             return timeStamp+" User "+playerID+"  has failed to create an account with error "+errorMessage+".";
-        } else if(type==messageType.ACCOUNT_STATS_REQUEST){
+        } else if(type==messageType.STATS_REQUEST){
             return timeStamp+" User "+playerID+" is requesting his records.";
-        } else if(type==messageType.ACCOUNT_STATS_RESPONSE){
-            return timeStamp+" User "+playerID+"'s records: "+records+".";
+        } else if(type==messageType.STATS_RESPONSE){
+            return timeStamp+" User "+playerID+"'s records: Game Played: " + numPlayed + "; Wins: " + numWin + "; Losses: " + numLoss + ".";
         } else if(type==messageType.COPY){
             return timeStamp+" Server responds to "+playerID+"'s ready message.";
         }

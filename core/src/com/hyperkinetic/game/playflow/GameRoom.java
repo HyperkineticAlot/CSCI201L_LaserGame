@@ -1,6 +1,5 @@
 package com.hyperkinetic.game.playflow;
 
-import java.net.*;
 import com.hyperkinetic.game.board.AbstractGameBoard;
 import com.hyperkinetic.game.board.StandardBoard;
 import com.hyperkinetic.game.pieces.LaserPiece;
@@ -192,7 +191,7 @@ public class GameRoom {
             handleMoveAttempt(message);
         } else if(message.getMessageType()==messageType.READY){
             handleReady(message);
-        } else if(message.getMessageType()==messageType.ACCOUNT_STATS_REQUEST){
+        } else if(message.getMessageType()==messageType.STATS_REQUEST){
             GameMessage gm = gs.queryDatabase(message);
             broadcast(gm);
         }

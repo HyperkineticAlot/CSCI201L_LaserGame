@@ -7,8 +7,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * GameSocket class, server side of websocket, hosts all GameRooms and implements match making
@@ -41,11 +39,13 @@ public class GameServer {
      */
     private static Vector<ServerThread> matchingQueue = new Vector<>();
     /**
-     * Stores player sockets in login
+     * Stores ServerThreads that are not logged in
      */
-    private static Vector<Socket> loginQueue = new Vector<>();
-    // stores mapping from playerID to sockets
-    // private static ConcurrentHashMap<String,Socket> playerIdMap = new ConcurrentHashMap<>();
+    private static Vector<ServerThread> loginQueue = new Vector<>();
+    /**
+     * Stores ServerThreads that are logged in
+     */
+    private static Vector<ServerThread> loggedQueue = new Vector<>();
     /**
      * stores mapping from playerID to GameRooms
      */
@@ -63,21 +63,10 @@ public class GameServer {
 
             while(true) {
                 Socket s = ss.accept();
-                loginQueue.add(s);
+                ServerThread st = new ServerThread(s, this);
+                loginQueue.add(st);
 
-                // TODO: implement actual logging with sql
-                // TODO: keep track of connected logged-in ServerThreads (?)
-                for(Socket login : loginQueue)
-                {
-                    BufferedReader pwReader = new BufferedReader(new InputStreamReader(login.getInputStream()));
-                    String line = pwReader.readLine();
-                    if(line != null)
-                    {
-                        ServerThread loggedUser = new ServerThread(login, line.split(",")[0]);
-                        matchingQueue.add(loggedUser);
-                    }
-                    // TODO: delete login from loginQueue: separate Login thread (?)
-                }
+
 
                 // first come first served matchmaking
                 for(int i = 0; i < matchingQueue.size() - 1; i++)
@@ -178,24 +167,58 @@ public class GameServer {
      * @return a responsive GameMessage object
      */
     public GameMessage queryDatabase(GameMessage gm){
-        Connection conn = null;
-        PreparedStatement ps = null;
+        Connection cn = null;
+        Statement st = null;
         ResultSet rs = null;
+        GameMessage retval = null;
         try{
-            conn = getConnection();
-            ps = conn.prepareStatement("");
-            rs = ps.executeQuery();
+            cn = getConnection();
+            st = cn.createStatement();
             if(gm.getMessageType()==GameMessage.messageType.LOGIN_ATTEMPT){
                 String playerID = gm.playerID;
                 String password = gm.password;
-                // TODO: query USER table to login player
-            } else if(gm.getMessageType()==GameMessage.messageType.ACCOUNT_CREATE){
+                rs = st.executeQuery("SELECT * FROM USER WHERE userName = '" + playerID + "'");
+                if (rs.next()) {
+                    // playerID exist
+                    if (password.equals(rs.getString(password))) {
+                        // password correct
+                        retval = new GameMessage(GameMessage.messageType.LOGIN_SUCCESS);
+                    }
+                    else {
+                        // password incorrect
+                        retval = new GameMessage(GameMessage.messageType.LOGIN_FAILURE);
+                        retval.errorMessage = "The password does not match the username. ";
+                    }
+                }
+                else {
+                    // playerID does not exist
+                    retval = new GameMessage(GameMessage.messageType.LOGIN_FAILURE);
+                    retval.errorMessage = "The username does not exist. ";
+                }
+            } else if(gm.getMessageType()==GameMessage.messageType.REGISTER_ATTEMPT){
                 String playerID = gm.playerID;
                 String password = gm.password;
-                // TODO: append to USER table & RECORD table the new player
-            } else if(gm.getMessageType()==GameMessage.messageType.ACCOUNT_STATS_REQUEST){
+                rs = st.executeQuery("SELECT * FROM USER WHERE userName = '" + playerID + "'");
+                if (rs.next()) {
+                    // Username already exist
+                    retval = new GameMessage(GameMessage.messageType.REGISTER_FAILURE);
+                    retval.errorMessage = "This user name already exists. ";
+                }
+                else {
+                    // register success
+                    st.execute("INSERT INTO USER (userName, passWord) VALUES ('"
+                            + playerID + "', '" + password + "')");
+                    retval = new GameMessage(GameMessage.messageType.REGISTER_SUCCESS);
+                }
+            } else if(gm.getMessageType()==GameMessage.messageType.STATS_REQUEST){
                 String playerID = gm.playerID;
-                // TODO: query USER table for userID & query RECORED table accordingly
+                rs = st.executeQuery("SELECT * FROM RECORD WHERE userID = '" + playerID + "'");
+                while (rs.next()) {
+                    retval = new GameMessage(GameMessage.messageType.STATS_RESPONSE);
+                    retval.numPlayed = rs.getInt("numPlayer");
+                    retval.numWin = rs.getInt("numWin");
+                    retval.numLoss = rs.getInt("numLoss");
+                }
             }
         } catch(ClassNotFoundException e){
             System.out.println("ClassNotFound error in queryDatabase(): "+e.getMessage());
@@ -203,14 +226,14 @@ public class GameServer {
             System.out.println("SQL error in queryDatabase(): "+e.getMessage());
         } finally {
             try {
-                if(rs!=null) rs.close();
-                if(ps!=null) ps.close();
-                if(conn!=null) conn.close();
+                if(rs != null) rs.close();
+                if(st != null) st.close();
+                if(cn != null) cn.close();
             } catch(SQLException e) {
                 System.out.println(e.getMessage());
             }
         }
-        return null;
+        return retval;
     }
 
     public void deleteRoom(GameRoom gr){
