@@ -86,28 +86,21 @@ public class ServerThread extends Thread {
                     GameMessage loginMessage = gs.queryDatabase(message);
                     if (loginMessage.getMessageType() == GameMessage.messageType.LOGIN_SUCCESS) {
                         // Login success
-                        // TODO send message to client and change this and client player id
-
                         loggedIn = true;
+                        playerID = loginMessage.playerID;
+                        gs.loginServerThread(this);
                     }
-                    else {
-                        // Login failed
-                        // TODO display error message
-                    }
-
+                    sendMessage(loginMessage);
                 }
                 else if (message.getMessageType() == GameMessage.messageType.REGISTER_ATTEMPT) {
                     GameMessage registerMessage = gs.queryDatabase(message);
                     if (registerMessage.getMessageType() == GameMessage.messageType.REGISTER_SUCCESS) {
                         // Register success and automatically login
-                        // TODO send message to client and change this and client player id
-
                         loggedIn = true;
+                        playerID = registerMessage.playerID;
+                        gs.loginServerThread(this);
                     }
-                    else {
-                        // Login failed
-                        // TODO display error message
-                    }
+                    sendMessage(registerMessage);
                 }
             }
             catch (ClassNotFoundException cnfe) {

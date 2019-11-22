@@ -45,7 +45,7 @@ public class GameServer {
     /**
      * Stores ServerThreads that are logged in
      */
-    private static Vector<ServerThread> loggedQueue = new Vector<>();
+    private static Vector<ServerThread> loggedInQueue = new Vector<>();
     /**
      * stores mapping from playerID to GameRooms
      */
@@ -93,6 +93,22 @@ public class GameServer {
             }
         } catch(IOException e) {
             System.out.println("Unable to create server: "+e.getMessage());
+        }
+    }
+
+    /**
+     * Remove the ServerThread from loginQueue and add that ServerThread to loggedInQueue.
+     *
+     * @param serverThread the ServerThread that is to be removed and added
+     */
+    public void loginServerThread(ServerThread serverThread) {
+        ServerThread threadToBeMoved = null;
+        for (int i = 0; i < loginQueue.size(); i++) {
+            if (serverThread == loginQueue.get(i)) {
+                threadToBeMoved = loginQueue.get(i);
+                loginQueue.remove(i);
+                loggedInQueue.add(threadToBeMoved);
+            }
         }
     }
 
