@@ -62,7 +62,15 @@ public class ClientThread extends Thread {
             {
                 GameMessage message = (GameMessage) in.readObject();
                 if(board==null){
-                    if(message.getMessageType()==GameMessage.messageType.ROOM_CREATE){
+                    if (message.getMessageType() == GameMessage.messageType.LOGIN_SUCCESS || message.getMessageType() == GameMessage.messageType.REGISTER_SUCCESS) {
+                        this.player.setPlayerID(message.playerID);
+                        this.playerID = message.playerID;
+                    }
+                    else if (message.getMessageType() == GameMessage.messageType.LOGIN_FAILURE || message.getMessageType() == GameMessage.messageType.REGISTER_FAILURE) {
+                        // TODO display error message
+                        System.out.println(message.errorMessage);
+                    }
+                    else if(message.getMessageType()==GameMessage.messageType.ROOM_CREATE){
                         this.board = message.startBoard;
                         player.setBoard(message.startBoard);
                     }
