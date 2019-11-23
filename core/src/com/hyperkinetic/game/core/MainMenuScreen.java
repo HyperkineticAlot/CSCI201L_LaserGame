@@ -3,6 +3,7 @@ package com.hyperkinetic.game.core;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -24,10 +25,24 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
     private Label outputLabel;
     private Texture backgroundPic;
     private Texture titlePic;
-    private int width;
-    private int height;
+    private float width;
+    private float height;
     private OrthographicCamera camera;
+
+    public Music bgm = Gdx.audio.newMusic(Gdx.files.internal("testMusic.mp3"));
+    public static boolean playBgm = true;
+    public static boolean initialPlaying = true;
+
     public MainMenuScreen (final LaserGame game) {
+        //
+        bgm.setVolume(0.5f);                 // sets the volume to half the maximum volume
+        bgm.setLooping(true);                // will repeat playback until music.stop() is called
+        if(playBgm && initialPlaying) {
+            bgm.play();                      // resumes the playback
+        }
+
+
+
         this.width = Gdx.graphics.getWidth();
         this.height = Gdx.graphics.getHeight();
         // constructor
@@ -103,10 +118,13 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         quit.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                Gdx.app.exit();
+                //Gdx.app.exit();
+                game.setScreen(new SettingsScreen(game, bgm)); // for test propose
+                outputLabel.setText("touch up");
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                outputLabel.setText("touch down");
                 return true;
             }
         });
@@ -166,4 +184,5 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
     public void dispose() {
         stage.dispose();
     }
+
 }

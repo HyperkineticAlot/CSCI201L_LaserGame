@@ -3,7 +3,9 @@ package com.hyperkinetic.game.core;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -12,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import sun.applet.Main;
 
 //import javax.xml.soap.Text;
 
@@ -22,22 +26,80 @@ public class SettingsScreen  extends InputAdapter implements Screen {
     private Label outputLabel;
     private Texture backgroundPic;
     private Texture titlePic;
+    private float width;
+    private float height;
+    private OrthographicCamera camera;
 
-    public SettingsScreen (final LaserGame game) {
-        // constructor
+    public SettingsScreen (final LaserGame game, final Music bgm) {
+        this.width = Gdx.graphics.getWidth();
+        this.height = Gdx.graphics.getHeight();
         this.game = game;
 
-        stage = new Stage(new ScreenViewport());
-        batch = new SpriteBatch();
+        camera = new OrthographicCamera(width, height);
+        camera.setToOrtho(false,width, height);
+        stage = new Stage(new StretchViewport(width, height, camera));
 
-        backgroundPic = new Texture(Gdx.files.internal("tempBackground.png"));
-        titlePic = new Texture(Gdx.files.internal("LaserGameTitle.png"));
+        backgroundPic = new Texture(Gdx.files.internal("LaserGameWithTitle.png"));
+        //titlePic = new Texture(Gdx.files.internal("LaserGameTitle.png"));
 
         Skin neon = new Skin(Gdx.files.internal("skin/neon-ui.json"));
+        neon.getFont("font").getData().setScale(1.20f, 1.20f);
+
+        // music on and off
+        ButtonGroup musicChoiceGroup = new ButtonGroup<CheckBox>();
+
+        CheckBox music = new CheckBox("Music", neon);
+        music.setSize((float)(width / 9.6),(float)(height / 10.8));
+        music.setPosition(width / 2 - (float)(width / 9.6) / 2, height / 2);
+
+        CheckBox noMusic = new CheckBox("No Music", neon);
+        noMusic.setSize((float)(width / 9.6),(float)(height / 10.8));
+        noMusic.setPosition(width / 2 - (float)(width / 9.6) / 2 + (float)(width / 9.6) , height / 2);
+
+        musicChoiceGroup.add(noMusic);
+        musicChoiceGroup.add(music);
+        musicChoiceGroup.setMaxCheckCount(1);
+        musicChoiceGroup.setMinCheckCount(1);
+        musicChoiceGroup.setUncheckLast(true);
+
+        music.addListener(new InputListener(){
+            @Override
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                System.out.println("touch up on music");
+                bgm.play();
+                MainMenuScreen.playBgm = true;
+                MainMenuScreen.initialPlaying = false;
+            }
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+
+        noMusic.addListener(new InputListener(){
+            @Override
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                System.out.println("touch up on no music");
+                bgm.pause();
+                MainMenuScreen.playBgm = false;
+                MainMenuScreen.initialPlaying = false;
+            }
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+
+        if(MainMenuScreen.playBgm) {
+            musicChoiceGroup.setChecked("Music");
+        } else {
+            musicChoiceGroup.setChecked("No Music");
+        }
+
 
         Button settings = new TextButton("Back", neon);
-        settings.setSize(200,100);
-        settings.setPosition(1920/2 - 100, 1280/2 - 200);
+        settings.setSize((float)(width / 9.6),(float)(height / 10.8));
+        settings.setPosition(width / 2 - (float)(width / 9.6) / 2, height / 2 - (float)(height / 10.8));
         settings.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -50,6 +112,8 @@ public class SettingsScreen  extends InputAdapter implements Screen {
         });
         stage.addActor(settings);
 
+        stage.addActor(music);
+        stage.addActor(noMusic);
     }
 
 
@@ -65,8 +129,8 @@ public class SettingsScreen  extends InputAdapter implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.getBatch().begin();
-        stage.getBatch().draw(backgroundPic, 0, 0, 1920, 1280);
-        stage.getBatch().draw(titlePic, 1920 / 2 - 958/ 2 , 1000);
+        stage.getBatch().draw(backgroundPic, 0, 0, this.width, this.height);
+        //stage.getBatch().draw(titlePic, 1920 / 2 - 958/ 2 , 1000);
         stage.getBatch().end();
 
         stage.act();
@@ -75,7 +139,7 @@ public class SettingsScreen  extends InputAdapter implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        stage.getViewport().update(width, height, false);
     }
 
     @Override

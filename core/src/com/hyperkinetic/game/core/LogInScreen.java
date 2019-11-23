@@ -24,8 +24,8 @@ public class LogInScreen  extends InputAdapter implements Screen {
     private Label outputLabel;
     private Texture backgroundPic;
     private Texture titlePic;
-    private int width;
-    private int height;
+    private float width;
+    private float height;
     private OrthographicCamera camera;
 
     public LogInScreen (final LaserGame game) {
@@ -45,7 +45,15 @@ public class LogInScreen  extends InputAdapter implements Screen {
         //titlePic = new Texture(Gdx.files.internal("LaserGameTitle.png"));
 
         Skin neon = new Skin(Gdx.files.internal("skin/neon-ui.json"));
-        neon.getFont("font").getData().setScale(1.20f, 1.20f);
+        neon.getFont("font").getData().setScale(1.30f, 1.30f);
+
+        Label usernameLabel = new Label("Username", neon);
+        usernameLabel.setPosition(width / 2 - (float)(width / 9.6) / 4,height / 2 + (float)(height / 21.6));
+        usernameLabel.setSize((float)(width / 9.6), (float)(height / 21.6) );
+
+        Label passwordLabel = new Label("Password", neon);
+        passwordLabel.setPosition(width / 2 - (float)(width / 9.6) / 4,height / 2 - (float)(height / 21.6));
+        passwordLabel.setSize((float)(width / 9.6), (float)(height / 21.6) );
 
         final TextField username = new TextField("", neon);
         username.setPosition(width / 2 - (float)(width / 9.6) / 2 ,height / 2);
@@ -55,13 +63,13 @@ public class LogInScreen  extends InputAdapter implements Screen {
         //password.setStyle();
         password.setPasswordMode(true);
         password.setPasswordCharacter('*');
-        password.setPosition(width / 2 - (float)(width / 9.6) / 2,height / 2 - (float)(height / 21.6));
+        password.setPosition(width / 2 - (float)(width / 9.6) / 2,height / 2 - 2 * (float)(height / 21.6));
         password.setSize((float)(width / 9.6), (float)(height / 21.6) );
 
 
         Button settings = new TextButton("LOG IN", neon);
         settings.setSize(200,100);
-        settings.setPosition(width/2 - (float)(width / 9.6) / 2, height / 2 - 2 * (float)(height / 10.8));
+        settings.setPosition(width/2 - (float)(width / 9.6) / 2, height / 2 - 3 * (float)(height / 10.8));
         settings.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -77,6 +85,8 @@ public class LogInScreen  extends InputAdapter implements Screen {
         stage.addActor(settings);
         stage.addActor(username);
         stage.addActor(password);
+        stage.addActor(usernameLabel);
+        stage.addActor(passwordLabel);
     }
 
 
