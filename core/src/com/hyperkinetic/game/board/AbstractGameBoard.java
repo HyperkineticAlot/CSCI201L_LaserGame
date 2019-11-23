@@ -190,16 +190,36 @@ public abstract class AbstractGameBoard {
 
         // Get the piece from the clicked tile and check that it is non-null
         AbstractGamePiece piece = board.pieces.get(board.tiles.indexOf(getTileFromLocation(newX, newY), true));
+
+        // if the player clicks on the same square again, drop the piece
+        if(piece == board.pickedUpPiece)
+        {
+            board.pickedUpPiece = null;
+        }
+
         if(piece == null)
         {
             // Try to make a move using this click
             if(!board.makeMove(getTileFromLocation(newX, newY)))
                 return false;
-            else return true;
+            else
+            {
+                board.pickedUpPiece = null;
+                return true;
+            }
         }
 
         // Check if the piece can be picked up
         if(!board.canPickUpPiece(piece)) return false;
+
+        // If the player clicked on the destination of the current move, revert the current move
+        if(board.nextMove != null &&
+                ((piece.getX() == board.nextMove.moveX && piece.getY() == board.nextMove.moveY) ||
+                 (board.nextMove.moveType.contains("rotate")) && piece.getX() == board.nextMove.x && piece.getY() == board.nextMove.y))
+        {
+            board.undoMove();
+            return true;
+        }
 
         // If there is a current move, undo it, and pick up the piece
         board.undoMove();
@@ -240,14 +260,16 @@ public abstract class AbstractGameBoard {
 
         // Check if the move is a rotation
         if(tile == AbstractBoardTile.ROTATE_LEFT) {
-            // TODO: Rotate left
+            update(pickedUpPiece.getX(), pickedUpPiece.getY(), "rotateL", -1, -1);
+            pickedUpPiece = null;
         }
         else if(tile == AbstractBoardTile.ROTATE_RIGHT) {
-            // TODO: Rotate right
+            update(pickedUpPiece.getX(), pickedUpPiece.getY(), "rotateR", -1, -1);
+            pickedUpPiece = null;
         }
 
         // If this exact tile is within the legal moves of the piece, move it
-        if(pickedUpPiece.getLegalMoves(this).contains(tile, true))
+        else if(pickedUpPiece.getLegalMoves(this).contains(tile, true))
         {
             int pIndex = pieces.indexOf(pickedUpPiece, true);
             int tIndex = tiles.indexOf(tile, true);
@@ -484,7 +506,7 @@ public abstract class AbstractGameBoard {
         if (x < 0 || y < 0 || x >= this.x || y >= this.y) {
             return null;
         }
-        return (tiles.get(y * this.y + x));
+        return (tiles.get(y * this.x + x));
     }
 
     /**
@@ -540,11 +562,16 @@ public abstract class AbstractGameBoard {
     {
         if(nextMove == null) return;
 
-        AbstractGamePiece piece = getPieceFromCoordinate(nextMove.moveX, nextMove.moveY);
+        AbstractGamePiece piece;
+        if(nextMove.moveType.contains("rotate"))
+            piece = getPieceFromCoordinate(nextMove.x, nextMove.y);
+        else
+            piece = getPieceFromCoordinate(nextMove.moveX, nextMove.moveY);
+
         if(nextMove.moveType.equals("rotateL")) {
-            pieceRotateRight(piece);
+            piece.rotateRight();
         } else if(nextMove.moveType.equals("rotateR")) {
-            pieceRotateLeft(piece);
+            piece.rotateLeft();
         } else {
             pieceMove(piece, nextMove.x, nextMove.y);
         }

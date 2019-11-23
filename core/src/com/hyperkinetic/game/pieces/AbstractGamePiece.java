@@ -104,7 +104,7 @@ public abstract class AbstractGamePiece
      * @param b the game board that contains this piece
      */
     public void placePiece(AbstractGameBoard b) {
-        b.getPieces().set(this.y*b.getY() + this.x, this);
+        b.getPieces().set(this.y*b.getX() + this.x, this);
     }
 
     /**
@@ -115,13 +115,12 @@ public abstract class AbstractGamePiece
      * @return The array containing all legal tiles of the board.
      */
     public Array<AbstractBoardTile> getLegalMoves(AbstractGameBoard b) {
-        Array<AbstractBoardTile> retval = new Array<AbstractBoardTile>();
-        int x = this.x;
-        int y = this.y;
+        Array<AbstractBoardTile> retval = new Array<>();
 
-        for (int j = y-1; j <= y+1; j++) {
-            for (int i = x-1; i <= x+1; i++) {
-                if ((b.getTileFromCoordinate(i, j)) != null && b.getPieceFromCoordinate(i, j) == null && j != y && i != x) {
+        for (int i = x - 1; i <= x + 1; i++) {
+            for (int j = y - 1; j <= y + 1; j++) {
+                if ((b.getTileFromCoordinate(i, j)) != null && b.getPieceFromCoordinate(i, j) == null &&
+                        (j != y || i != x) && i >= 0 && j >= 0) {
                     retval.add(b.getTileFromCoordinate(i, j));
                 }
             }
