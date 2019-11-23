@@ -85,7 +85,7 @@ public class ClientThread extends Thread {
                     } else if(message.getMessageType()==GameMessage.messageType.MOVE_FAILURE){
                         if(message.playerID.equals(playerID)){
                             // undo move & wait for next
-                            board.undoMove();
+                            //board.undoMove();
                         }
                     } else if(message.getMessageType()==GameMessage.messageType.GAME_OVER){
                         if(message.playerID.equals(playerID)){ // wins - update LaserGameScreen status

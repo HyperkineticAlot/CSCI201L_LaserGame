@@ -12,7 +12,9 @@ public class LaserPiece extends AbstractBlockPiece{
 
     @Override
     public Array<Directions.Direction> acceptLaser(Directions.Direction laserDirection) {
-        return null;
+        Array<Directions.Direction> retval = new Array<>();
+        retval.add(laserDirection);
+        return retval;
     }
 
 

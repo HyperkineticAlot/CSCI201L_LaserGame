@@ -65,7 +65,7 @@ public class Directions
         }
         else if(mirror == MirrorDirection.NORTHEAST)
         {
-            if(laser == Direction.SOUTH) return Direction.WEST;
+            if(laser == Direction.SOUTH) return Direction.EAST;
             if(laser == Direction.WEST) return Direction.NORTH;
         }
         else if(mirror == MirrorDirection.SOUTHEAST)

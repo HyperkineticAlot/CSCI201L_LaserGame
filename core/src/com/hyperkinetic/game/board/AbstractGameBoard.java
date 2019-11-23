@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.core.LaserGame;
+import com.hyperkinetic.game.pieces.AbstractBlockPiece;
 import com.hyperkinetic.game.pieces.AbstractGamePiece;
 import com.hyperkinetic.game.pieces.KingPiece;
 import com.hyperkinetic.game.pieces.LaserPiece;
@@ -190,6 +191,12 @@ public abstract class AbstractGameBoard {
 
         // Get the piece from the clicked tile and check that it is non-null
         AbstractGamePiece piece = board.pieces.get(board.tiles.indexOf(getTileFromLocation(newX, newY), true));
+
+        // If the clicked piece is a laser, fire it
+        if(piece == board.aLaser || piece == board.bLaser)
+        {
+            return board.handleLaserClick((LaserPiece) piece);
+        }
 
         // if the player clicks on the same square again, drop the piece
         if(piece == board.pickedUpPiece)
@@ -558,7 +565,7 @@ public abstract class AbstractGameBoard {
         this.nextMove = move;
     }
 
-    public synchronized void undoMove()
+    private void undoMove()
     {
         if(nextMove == null) return;
 
@@ -577,6 +584,34 @@ public abstract class AbstractGameBoard {
         }
 
         nextMove = null;
+    }
+
+    private boolean handleLaserClick(LaserPiece laser)
+    {
+        if(nextMove == null)
+        {
+            // TODO: give some warning about making a move before ending your turn
+            return false;
+        }
+
+        if(laser == aLaser)
+        {
+            if(hasTurn ^ flipBoard)
+            {
+                fireLaser(laser.getX(), laser.getY(), laser.getOrientation());
+                return true;
+            }
+        }
+        else if(laser == bLaser)
+        {
+            if(!hasTurn ^ flipBoard)
+            {
+                fireLaser(laser.getX(), laser.getY(), laser.getOrientation());
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -659,7 +694,7 @@ public abstract class AbstractGameBoard {
     public void fireLaser(int startX, int startY, Directions.Direction d) {
         laserDuration = System.currentTimeMillis();
 
-        if (startX < 0 || startY < 0 || startX > x || startY > y) return;
+        if (startX < 0 || startY < 0 || startX >= x || startY >= y) return;
 
         AbstractGamePiece thisPiece = pieces.get(startY * x + startX);
         AbstractBoardTile thisTile = tiles.get(startY * x + startX);
@@ -705,7 +740,11 @@ public abstract class AbstractGameBoard {
             fireLaser(newX, newY, dir);
         }
 
-        moveConfirmed = true;
+        if(local)
+            nextMove = null;
+        else
+            moveConfirmed = true;
+
         hasTurn = !hasTurn;
     }
 
@@ -720,11 +759,11 @@ public abstract class AbstractGameBoard {
     {
         if(d == Directions.Direction.NORTH)
             lasersToDraw.add(new Rectangle(screenX + startX * tileDim + tileDim / 2F - 5,
-                                        screenY + startY * tileDim + 3 * tileDim / 2,
+                                        screenY + startY * tileDim + tileDim / 2F,
                                     10, tileDim));
         else if(d == Directions.Direction.SOUTH)
             lasersToDraw.add(new Rectangle(screenX + startX * tileDim + tileDim / 2F - 5,
-                                        screenY + startY * tileDim + tileDim / 2F,
+                                        screenY + startY * tileDim - tileDim / 2F,
                                     10, tileDim));
         else if(d == Directions.Direction.EAST)
             lasersToDraw.add(new Rectangle(screenX + startX * tileDim + tileDim / 2F,
