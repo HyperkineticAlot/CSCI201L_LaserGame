@@ -30,7 +30,7 @@ public class SettingsScreen  extends InputAdapter implements Screen {
     private float height;
     private OrthographicCamera camera;
 
-    public SettingsScreen (final LaserGame game, final Music bgm) {
+    public SettingsScreen (final LaserGame game) {
         this.width = Gdx.graphics.getWidth();
         this.height = Gdx.graphics.getHeight();
         this.game = game;
@@ -45,7 +45,7 @@ public class SettingsScreen  extends InputAdapter implements Screen {
         Skin neon = new Skin(Gdx.files.internal("skin/neon-ui.json"));
         neon.getFont("font").getData().setScale(1.20f, 1.20f);
 
-        // music on and off
+        // music on and off checkbox group
         ButtonGroup musicChoiceGroup = new ButtonGroup<CheckBox>();
 
         CheckBox music = new CheckBox("Music", neon);
@@ -66,7 +66,12 @@ public class SettingsScreen  extends InputAdapter implements Screen {
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("touch up on music");
-                bgm.play();
+                System.out.println("printing bgm " + MainMenuScreen.bgm);
+                if(!MainMenuScreen.bgm.isPlaying()) {
+                    MainMenuScreen.bgm.play();
+                }
+
+                //System.out.println("if the same instance " + bgm.);
                 MainMenuScreen.playBgm = true;
                 MainMenuScreen.initialPlaying = false;
             }
@@ -80,7 +85,9 @@ public class SettingsScreen  extends InputAdapter implements Screen {
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("touch up on no music");
-                bgm.pause();
+                if(MainMenuScreen.bgm.isPlaying()) {
+                    MainMenuScreen.bgm.pause();
+                }
                 MainMenuScreen.playBgm = false;
                 MainMenuScreen.initialPlaying = false;
             }
@@ -111,7 +118,6 @@ public class SettingsScreen  extends InputAdapter implements Screen {
             }
         });
         stage.addActor(settings);
-
         stage.addActor(music);
         stage.addActor(noMusic);
     }
@@ -160,5 +166,6 @@ public class SettingsScreen  extends InputAdapter implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        //bgm.dispose();
     }
 }

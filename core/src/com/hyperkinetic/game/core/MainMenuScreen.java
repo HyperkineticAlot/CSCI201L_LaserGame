@@ -29,19 +29,20 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
     private float height;
     private OrthographicCamera camera;
 
-    public Music bgm = Gdx.audio.newMusic(Gdx.files.internal("testMusic.mp3"));
+    public static Music bgm;
     public static boolean playBgm = true;
     public static boolean initialPlaying = true;
 
     public MainMenuScreen (final LaserGame game) {
-        //
-        bgm.setVolume(0.5f);                 // sets the volume to half the maximum volume
-        bgm.setLooping(true);                // will repeat playback until music.stop() is called
+        if(initialPlaying) {
+            bgm = Gdx.audio.newMusic(Gdx.files.internal("testMusic.mp3"));
+            bgm.setVolume(0.5f);                 // sets the volume to half the maximum volume
+            bgm.setLooping(true);                // will repeat playback until music.stop() is called
+        }
+
         if(playBgm && initialPlaying) {
             bgm.play();                      // resumes the playback
         }
-
-
 
         this.width = Gdx.graphics.getWidth();
         this.height = Gdx.graphics.getHeight();
@@ -119,7 +120,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 //Gdx.app.exit();
-                game.setScreen(new SettingsScreen(game, bgm)); // for test propose
+                game.setScreen(new SettingsScreen(game)); // for test propose
                 outputLabel.setText("touch up");
             }
             @Override
