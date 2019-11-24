@@ -46,8 +46,6 @@ public class GameRoom {
         // bThread.setColor(false);
         aThread.enterGame(this);
         bThread.enterGame(this);
-        aThread.start();
-        bThread.start();
 
         this.board = new StandardBoard(true);
 

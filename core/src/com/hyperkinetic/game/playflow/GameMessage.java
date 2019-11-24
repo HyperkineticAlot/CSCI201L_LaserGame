@@ -35,6 +35,7 @@ public class GameMessage implements Serializable {
         REGISTER_FAILURE,
         STATS_REQUEST,
         STATS_RESPONSE,
+        MATCHMAKING_REQUEST,
 
         ROOM_CREATE,
         PLAYER_MOVE,
@@ -99,6 +100,8 @@ public class GameMessage implements Serializable {
             return timeStamp+" User "+playerID+" is requesting his records.";
         } else if(type==messageType.STATS_RESPONSE){
             return timeStamp+" User "+playerID+"'s records: Game Played: " + numPlayed + "; Wins: " + numWin + "; Losses: " + numLoss + ".";
+        } else if(type == messageType.MATCHMAKING_REQUEST) {
+            return timeStamp+" User "+playerID+" is requesting an online match.";
         } else if(type==messageType.COPY){
             return timeStamp+" Server responds to "+playerID+"'s ready message.";
         }

@@ -1,5 +1,10 @@
 package com.hyperkinetic.game.playflow;
 
+import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.hyperkinetic.game.core.LaserGame;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -53,6 +58,7 @@ public class GameServer {
     private static Vector<GameRoom> gameRooms = new Vector<>();
 
     public static void main(String[] args){
+        LaserGame.IS_SERVER = true;
         GameServer gs = new GameServer();
     }
 
@@ -71,22 +77,7 @@ public class GameServer {
                 loginQueue.add(st);
                 System.out.println("Accepted one new connection!");
 
-                // first come first served matchmaking
-                for(int i = 0; i < matchingQueue.size() - 1; i++)
-                {
-                    GameRoom gr = new GameRoom(this, matchingQueue.get(i), matchingQueue.get(i+1));
-                    gameRooms.add(gr);
-                }
-                if(matchingQueue.size() % 2 == 0)
-                {
-                    matchingQueue.clear();
-                }
-                else
-                {
-                    ServerThread lastUser = matchingQueue.lastElement();
-                    matchingQueue.clear();
-                    matchingQueue.add(lastUser);
-                }
+                // TODO: this doesn't run lole
 
                 // check for dead games
                 for(GameRoom room : gameRooms)
@@ -265,10 +256,47 @@ public class GameServer {
     }
 
     public void deleteRoom(GameRoom gr){
-        this.gameRooms.remove(gr);
+        gameRooms.remove(gr);
     }
 
     public void logMessage(GameMessage message){
         System.out.println(message.getMessage());
     }
+
+    public void addToMatchmaking(String playerID)
+    {
+        for(ServerThread st : loggedInQueue)
+        {
+            if(st.getPlayerID().equals(playerID))
+            {
+                loggedInQueue.remove(st);
+                matchingQueue.add(st);
+                break;
+            }
+        }
+
+        // first come first served matchmaking
+        for(int i = 0; i < matchingQueue.size() - 1; i+=2)
+        {
+            GameRoom gr = new GameRoom(this, matchingQueue.get(i), matchingQueue.get(i+1));
+            matchingQueue.get(i).enterGame(gr);
+            matchingQueue.get(i+1).enterGame(gr);
+            gameRooms.add(gr);
+        }
+        if(matchingQueue.size() % 2 == 0)
+        {
+            matchingQueue.clear();
+        }
+        else
+        {
+            ServerThread lastUser = matchingQueue.lastElement();
+            matchingQueue.clear();
+            matchingQueue.add(lastUser);
+        }
+    }
+
+    //private static class ServerWindow extends ApplicationAdapter
+    //{
+
+    //}
 }

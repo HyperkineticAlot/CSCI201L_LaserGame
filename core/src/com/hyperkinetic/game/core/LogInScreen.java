@@ -97,7 +97,7 @@ public class LogInScreen  extends InputAdapter implements Screen {
                 }
                 else
                 {
-                    game.player = newPlayer.playerID;
+                    game.player = newPlayer.getPlayer();
                     game.setScreen(new MainMenuScreen(game));
                 }
             }

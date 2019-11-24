@@ -42,7 +42,9 @@ public class LaserGame extends Game {
      */
     private GameRoom gameRoom;
 
-    public String player;
+    public Player player;
+
+    public static boolean IS_SERVER = false;
 
 
     public void create() {
@@ -82,6 +84,7 @@ public class LaserGame extends Game {
      */
     public static Texture loadTexture(String path)
     {
+        if(IS_SERVER) return null;
         Texture retval = new Texture(path);
         disposables.add(retval);
         return retval;

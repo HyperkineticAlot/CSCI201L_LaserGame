@@ -117,7 +117,28 @@ public class ServerThread extends Thread {
                 System.out.println("ioe in run() of ServerThread " + playerID);
             }
         }
-        while(room != null && !room.isOver)
+        while(room == null)
+        {
+            try
+            {
+                GameMessage message = (GameMessage) in.readObject();
+                if(message.getMessageType() == GameMessage.messageType.MATCHMAKING_REQUEST)
+                {
+                    gs.addToMatchmaking(message.playerID);
+                }
+            }
+            catch(IOException ioe)
+            {
+                System.out.println("ioe in run() of ServerThread " + playerID);
+                ioe.printStackTrace();
+            }
+            catch(ClassNotFoundException cnfe)
+            {
+                System.out.println("cnfe in run() of ServerThread " + playerID);
+                cnfe.printStackTrace();
+            }
+        }
+        while(!room.isOver)
         {
             // querying for GameMessage objects
             try

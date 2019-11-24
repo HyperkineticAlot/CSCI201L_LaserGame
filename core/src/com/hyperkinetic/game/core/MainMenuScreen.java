@@ -64,19 +64,38 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         neon.getFont("font").getData().setScale(1.20f, 1.20f);
 
 
-        Button guest = new TextButton("GUEST", neon);
+        Button guest = new TextButton(game.player == null ? "GUEST" : "PLAY", neon);
         guest.setSize((float)(width / 9.6),(float)(height / 10.8));
         guest.setPosition(width/2 - (float)(width / 9.6) / 2, height/2 + (float)(height / 10.8));
-        guest.addListener(new InputListener(){
-            @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new LaserGameScreen(game));
-            }
-            @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
-        });
+        if(game.player == null)
+        {
+            guest.addListener(new InputListener(){
+                @Override
+                public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                    game.setScreen(new LaserGameScreen(game));
+                }
+                @Override
+                public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                    return true;
+                }
+            });
+        }
+        else
+        {
+            guest.addListener(new InputListener()
+            {
+                @Override
+                public void touchUp(InputEvent event, float x, float y, int pointer, int button)
+                {
+                    game.player.sendMatchmakingRequest();
+                    game.setScreen(new LaserGameScreen(game));
+                }
+                @Override
+                public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                    return true;
+                }
+            });
+        }
         stage.addActor(guest);
 
 

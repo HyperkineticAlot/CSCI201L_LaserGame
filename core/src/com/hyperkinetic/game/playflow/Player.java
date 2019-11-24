@@ -41,6 +41,11 @@ public class Player extends Thread {
         this.board = board;
     }
 
+    public AbstractGameBoard getBoard()
+    {
+        return board;
+    }
+
     public void setPlayerID(String playerID){
         this.playerID = playerID;
     }
@@ -100,5 +105,12 @@ public class Player extends Thread {
                 }
             }
         }
+    }
+
+    public void sendMatchmakingRequest()
+    {
+        GameMessage request = new GameMessage(GameMessage.messageType.MATCHMAKING_REQUEST);
+        request.playerID = playerID;
+        sendMessage(request);
     }
 }

@@ -27,13 +27,12 @@ public class LaserGameScreen implements Screen {
     private AbstractGameBoard board;
 
     private Stage stage;
-    private Game game;
+    private LaserGame game;
 
-    public LaserGameScreen(Game aGame) {
+    public LaserGameScreen(LaserGame aGame) {
         game = aGame;
         stage = new Stage(new ScreenViewport());
-        // board = new StandardBoard();
-        ClientThread localPlayer = new ClientThread("localhost", GameRoom.PORT,true,false);
+        board = null;
         batch = new SpriteBatch();
     }
 
@@ -48,7 +47,15 @@ public class LaserGameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
-        board.render(batch);
+        if(board == null && game.player.getBoard() != null)
+        {
+            board = game.player.getBoard();
+        }
+
+        if(board != null)
+        {
+            board.render(batch);
+        }
 
         batch.end();
     }
