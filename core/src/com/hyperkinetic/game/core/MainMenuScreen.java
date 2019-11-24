@@ -80,19 +80,36 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         stage.addActor(guest);
 
 
-        Button login = new TextButton("LOG IN", neon);
+        Button login = new TextButton(game.player == null ? "LOG IN" : "LOG OUT", neon);
         login.setSize((float)(width / 9.6),(float)(height / 10.8));
         login.setPosition(width / 2 - (float)(width / 9.6) / 2, height / 2);
-        login.addListener(new InputListener(){
-            @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new LogInScreen(game));
-            }
-            @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
-        });
+        if(game.player == null) {
+            login.addListener(new InputListener() {
+                @Override
+                public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                    game.setScreen(new LogInScreen(game));
+                }
+
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    return true;
+                }
+            });
+        }
+        else
+        {
+            login.addListener(new InputListener() {
+                @Override
+                public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                    game.player = null;
+                    game.setScreen(new MainMenuScreen(game));
+                }
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    return true;
+                }
+            });
+        }
         stage.addActor(login);
 
 
