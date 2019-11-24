@@ -50,6 +50,10 @@ public class ClientThread extends Thread {
         }
     }
 
+    public Player getPlayer(){
+        return player;
+    }
+
     /**
      * Receive the start-of-game message and constantly check for server packets and process
      */

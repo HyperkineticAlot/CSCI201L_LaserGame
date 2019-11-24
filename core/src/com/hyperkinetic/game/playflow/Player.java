@@ -44,6 +44,20 @@ public class Player extends Thread {
         this.playerID = playerID;
     }
 
+    public void sendMessage(GameMessage message)
+    {
+        try
+        {
+            out.writeObject(message);
+            out.flush();
+        }
+        catch(IOException ioe)
+        {
+            System.out.println("ioe in sendMessage() of ClientThread " + playerID);
+            ioe.printStackTrace();
+        }
+    }
+
     /**
      * Player constantly checks the game board for moves and send to server
      */
@@ -60,21 +74,11 @@ public class Player extends Thread {
                 GameMessage nextMove = board.getNextMove();
                 if(nextMove!=null){
                     nextMove.playerID = playerID;
-                    try{
-                        out.writeObject(nextMove);
-                        out.flush();
-                    } catch(IOException ioe){
-                        ioe.printStackTrace();
-                    }
+                    sendMessage(nextMove);
                 } else {
                     GameMessage readyMessage = new GameMessage(GameMessage.messageType.READY);
                     readyMessage.playerID = playerID;
-                    try{
-                        out.writeObject(readyMessage);
-                        out.flush();
-                    } catch(IOException ioe){
-                        ioe.printStackTrace();
-                    }
+                    sendMessage(readyMessage);
                 }
             }
         }

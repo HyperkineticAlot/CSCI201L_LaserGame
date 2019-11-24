@@ -14,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.hyperkinetic.game.playflow.ClientThread;
+import com.hyperkinetic.game.playflow.GameServer;
 
 //import javax.xml.soap.Text;
 
@@ -76,6 +78,8 @@ public class LogInScreen  extends InputAdapter implements Screen {
                 System.out.println(username.getText());
                 System.out.println(password.getText());
                 //game.setScreen(new MainMenuScreen(game));
+                ClientThread newPlayer = new ClientThread("localhost", GameServer.port,false,false);
+
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {

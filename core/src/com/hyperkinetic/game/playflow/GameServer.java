@@ -21,7 +21,7 @@ public class GameServer {
     /**
      * Port number of the server
      */
-    private static final int port = 8000;
+    public static final int port = 8000;
     /**
      * Database connection URL
      */
@@ -58,14 +58,17 @@ public class GameServer {
     public GameServer(){
         // test database connection
         if(!checkConnection()) return;
+        System.out.println("Connected to database!");
         try {
+            System.out.println("Binding to port: "+port);
             ServerSocket ss = new ServerSocket(port);
+            System.out.println("Connected!");
 
             while(true) {
                 Socket s = ss.accept();
                 ServerThread st = new ServerThread(s, this);
                 loginQueue.add(st);
-
+                System.out.println("Accepted one new connection!");
 
 
                 // first come first served matchmaking
@@ -136,7 +139,7 @@ public class GameServer {
      * @throws SQLException
      */
     public static Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
+        Class.forName("com.mysql.jdbc.Driver");
         Connection conn = DriverManager.getConnection("jdbc:"+url+"?user="+user+"&password="+pwd);
         return conn;
     }
@@ -259,5 +262,9 @@ public class GameServer {
 
     public void deleteRoom(GameRoom gr){
         this.gameRooms.remove(gr);
+    }
+
+    public void logMessage(GameMessage message){
+        System.out.println(message.getMessage());
     }
 }

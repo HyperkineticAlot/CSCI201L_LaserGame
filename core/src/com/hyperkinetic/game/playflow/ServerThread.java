@@ -14,15 +14,17 @@ public class ServerThread extends Thread {
     private ObjectOutputStream out;
 
     public ServerThread(Socket s, GameServer gs){
-        this.playerID = playerID;
+        // this.playerID = playerID;
         socket = s;
         this.gs = gs;
         try
         {
             in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
+            this.start();
         }
         catch(IOException ioe) {
+            System.out.println("oops");
             ioe.printStackTrace();
         }
 
@@ -82,6 +84,7 @@ public class ServerThread extends Thread {
         while (!loggedIn) {
             try {
                 GameMessage message = (GameMessage) in.readObject();
+                gs.logMessage(message);
                 if (message.getMessageType() == GameMessage.messageType.LOGIN_ATTEMPT) {
                     GameMessage loginMessage = gs.queryDatabase(message);
                     if (loginMessage.getMessageType() == GameMessage.messageType.LOGIN_SUCCESS) {
