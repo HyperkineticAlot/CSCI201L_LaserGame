@@ -17,6 +17,7 @@ public class ServerThread extends Thread {
         // this.playerID = playerID;
         socket = s;
         this.gs = gs;
+
         try
         {
             out = new ObjectOutputStream(socket.getOutputStream());
@@ -116,7 +117,7 @@ public class ServerThread extends Thread {
                 System.out.println("ioe in run() of ServerThread " + playerID);
             }
         }
-        while(!room.isOver)
+        while(room != null && !room.isOver)
         {
             // querying for GameMessage objects
             try

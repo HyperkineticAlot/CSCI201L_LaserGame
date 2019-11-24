@@ -20,6 +20,8 @@ import com.hyperkinetic.game.playflow.GameServer;
 //import javax.xml.soap.Text;
 
 public class LogInScreen  extends InputAdapter implements Screen {
+    public static final String LOGIN_FAILURE_FLAG = "LOGIN_FAILURE";
+
     LaserGame game;
     private Stage stage;
     private SpriteBatch batch;
@@ -79,7 +81,25 @@ public class LogInScreen  extends InputAdapter implements Screen {
                 System.out.println(password.getText());
                 //game.setScreen(new MainMenuScreen(game));
                 ClientThread newPlayer = new ClientThread("localhost", GameServer.port,false,false);
+                newPlayer.getPlayer().login(username.getText(), password.getText());
 
+                while(newPlayer.playerID == null)
+                {
+                    try
+                    {
+                        Thread.sleep(1000);
+                    } catch(InterruptedException e) { e.printStackTrace(); }
+                }
+                if(newPlayer.playerID.equals(LOGIN_FAILURE_FLAG))
+                {
+                    // TODO: display login failure alert
+                    newPlayer.resetPlayerID();
+                }
+                else
+                {
+                    game.player = newPlayer.playerID;
+                    game.setScreen(new MainMenuScreen(game));
+                }
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {

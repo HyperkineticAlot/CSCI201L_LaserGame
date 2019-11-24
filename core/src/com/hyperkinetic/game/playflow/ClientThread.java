@@ -1,6 +1,7 @@
 package com.hyperkinetic.game.playflow;
 
 import com.hyperkinetic.game.board.AbstractGameBoard;
+import com.hyperkinetic.game.core.LogInScreen;
 import com.hyperkinetic.game.pieces.LaserPiece;
 
 import java.io.IOException;
@@ -35,6 +36,8 @@ public class ClientThread extends Thread {
         board = null;
         this.isGuest = isGuest;
         this.isAI = isAI;
+        this.playerID = null;
+
         try
         {
             System.out.println("Trying to connect to "+hostname+":"+port);
@@ -73,6 +76,8 @@ public class ClientThread extends Thread {
                     else if (message.getMessageType() == GameMessage.messageType.LOGIN_FAILURE || message.getMessageType() == GameMessage.messageType.REGISTER_FAILURE) {
                         // TODO display error message
                         System.out.println(message.errorMessage);
+                        this.player.setPlayerID(LogInScreen.LOGIN_FAILURE_FLAG);
+                        this.playerID = LogInScreen.LOGIN_FAILURE_FLAG;
                     }
                     else if(message.getMessageType()==GameMessage.messageType.ROOM_CREATE){
                         this.board = message.startBoard;
@@ -125,6 +130,11 @@ public class ClientThread extends Thread {
                 System.out.println("ioe in run() of ClientThread of " + player.playerID);
             }
         }
+    }
+
+    public void resetPlayerID() {
+        playerID = null;
+        player.setPlayerID(null);
     }
 }
 

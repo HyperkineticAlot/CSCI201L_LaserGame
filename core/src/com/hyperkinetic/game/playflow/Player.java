@@ -28,9 +28,10 @@ public class Player extends Thread {
         this.ct = ct;
         this.socket = socket;
         this.board = null;
+        this.playerID = null;
+
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
-            // this.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,6 +43,23 @@ public class Player extends Thread {
 
     public void setPlayerID(String playerID){
         this.playerID = playerID;
+    }
+
+    public String getPlayerID()
+    {
+        return playerID;
+    }
+
+    public boolean login(String playerID, String pass)
+    {
+        this.playerID = playerID;
+        GameMessage loginMessage = new GameMessage(GameMessage.messageType.LOGIN_ATTEMPT);
+        loginMessage.playerID = playerID;
+        loginMessage.password = pass;
+
+        sendMessage(loginMessage);
+
+        return false;
     }
 
     public void sendMessage(GameMessage message)
@@ -69,7 +87,7 @@ public class Player extends Thread {
             // WHEN THE PLAYER MAKES A MOVE, SET THE nextMove FIELD IN GAME BOARD TO NULL!!
             // ONLY SET NEXT MOVE WHEN FIRING LASER
             if(board==null){
-                System.out.println("Still in game queue...");
+                //System.out.println("Still in game queue...");
             } else {
                 GameMessage nextMove = board.getNextMove();
                 if(nextMove!=null){

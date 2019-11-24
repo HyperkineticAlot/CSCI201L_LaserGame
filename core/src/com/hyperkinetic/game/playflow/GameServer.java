@@ -71,7 +71,6 @@ public class GameServer {
                 loginQueue.add(st);
                 System.out.println("Accepted one new connection!");
 
-
                 // first come first served matchmaking
                 for(int i = 0; i < matchingQueue.size() - 1; i++)
                 {
@@ -195,25 +194,29 @@ public class GameServer {
             cn = getConnection();
             st = cn.createStatement();
             if(gm.getMessageType()==GameMessage.messageType.LOGIN_ATTEMPT){
+                System.out.println("Received login attempt from user " + gm.playerID + ".");
                 String playerID = gm.playerID;
                 String password = gm.password;
                 rs = st.executeQuery("SELECT * FROM USER WHERE userName = '" + playerID + "'");
                 if (rs.next()) {
                     // playerID exist
-                    if (password.equals(rs.getString(password))) {
+                    if (password.equals(rs.getString("passWord"))) {
                         // password correct
                         retval = new GameMessage(GameMessage.messageType.LOGIN_SUCCESS);
+                        System.out.println("User " + playerID + " logged in.");
                     }
                     else {
                         // password incorrect
                         retval = new GameMessage(GameMessage.messageType.LOGIN_FAILURE);
                         retval.errorMessage = "The password does not match the username. ";
+                        System.out.println("User " + playerID + " failed to login on account of bad password.");
                     }
                 }
                 else {
                     // playerID does not exist
                     retval = new GameMessage(GameMessage.messageType.LOGIN_FAILURE);
                     retval.errorMessage = "The username does not exist. ";
+                    System.out.println("User " + playerID + " failed to login on account of no matching username.");
                 }
                 retval.playerID = playerID;
             } else if(gm.getMessageType()==GameMessage.messageType.REGISTER_ATTEMPT){
