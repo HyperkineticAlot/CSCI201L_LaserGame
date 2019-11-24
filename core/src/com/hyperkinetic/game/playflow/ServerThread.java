@@ -19,8 +19,10 @@ public class ServerThread extends Thread {
         this.gs = gs;
         try
         {
-            in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
+            out.flush();
+
+            in = new ObjectInputStream(socket.getInputStream());
             this.start();
         }
         catch(IOException ioe) {
