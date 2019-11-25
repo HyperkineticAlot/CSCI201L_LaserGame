@@ -33,7 +33,7 @@ public class GameServer {
      */
     private static final String url = "mysql://localhost:3306/finalproject";
     /**
-     * Databaser connection
+     * Database connection
      */
     private static Connection conn;
     /**
@@ -270,14 +270,26 @@ public class GameServer {
         return retval;
     }
 
+    /**
+     * Remove the game room from the gameRooms vector.
+     * @param gr the GameRoom to be removed
+     */
     public void deleteRoom(GameRoom gr){
         gameRooms.remove(gr);
     }
 
+    /**
+     * Print the game message to the server console.
+     * @param message the GameMessage to be logged
+     */
     public void logMessage(GameMessage message){
         System.out.println(message.getMessage());
     }
 
+    /**
+     * Add the logged in user to the matchmaking queue
+     * @param playerID the id of the player that is added to the matching queue
+     */
     public void addToMatchmaking(String playerID)
     {
         for(ServerThread st : loggedInQueue)
