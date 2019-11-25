@@ -166,19 +166,6 @@ public class GameRoom {
         }
     }
 
-    private void handleReady(GameMessage message){
-        if(message.getMessageType()!=messageType.READY) return;
-
-        String playerID = message.playerID;
-        GameMessage copy = new GameMessage(messageType.COPY);
-        copy.playerID = playerID;
-        if(playerID.equals(aThread.getPlayerID())){
-            aThread.sendMessage(copy);
-        } else {
-            bThread.sendMessage(copy);
-        }
-    }
-
     /**
      * Read the message from the server.
      * @param message the message from the server
@@ -187,8 +174,6 @@ public class GameRoom {
     {
         if(message.getMessageType()==messageType.PLAYER_MOVE){
             handleMoveAttempt(message);
-        } else if(message.getMessageType()==messageType.READY){
-            handleReady(message);
         } else if(message.getMessageType()==messageType.STATS_REQUEST){
             GameMessage gm = gs.queryDatabase(message);
             broadcast(gm);

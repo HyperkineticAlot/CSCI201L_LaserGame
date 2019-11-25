@@ -42,9 +42,6 @@ public class GameMessage implements Serializable {
         MOVE_SUCCESS,
         MOVE_FAILURE,
         GAME_OVER,
-
-        READY,
-        COPY
     }
 
     public GameMessage(GameMessage.messageType type){
@@ -82,8 +79,6 @@ public class GameMessage implements Serializable {
         } else if(type==messageType.MOVE_FAILURE){
             return timeStamp+" "+playerID+" selects piece at "+x+", "+y+", moveType="
                     +moveType+", moveX="+moveX+", moveY="+moveY+" is disapproved because "+errorMessage+".";
-        } else if(type==messageType.READY){
-            return timeStamp+" "+playerID+" is ready.";
         } else if(type==messageType.LOGIN_ATTEMPT){
             return timeStamp+" User "+playerID+" attempts to log in with password "+password+".";
         } else if(type==messageType.LOGIN_SUCCESS){
@@ -102,8 +97,6 @@ public class GameMessage implements Serializable {
             return timeStamp+" User "+playerID+"'s records: Game Played: " + numPlayed + "; Wins: " + numWin + "; Losses: " + numLoss + ".";
         } else if(type == messageType.MATCHMAKING_REQUEST) {
             return timeStamp+" User "+playerID+" is requesting an online match.";
-        } else if(type==messageType.COPY){
-            return timeStamp+" Server responds to "+playerID+"'s ready message.";
         }
         return "";
     }
