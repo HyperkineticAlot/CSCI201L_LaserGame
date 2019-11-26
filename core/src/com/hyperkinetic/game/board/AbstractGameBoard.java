@@ -137,7 +137,8 @@ public abstract class AbstractGameBoard {
         moveConfirmed = false;
         pickedUpPiece = null;
         local = false;
-        this.hasTurn = this.flipBoard = hasTurn;
+        this.hasTurn = hasTurn;
+        this.flipBoard = !hasTurn;
 
         this.x = x;
         this.y = y;
@@ -215,18 +216,6 @@ public abstract class AbstractGameBoard {
         // Get the piece from the clicked tile and check that it is non-null
         AbstractGamePiece piece = board.pieces.get(board.tiles.indexOf(getTileFromLocation(newX, newY), true));
 
-        // If the clicked piece is a laser, fire it
-        if(piece == board.aLaser || piece == board.bLaser)
-        {
-            return board.handleLaserClick((LaserPiece) piece);
-        }
-
-        // if the player clicks on the same square again, drop the piece
-        if(piece == board.pickedUpPiece)
-        {
-            board.pickedUpPiece = null;
-        }
-
         if(piece == null)
         {
             // Try to make a move using this click
@@ -237,6 +226,18 @@ public abstract class AbstractGameBoard {
                 board.pickedUpPiece = null;
                 return true;
             }
+        }
+
+        // If the clicked piece is a laser, fire it
+        if(piece.equals(board.aLaser) || piece.equals(board.bLaser))
+        {
+            return board.handleLaserClick((LaserPiece) piece);
+        }
+
+        // if the player clicks on the same square again, drop the piece
+        if(piece == board.pickedUpPiece)
+        {
+            board.pickedUpPiece = null;
         }
 
         // Check if the piece can be picked up
@@ -623,7 +624,7 @@ public abstract class AbstractGameBoard {
             return false;
         }
 
-        if(laser == aLaser)
+        if(laser.equals(aLaser))
         {
             if(hasTurn ^ flipBoard)
             {
@@ -631,7 +632,7 @@ public abstract class AbstractGameBoard {
                 return true;
             }
         }
-        else if(laser == bLaser)
+        else if(laser.equals(bLaser))
         {
             if(!hasTurn ^ flipBoard)
             {

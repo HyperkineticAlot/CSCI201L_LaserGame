@@ -32,6 +32,7 @@ public class Player extends Thread {
 
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
+            out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -98,10 +99,6 @@ public class Player extends Thread {
                 if(nextMove!=null){
                     nextMove.playerID = playerID;
                     sendMessage(nextMove);
-                } else {
-                    GameMessage readyMessage = new GameMessage(GameMessage.messageType.READY);
-                    readyMessage.playerID = playerID;
-                    sendMessage(readyMessage);
                 }
             }
         }
