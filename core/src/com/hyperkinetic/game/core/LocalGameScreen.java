@@ -24,6 +24,8 @@ public class LocalGameScreen implements Screen
         game = g;
         stage = new Stage(new ScreenViewport());
         board = new StandardBoard(true, true);
+        board.initialize();
+
         batch = new SpriteBatch();
     }
 

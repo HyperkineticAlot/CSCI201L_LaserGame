@@ -13,6 +13,9 @@ import com.hyperkinetic.game.pieces.LaserPiece;
 import com.hyperkinetic.game.playflow.GameMessage;
 import com.hyperkinetic.game.util.Directions;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 /**
  * A superclass for all laser game boards. Contains code to render the game board as well as static
  * functionality to track the game state.
@@ -20,7 +23,9 @@ import com.hyperkinetic.game.util.Directions;
  * @author cqwillia briannlz
  */
 //TODO: Reorganize this file
-public abstract class AbstractGameBoard {
+public abstract class AbstractGameBoard implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     /**
      * Tracks the game board currently being played on for centralized modification by various game objects.
      */
@@ -28,7 +33,7 @@ public abstract class AbstractGameBoard {
     /**
      * Texture of the laser.
      */
-    private static Texture laserTexture = LaserGame.loadTexture("board/laser.png");
+    private static Texture laserTexture;
 
     /**
      * X-dimension of the board.
@@ -136,10 +141,30 @@ public abstract class AbstractGameBoard {
         local = false;
         this.hasTurn = this.flipBoard = hasTurn;
 
-        int xSpace = (int) (Gdx.graphics.getWidth() * .60);
-        int ySpace = (int) (Gdx.graphics.getHeight() * .80);
         this.x = x;
         this.y = y;
+
+        screenX = -1;
+        screenY = -1;
+        tileDim = -1;
+        pieceDim = -1;
+    }
+
+    public AbstractGameBoard(int x, int y, boolean hasTurn, boolean local)
+    {
+        this(x, y, hasTurn);
+        this.local = local;
+        if(local)
+            this.flipBoard = false;
+    }
+
+    /**
+     * Initializes the client side fields of the game board (screen dimension, static board variable)
+     */
+    public void initialize()
+    {
+        int xSpace = (int) (Gdx.graphics.getWidth() * .60);
+        int ySpace = (int) (Gdx.graphics.getHeight() * .80);
 
         double boardRatio = ((double) x / y);
         double screenRatio = ((double) Gdx.graphics.getWidth() / Gdx.graphics.getHeight());
@@ -155,15 +180,15 @@ public abstract class AbstractGameBoard {
         }
         pieceDim = tileDim * 4 / 5;
 
-        AbstractGameBoard.board = this;
-    }
+        for(AbstractGamePiece piece : pieces)
+            if(piece != null) piece.loadRegion();
 
-    public AbstractGameBoard(int x, int y, boolean hasTurn, boolean local)
-    {
-        this(x, y, hasTurn);
-        this.local = local;
-        if(local)
-            this.flipBoard = false;
+        for(AbstractBoardTile tile : tiles)
+            if(tile != null) tile.loadRegion();
+
+        AbstractGameBoard.board = this;
+
+        laserTexture = LaserGame.loadTexture("board/laser.png");
     }
 
     /**
