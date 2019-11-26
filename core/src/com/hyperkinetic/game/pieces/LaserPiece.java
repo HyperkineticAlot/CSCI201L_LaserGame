@@ -18,5 +18,4 @@ public class LaserPiece extends AbstractBlockPiece{
         return retval;
     }
 
-
 }
