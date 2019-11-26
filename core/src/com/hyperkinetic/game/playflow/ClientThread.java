@@ -115,11 +115,6 @@ public class ClientThread extends Thread {
                             // TODO: display records in a nicely fashion
                             System.out.println(playerID+" has played: " + numPlayed + "games. Wins: " + numWin + "; Losses: " + numLoss + ".");
                         }
-                    } else if(message.getMessageType()==GameMessage.messageType.COPY){
-                        if(message.playerID.equals(playerID)){
-                            // TODO: track connection status
-                            System.out.println("One handshake complete - connection maintained...");
-                        }
                     }
                 }
             }
