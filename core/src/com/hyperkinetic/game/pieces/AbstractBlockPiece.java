@@ -17,6 +17,11 @@ public abstract class AbstractBlockPiece extends AbstractGamePiece
         this.orientation = o;
     }
 
+    public AbstractBlockPiece()
+    {
+        orientation = Directions.Direction.NORTH;
+    }
+
     public Directions.Direction getOrientation() {
         return orientation;
     }

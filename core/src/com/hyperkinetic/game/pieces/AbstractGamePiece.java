@@ -15,9 +15,8 @@ import java.io.Serializable;
  *
  * @author cqwillia briannlz
  */
-public abstract class AbstractGamePiece implements Serializable
+public abstract class AbstractGamePiece
 {
-    private static final long serialVersionUID = 3L;
 
     private static final int IMG_DIM = 300;
 
@@ -36,7 +35,13 @@ public abstract class AbstractGamePiece implements Serializable
         this.x = x;
         this.y = y;
         color = c;
-        loadRegion("pieces/singlemirror.png");
+    }
+
+    public AbstractGamePiece()
+    {
+        x = 0;
+        y = 0;
+        color = true;
     }
 
     /**

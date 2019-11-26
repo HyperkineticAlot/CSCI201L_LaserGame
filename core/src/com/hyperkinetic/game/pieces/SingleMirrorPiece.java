@@ -21,6 +21,7 @@ public class SingleMirrorPiece extends AbstractMirrorPiece
     {
         super(x, y, c, o);
     }
+    public SingleMirrorPiece() {}
 
     @Override
     public Array<Directions.Direction> acceptLaser(Directions.Direction laserDirection)

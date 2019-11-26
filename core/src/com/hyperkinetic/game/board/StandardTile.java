@@ -12,8 +12,12 @@ public class StandardTile extends AbstractBoardTile
 
     public StandardTile(AbstractBoardTile.TileType type)
     {
-        super("board/", type);
         this.type = type;
+    }
+
+    public StandardTile()
+    {
+        this.type = TileType.CENTER;
     }
 
     @Override

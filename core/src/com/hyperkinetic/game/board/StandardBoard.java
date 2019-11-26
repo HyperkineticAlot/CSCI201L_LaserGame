@@ -24,6 +24,10 @@ public class StandardBoard extends AbstractGameBoard
         createTiles();
         createPieces();
     }
+    public StandardBoard()
+    {
+        this(true);
+    }
 
     @Override
     public void createTiles()

@@ -48,17 +48,14 @@ public abstract class AbstractBoardTile implements Serializable
 
     public AbstractBoardTile()
     {
-        loadRegion("board/center.png");
         piece = null;
     }
     public AbstractBoardTile(AbstractBoardTile.TileType type)
     {
-        loadRegion(type);
         piece = null;
     }
     public AbstractBoardTile(String basePath, AbstractBoardTile.TileType type)
     {
-        loadRegion(basePath, type);
         piece = null;
     }
 

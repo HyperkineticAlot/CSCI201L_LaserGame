@@ -1,5 +1,6 @@
 package com.hyperkinetic.game.playflow;
 
+import com.badlogic.gdx.utils.Json;
 import com.hyperkinetic.game.board.AbstractGameBoard;
 import com.hyperkinetic.game.core.LogInScreen;
 import com.hyperkinetic.game.pieces.LaserPiece;
@@ -80,8 +81,10 @@ public class ClientThread extends Thread {
                         this.playerID = LogInScreen.LOGIN_FAILURE_FLAG;
                     }
                     else if(message.getMessageType()==GameMessage.messageType.ROOM_CREATE){
-                        this.board = message.startBoard;
-                        player.setBoard(message.startBoard);
+                        Json json = new Json();
+                        AbstractGameBoard start = message.boardClass.cast(json.fromJson(message.boardClass, message.startBoard));
+                        this.board = start;
+                        player.setBoard(start);
                     }
                 } else {
                     if(message.getMessageType()==GameMessage.messageType.MOVE_SUCCESS){

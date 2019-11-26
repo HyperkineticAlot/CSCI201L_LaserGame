@@ -9,6 +9,7 @@ public class LaserPiece extends AbstractBlockPiece{
     public LaserPiece(int x, int y, boolean c, Directions.Direction o) {
         super(x, y, c, o);
     }
+    public LaserPiece() {}
 
     @Override
     public Array<Directions.Direction> acceptLaser(Directions.Direction laserDirection) {

@@ -23,9 +23,7 @@ import java.util.ArrayList;
  * @author cqwillia briannlz
  */
 //TODO: Reorganize this file
-public abstract class AbstractGameBoard implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+public abstract class AbstractGameBoard {
     /**
      * Tracks the game board currently being played on for centralized modification by various game objects.
      */
@@ -457,10 +455,10 @@ public abstract class AbstractGameBoard implements Serializable {
         for (int i = 0; i < y; i++) {
             for (int j = 0; j < x; j++) {
                 if(flipBoard) {
-                    if(highlight != null && highlight.contains(tiles.get(x-j + (y-i) * x), true))
+                    if(highlight != null && highlight.contains(tiles.get(x * (y - i) - j - 1), true))
                         sb.draw(laserTexture, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
                     else
-                        tiles.get(x - j + (y - i) * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim, true);
+                        tiles.get(x * (y - i) - j - 1).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim, true);
                 }
                 else {
                     if(highlight != null && highlight.contains(tiles.get(j + i * x), true))
@@ -478,10 +476,16 @@ public abstract class AbstractGameBoard implements Serializable {
             {
                 piece.render(sb, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), pieceDim, pieceDim, false, true);
             }
-            else if(piece!=null)
-                piece.render(sb, screenX + piece.getX() * tileDim + tileDim / 10,
-                                 screenY + piece.getY() * tileDim + tileDim / 10,
-                                 pieceDim, pieceDim, flipBoard);
+            else if(piece!=null) {
+                if(flipBoard)
+                    piece.render(sb, Gdx.graphics.getWidth() - screenX - (piece.getX()+1) * tileDim + tileDim / 10,
+                                     Gdx.graphics.getHeight() - screenY - (piece.getY()+1) * tileDim + tileDim / 10,
+                                        pieceDim, pieceDim, true);
+                else
+                    piece.render(sb, screenX + piece.getX() * tileDim + tileDim / 10,
+                        screenY + piece.getY() * tileDim + tileDim / 10,
+                        pieceDim, pieceDim, false);
+            }
         }
 
         // TODO: render lasers here

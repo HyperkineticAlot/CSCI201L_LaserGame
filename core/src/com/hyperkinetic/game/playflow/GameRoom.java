@@ -1,5 +1,6 @@
 package com.hyperkinetic.game.playflow;
 
+import com.badlogic.gdx.utils.Json;
 import com.hyperkinetic.game.board.AbstractGameBoard;
 import com.hyperkinetic.game.board.StandardBoard;
 import com.hyperkinetic.game.pieces.LaserPiece;
@@ -49,14 +50,20 @@ public class GameRoom {
 
         this.board = new StandardBoard(true);
 
+        Json json = new Json();
+
         GameMessage gm1 = new GameMessage(messageType.ROOM_CREATE);
-        gm1.startBoard = new StandardBoard(true);
+        StandardBoard board1 = new StandardBoard(true);
+        gm1.startBoard = json.toJson(board1);
+        gm1.boardClass = StandardBoard.class;
         gm1.playerID = aThread.getPlayerID();
         gm1.player2ID = bThread.getPlayerID();
         aThread.sendMessage(gm1);
 
         GameMessage gm2 = new GameMessage(messageType.ROOM_CREATE);
-        gm2.startBoard = new StandardBoard(false);
+        StandardBoard board2 = new StandardBoard(false);
+        gm2.startBoard = json.toJson(board2);
+        gm2.boardClass = StandardBoard.class;
         gm2.playerID = aThread.getPlayerID();
         gm2.player2ID = bThread.getPlayerID();
         bThread.sendMessage(gm2);
