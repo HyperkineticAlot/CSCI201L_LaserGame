@@ -19,7 +19,8 @@ public class GameMessage implements Serializable {
     public int moveX=-1;
     public int moveY=-1;
     public String errorMessage;
-    public AbstractGameBoard startBoard;
+    public String startBoard;
+    public Class<? extends AbstractGameBoard> boardClass;
 
     public String password;
     public int numPlayed;

@@ -8,6 +8,7 @@ public class KingPiece extends AbstractBlockPiece {
     public KingPiece(int x, int y, boolean c, Directions.Direction o) {
         super(x, y, c, o);
     }
+    public KingPiece() {}
 
     @Override
     public Array<Directions.Direction> acceptLaser(Directions.Direction laserDirection) {

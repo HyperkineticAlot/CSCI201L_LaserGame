@@ -13,6 +13,9 @@ import com.hyperkinetic.game.pieces.LaserPiece;
 import com.hyperkinetic.game.playflow.GameMessage;
 import com.hyperkinetic.game.util.Directions;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 /**
  * A superclass for all laser game boards. Contains code to render the game board as well as static
  * functionality to track the game state.
@@ -28,7 +31,7 @@ public abstract class AbstractGameBoard {
     /**
      * Texture of the laser.
      */
-    private static Texture laserTexture = LaserGame.loadTexture("board/laser.png");
+    private static Texture laserTexture;
 
     /**
      * X-dimension of the board.
@@ -136,10 +139,30 @@ public abstract class AbstractGameBoard {
         local = false;
         this.hasTurn = this.flipBoard = hasTurn;
 
-        int xSpace = (int) (Gdx.graphics.getWidth() * .60);
-        int ySpace = (int) (Gdx.graphics.getHeight() * .80);
         this.x = x;
         this.y = y;
+
+        screenX = -1;
+        screenY = -1;
+        tileDim = -1;
+        pieceDim = -1;
+    }
+
+    public AbstractGameBoard(int x, int y, boolean hasTurn, boolean local)
+    {
+        this(x, y, hasTurn);
+        this.local = local;
+        if(local)
+            this.flipBoard = false;
+    }
+
+    /**
+     * Initializes the client side fields of the game board (screen dimension, static board variable)
+     */
+    public void initialize()
+    {
+        int xSpace = (int) (Gdx.graphics.getWidth() * .60);
+        int ySpace = (int) (Gdx.graphics.getHeight() * .80);
 
         double boardRatio = ((double) x / y);
         double screenRatio = ((double) Gdx.graphics.getWidth() / Gdx.graphics.getHeight());
@@ -155,15 +178,15 @@ public abstract class AbstractGameBoard {
         }
         pieceDim = tileDim * 4 / 5;
 
-        AbstractGameBoard.board = this;
-    }
+        for(AbstractGamePiece piece : pieces)
+            if(piece != null) piece.loadRegion();
 
-    public AbstractGameBoard(int x, int y, boolean hasTurn, boolean local)
-    {
-        this(x, y, hasTurn);
-        this.local = local;
-        if(local)
-            this.flipBoard = false;
+        for(AbstractBoardTile tile : tiles)
+            if(tile != null) tile.loadRegion();
+
+        AbstractGameBoard.board = this;
+
+        laserTexture = LaserGame.loadTexture("board/laser.png");
     }
 
     /**
@@ -432,10 +455,10 @@ public abstract class AbstractGameBoard {
         for (int i = 0; i < y; i++) {
             for (int j = 0; j < x; j++) {
                 if(flipBoard) {
-                    if(highlight != null && highlight.contains(tiles.get(x-j + (y-i) * x), true))
+                    if(highlight != null && highlight.contains(tiles.get(x * (y - i) - j - 1), true))
                         sb.draw(laserTexture, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
                     else
-                        tiles.get(x - j + (y - i) * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim, true);
+                        tiles.get(x * (y - i) - j - 1).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim, true);
                 }
                 else {
                     if(highlight != null && highlight.contains(tiles.get(j + i * x), true))
@@ -453,10 +476,16 @@ public abstract class AbstractGameBoard {
             {
                 piece.render(sb, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), pieceDim, pieceDim, false, true);
             }
-            else if(piece!=null)
-                piece.render(sb, screenX + piece.getX() * tileDim + tileDim / 10,
-                                 screenY + piece.getY() * tileDim + tileDim / 10,
-                                 pieceDim, pieceDim, flipBoard);
+            else if(piece!=null) {
+                if(flipBoard)
+                    piece.render(sb, Gdx.graphics.getWidth() - screenX - (piece.getX()+1) * tileDim + tileDim / 10,
+                                     Gdx.graphics.getHeight() - screenY - (piece.getY()+1) * tileDim + tileDim / 10,
+                                        pieceDim, pieceDim, true);
+                else
+                    piece.render(sb, screenX + piece.getX() * tileDim + tileDim / 10,
+                        screenY + piece.getY() * tileDim + tileDim / 10,
+                        pieceDim, pieceDim, false);
+            }
         }
 
         // TODO: render lasers here

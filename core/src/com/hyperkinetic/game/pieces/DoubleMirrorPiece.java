@@ -9,6 +9,8 @@ public class DoubleMirrorPiece extends AbstractMirrorPiece {
         super(x, y, c, orientation);
     }
 
+    public DoubleMirrorPiece () {}
+
     @Override
     public Array<Directions.Direction> acceptLaser(Directions.Direction laserDirection) {
         Directions.MirrorDirection oppositeSide = null;

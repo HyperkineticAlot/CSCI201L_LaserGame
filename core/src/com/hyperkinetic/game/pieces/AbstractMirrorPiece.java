@@ -19,6 +19,11 @@ public abstract class AbstractMirrorPiece extends AbstractGamePiece
         this.orientation = o;
     }
 
+    public AbstractMirrorPiece()
+    {
+        orientation = NORTHWEST;
+    }
+
     public Directions.MirrorDirection getOrientation() {
         return orientation;
     }

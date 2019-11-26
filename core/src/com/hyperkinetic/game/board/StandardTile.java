@@ -8,8 +8,21 @@ package com.hyperkinetic.game.board;
  */
 public class StandardTile extends AbstractBoardTile
 {
+    private TileType type;
+
     public StandardTile(AbstractBoardTile.TileType type)
     {
-        super("board/", type);
+        this.type = type;
+    }
+
+    public StandardTile()
+    {
+        this.type = TileType.CENTER;
+    }
+
+    @Override
+    public void loadRegion()
+    {
+        super.loadRegion("board/", type);
     }
 }

@@ -5,13 +5,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.hyperkinetic.game.core.LaserGame;
 import com.hyperkinetic.game.pieces.AbstractGamePiece;
 
+import java.io.Serializable;
+
 /**
  * An abstract superclass describing the behaviour of tiles on the game board.
  *
  * @author cqwillia
  */
-public abstract class AbstractBoardTile
+public abstract class AbstractBoardTile implements Serializable
 {
+    private static final long serialVersionUID = 2L;
+
     private static final int IMG_DIM = 300;
 
     /**
@@ -36,7 +40,7 @@ public abstract class AbstractBoardTile
     /**
      * The texture of the board tile.
      */
-    private Texture texture;
+    private transient Texture texture;
     /**
      * The piece that sits on the tile.
      */
@@ -44,17 +48,14 @@ public abstract class AbstractBoardTile
 
     public AbstractBoardTile()
     {
-        loadRegion("board/center.png");
         piece = null;
     }
     public AbstractBoardTile(AbstractBoardTile.TileType type)
     {
-        loadRegion(type);
         piece = null;
     }
     public AbstractBoardTile(String basePath, AbstractBoardTile.TileType type)
     {
-        loadRegion(basePath, type);
         piece = null;
     }
 
@@ -142,7 +143,7 @@ public abstract class AbstractBoardTile
      * Load the texture on the tile using the type of image.
      * @param type the type of the tile
      */
-    private void loadRegion(AbstractBoardTile.TileType type)
+    protected void loadRegion(AbstractBoardTile.TileType type)
     {
         loadRegion(getPathFromTileType(type));
     }
@@ -152,9 +153,14 @@ public abstract class AbstractBoardTile
      * @param basePath the base path of image
      * @param type the type of the tile
      */
-    private void loadRegion(String basePath, AbstractBoardTile.TileType type)
+    protected void loadRegion(String basePath, AbstractBoardTile.TileType type)
     {
         loadRegion(basePath + getPathFromTileType(type));
+    }
+
+    public void loadRegion()
+    {
+        loadRegion(TileType.CENTER);
     }
 
     /**

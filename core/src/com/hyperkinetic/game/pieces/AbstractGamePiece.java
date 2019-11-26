@@ -8,6 +8,8 @@ import com.hyperkinetic.game.board.AbstractGameBoard;
 import com.hyperkinetic.game.core.LaserGame;
 import com.hyperkinetic.game.util.Directions;
 
+import java.io.Serializable;
+
 /**
  * Abstract superclass describing the behaviour of a game piece.
  *
@@ -15,6 +17,7 @@ import com.hyperkinetic.game.util.Directions;
  */
 public abstract class AbstractGamePiece
 {
+
     private static final int IMG_DIM = 300;
 
     /**
@@ -26,13 +29,19 @@ public abstract class AbstractGamePiece
      */
     protected boolean color;
 
-    private Texture texture;
+    private transient Texture texture;
 
     public AbstractGamePiece(int x, int y, boolean c) {
         this.x = x;
         this.y = y;
         color = c;
-        loadRegion("pieces/singlemirror.png");
+    }
+
+    public AbstractGamePiece()
+    {
+        x = 0;
+        y = 0;
+        color = true;
     }
 
     /**
@@ -149,6 +158,11 @@ public abstract class AbstractGamePiece
 
         sb.draw(texture, x, y, width/2F, height/2F, width, height, scale, scale, getRotation(), 0, 0, IMG_DIM, IMG_DIM, flipped, flipped);
 
+    }
+
+    public void loadRegion()
+    {
+        loadRegion("pieces/singlemirror.png");
     }
 
     protected void loadRegion(String image)

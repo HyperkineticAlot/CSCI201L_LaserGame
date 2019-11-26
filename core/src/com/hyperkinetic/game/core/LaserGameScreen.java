@@ -50,6 +50,7 @@ public class LaserGameScreen implements Screen {
         if(board == null && game.player.getBoard() != null)
         {
             board = game.player.getBoard();
+            board.initialize();
         }
 
         if(board != null)
