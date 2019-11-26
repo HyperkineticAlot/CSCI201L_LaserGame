@@ -18,4 +18,11 @@ public class LaserPiece extends AbstractBlockPiece{
         return retval;
     }
 
+    @Override
+    public boolean equals(Object other)
+    {
+        if(!(other instanceof LaserPiece)) return false;
+        LaserPiece o = (LaserPiece) other;
+        return o.color == this.color && o.x == this.x && o.y == this.y;
+    }
 }

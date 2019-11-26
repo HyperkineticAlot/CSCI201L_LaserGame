@@ -44,8 +44,8 @@ public class ClientThread extends Thread {
             System.out.println("Trying to connect to "+hostname+":"+port);
             socket = new Socket(hostname, port);
             System.out.println("Connected to "+hostname+":"+port);
-            in = new ObjectInputStream(socket.getInputStream());
             player = new Player(socket, this);
+            in = new ObjectInputStream(socket.getInputStream());
             this.start();
             player.start();
         }
