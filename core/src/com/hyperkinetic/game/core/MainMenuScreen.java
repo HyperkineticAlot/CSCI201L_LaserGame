@@ -64,10 +64,10 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         neon.getFont("font").getData().setScale(1.20f, 1.20f);
 
 
-        Button guest = new TextButton(game.player == null ? "GUEST" : "PLAY", neon);
+        Button guest = new TextButton(LaserGame.client == null ? "GUEST" : "PLAY", neon);
         guest.setSize((float)(width / 9.6),(float)(height / 10.8));
         guest.setPosition(width/2 - (float)(width / 9.6) / 2, height/2 + (float)(height / 10.8));
-        if(game.player == null)
+        if(LaserGame.client == null)
         {
             guest.addListener(new InputListener(){
                 @Override
@@ -87,7 +87,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
                 @Override
                 public void touchUp(InputEvent event, float x, float y, int pointer, int button)
                 {
-                    game.player.sendMatchmakingRequest();
+                    LaserGame.client.getPlayer().sendMatchmakingRequest();
                     game.setScreen(new LaserGameScreen(game));
                 }
                 @Override
@@ -99,10 +99,10 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         stage.addActor(guest);
 
 
-        Button login = new TextButton(game.player == null ? "LOG IN" : "LOG OUT", neon);
+        Button login = new TextButton(LaserGame.client == null ? "LOG IN" : "LOG OUT", neon);
         login.setSize((float)(width / 9.6),(float)(height / 10.8));
         login.setPosition(width / 2 - (float)(width / 9.6) / 2, height / 2);
-        if(game.player == null) {
+        if(LaserGame.client == null) {
             login.addListener(new InputListener() {
                 @Override
                 public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
@@ -120,7 +120,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
             login.addListener(new InputListener() {
                 @Override
                 public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                    game.player = null;
+                    LaserGame.client = null;
                     game.setScreen(new MainMenuScreen(game));
                 }
                 @Override

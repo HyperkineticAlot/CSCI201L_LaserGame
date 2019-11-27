@@ -47,9 +47,9 @@ public class LaserGameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
-        if(board == null && game.player.getBoard() != null)
+        if(board == null && LaserGame.client.getPlayer().getBoard() != null)
         {
-            board = game.player.getBoard();
+            board = LaserGame.client.getPlayer().getBoard();
             board.initialize();
         }
 

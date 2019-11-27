@@ -576,7 +576,7 @@ public abstract class AbstractGameBoard {
      * @param nX the new x coordinate of the piece
      * @param nY the new y coordinate of the piece
      */
-    public synchronized void update(int x,int y,String moveType,int nX,int nY){
+    public void update(int x,int y,String moveType,int nX,int nY){
         AbstractGamePiece piece = getPieceFromCoordinate(x,y);
         if(moveType.equals("rotateL")) {
             pieceRotateLeft(piece);
@@ -629,6 +629,11 @@ public abstract class AbstractGameBoard {
             if(hasTurn ^ flipBoard)
             {
                 fireLaser(laser.getX(), laser.getY(), laser.getOrientation());
+                if(!LaserGame.IS_SERVER && LaserGame.client != null && !local)
+                {
+                    nextMove.playerID = LaserGame.client.playerID;
+                    LaserGame.client.getPlayer().sendMessage(nextMove);
+                }
                 return true;
             }
         }
@@ -637,6 +642,11 @@ public abstract class AbstractGameBoard {
             if(!hasTurn ^ flipBoard)
             {
                 fireLaser(laser.getX(), laser.getY(), laser.getOrientation());
+                if(!LaserGame.IS_SERVER && LaserGame.client != null && !local)
+                {
+                    nextMove.playerID = LaserGame.client.playerID;
+                    LaserGame.client.getPlayer().sendMessage(nextMove);
+                }
                 return true;
             }
         }

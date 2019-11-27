@@ -11,7 +11,7 @@ import java.util.Random;
 /**
  * Player class
  */
-public class Player extends Thread {
+public class Player{
 
     public String playerID;
     private ClientThread ct;
@@ -79,28 +79,6 @@ public class Player extends Thread {
         {
             System.out.println("ioe in sendMessage() of ClientThread " + playerID);
             ioe.printStackTrace();
-        }
-    }
-
-    /**
-     * Player constantly checks the game board for moves and send to server
-     */
-    @Override
-    public void run()
-    {
-        while(true)
-        {
-            // WHEN THE PLAYER MAKES A MOVE, SET THE nextMove FIELD IN GAME BOARD TO NULL!!
-            // ONLY SET NEXT MOVE WHEN FIRING LASER
-            if(board==null){
-                //System.out.println("Still in game queue...");
-            } else {
-                GameMessage nextMove = board.getNextMove();
-                if(nextMove!=null){
-                    nextMove.playerID = playerID;
-                    sendMessage(nextMove);
-                }
-            }
         }
     }
 
