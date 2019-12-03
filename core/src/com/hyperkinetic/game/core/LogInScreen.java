@@ -50,8 +50,8 @@ public class LogInScreen  extends InputAdapter implements Screen {
 
         Skin neon = new Skin(Gdx.files.internal("skin/neon-ui.json"));
         Skin pink = new Skin(Gdx.files.internal("pinkSkin/neon-ui.json"));
-        neon.getFont("font").getData().setScale(1.30f * width / 1920, 1.30f * width / 1920);
-        pink.getFont("font").getData().setScale(1.30f * width / 1920, 1.30f * width / 1920);
+        neon.getFont("font").getData().setScale(1.30f * width / 1920, 1.30f * height / 1280);
+        pink.getFont("font").getData().setScale(1.30f * width / 1920, 1.30f * height / 1280);
 
         Label usernameLabel = new Label("Username", neon);
         usernameLabel.setPosition(width / 2 - (float)(width / 9.6) / 2 + (float)(width / 9.6) / 4,height / 2 + (float)(height / 21.6) + 2 * (float)(height / 21.6));

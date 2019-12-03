@@ -4,12 +4,19 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.hyperkinetic.game.board.AbstractGameBoard;
 import com.hyperkinetic.game.board.StandardBoard;
 import com.hyperkinetic.game.playflow.ClientThread;
@@ -28,17 +35,44 @@ public class LaserGameScreen implements Screen {
 
     private Stage stage;
     private LaserGame game;
+    private float width;
+    private float height;
+    private OrthographicCamera camera;
 
     public LaserGameScreen(LaserGame aGame) {
+        this.width = Gdx.graphics.getWidth();
+        this.height = Gdx.graphics.getHeight();
         game = aGame;
-        stage = new Stage(new ScreenViewport());
+        camera = new OrthographicCamera(width, height);
+        camera.setToOrtho(false,width, height);
+        stage = new Stage(new StretchViewport(width, height, camera));
         board = null;
         batch = new SpriteBatch();
+
+
+        Skin pink = new Skin(Gdx.files.internal("pinkSkin/neon-ui.json"));
+
+        Button quit = new TextButton("QUIT", pink);
+        quit.setSize(200, 100);
+        quit.setPosition(width / 2,height / 2);
+        quit.addListener(new InputListener(){
+            @Override
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                game.setScreen(new MainMenuScreen(game));
+            }
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+
+        stage.addActor(quit);
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(new GameInputProcessor());
+        //Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -59,11 +93,19 @@ public class LaserGameScreen implements Screen {
         }
 
         batch.end();
+
+
+        stage.getBatch().begin();
+        //stage.getBatch().draw(titlePic, 1920 / 2 - 958/ 2 , 1000);
+        stage.getBatch().end();
+
+        stage.act();
+        stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-
+        stage.getViewport().update(width, height, false);
     }
 
     @Override
@@ -84,5 +126,6 @@ public class LaserGameScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
+        stage.dispose();
     }
 }
