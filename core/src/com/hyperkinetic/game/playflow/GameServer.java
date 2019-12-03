@@ -282,8 +282,15 @@ public class GameServer {
                     pst.setString(1, playerID);
                     pst.setString(2, password);
                     pst.executeUpdate();
-                    pst = conn.prepareStatement("INSERT INTO RECORD (userID, numPlayed, numWin, numLoss) VALUES (?, ?, ?, ?)");
+                    pst = conn.prepareStatement("SELECT userID FROM USER WHERE userName=?");
                     pst.setString(1, playerID);
+                    rs = pst.executeQuery();
+                    int newID = 0;
+                    if(rs.next()){
+                        newID = rs.getInt("userID");
+                    }
+                    pst = conn.prepareStatement("INSERT INTO RECORD (userID, numPlayed, numWin, numLoss) VALUES (?, ?, ?, ?)");
+                    pst.setInt(1, newID);
                     pst.setInt(2, 0);
                     pst.setInt(3, 0);
                     pst.setInt(4, 0);
