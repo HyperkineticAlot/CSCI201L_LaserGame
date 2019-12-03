@@ -11,7 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+
+import static com.hyperkinetic.game.core.MainMenuScreen.bgm;
 
 //import javax.xml.soap.Text;
 
@@ -35,7 +38,7 @@ public class SettingsScreen  extends InputAdapter implements Screen {
         camera.setToOrtho(false,width, height);
         stage = new Stage(new StretchViewport(width, height, camera));
 
-        backgroundPic = new Texture(Gdx.files.internal("LaserGameWithTitle.png"));
+        backgroundPic = new Texture(Gdx.files.internal("reboundBackground.jpg"));
         //titlePic = new Texture(Gdx.files.internal("LaserGameTitle.png"));
 
         Skin neon = new Skin(Gdx.files.internal("skin/neon-ui.json"));
@@ -61,10 +64,10 @@ public class SettingsScreen  extends InputAdapter implements Screen {
         music.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("touch up on music");
-                System.out.println("printing bgm " + MainMenuScreen.bgm);
-                if(!MainMenuScreen.bgm.isPlaying()) {
-                    MainMenuScreen.bgm.play();
+                //System.out.println("touch up on music");
+                //System.out.println("printing bgm " + bgm);
+                if(!bgm.isPlaying()) {
+                    bgm.play();
                 }
 
                 //System.out.println("if the same instance " + bgm.);
@@ -81,8 +84,8 @@ public class SettingsScreen  extends InputAdapter implements Screen {
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 //System.out.println("touch up on no music");
-                if(MainMenuScreen.bgm.isPlaying()) {
-                    MainMenuScreen.bgm.pause();
+                if(bgm.isPlaying()) {
+                    bgm.pause();
                 }
                 MainMenuScreen.playBgm = false;
                 MainMenuScreen.initialPlaying = false;
@@ -99,6 +102,32 @@ public class SettingsScreen  extends InputAdapter implements Screen {
             musicChoiceGroup.setChecked("No Music");
         }
 
+        Label bar = new Label("VOLUME", neon);
+        bar.setSize((float)(width / 9.6),(float)(height / 10.8));
+        bar.setPosition(width / 2 - (float)(width / 9.6) / 6, height / 2 + (float) ((1.5) * (height / 10.8)));
+
+
+        final Slider slider = new Slider(0, 100,1, false, neon);
+        slider.setPosition(width / 2 - (float)(width / 9.6) , height / 2 + (float)(height / 10.8));
+        slider.setSize((float)(width / 4.8), (float)(height / 10.8));
+        slider.setValue(50);
+        slider.addListener(new DragListener() {
+            public void dragStart(InputEvent event, float x, float y, int pointer)
+            {
+                bgm.setVolume(slider.getPercent());
+            }
+
+            public void drag(InputEvent event, float x, float y, int pointer)
+            {
+                bgm.setVolume(slider.getPercent());
+            }
+
+            public void dragStop(InputEvent event, float x, float y, int pointer)
+            {
+                bgm.setVolume(slider.getPercent());
+            }
+
+        });
 
         Button settings = new TextButton("BACK", neon);
         settings.setSize((float)(width / 9.6),(float)(height / 10.8));
@@ -114,6 +143,8 @@ public class SettingsScreen  extends InputAdapter implements Screen {
             }
         });
         stage.addActor(settings);
+        stage.addActor(bar);
+        stage.addActor(slider);
         stage.addActor(music);
         stage.addActor(noMusic);
     }

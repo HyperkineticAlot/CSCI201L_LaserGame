@@ -7,9 +7,9 @@ import com.hyperkinetic.game.core.LaserGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.title = "Laser Game";
+		config.title = "R.E.B.O.U.N.D";
 		config.width = 1920;
-		config.height = 1080;
+		config.height = 1280;
 		new LwjglApplication(new LaserGame(), config);
 	}
 }

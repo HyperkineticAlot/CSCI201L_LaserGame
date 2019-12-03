@@ -68,6 +68,18 @@ public class Player{
         return false;
     }
 
+    public boolean register(String playerID, String pass)
+    {
+        this.playerID = playerID;
+        GameMessage registerMessage = new GameMessage(GameMessage.messageType.REGISTER_ATTEMPT);
+        registerMessage.playerID = playerID;
+        registerMessage.password = pass;
+
+        sendMessage(registerMessage);
+
+        return false;
+    }
+
     public void sendMessage(GameMessage message)
     {
         try

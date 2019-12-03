@@ -156,9 +156,59 @@ public class GameServer {
             String loser = gm.player2ID;
             try{
                 conn = getConnection();
-                ps = conn.prepareStatement("");
+                // winner
+                ps = conn.prepareStatement("SELECT userID FROM USER WHERE userName=?");
+                ps.setString(1,winner);
                 rs = ps.executeQuery();
-                // TODO: query USER table for userID & update RECORD table accordingly
+                int winnerID = 0;
+                if(rs.next()){
+                    winnerID = rs.getInt("userID");
+                }
+                ps = conn.prepareStatement("SELECT recordID, numPlayed, numWin, numLoss FROM RECORD WHERE userID=?");
+                ps.setInt(1,winnerID);
+                rs = ps.executeQuery();
+                int winnerRecordID = 0;
+                int winnerNumPlayed = 0;
+                int winnerNumWin = 0;
+                int winnerNumLoss = 0;
+                if(rs.next()){
+                    winnerRecordID = rs.getInt("recordID");
+                    winnerNumPlayed = rs.getInt("numPlayed");
+                    winnerNumWin = rs.getInt("numWin");
+                    winnerNumLoss = rs.getInt("numLoss");
+                }
+                ps = conn.prepareStatement("UPDATE RECORD SET numPlayed=?, numWin=? WHERE recordID=?");
+                ps.setInt(1,winnerNumPlayed+1);
+                ps.setInt(2,winnerNumWin+1);
+                ps.setInt(3,winnerRecordID);
+                ps.executeUpdate();
+
+                // loser
+                ps = conn.prepareStatement("SELECT userID FROM USER WHERE userName=?");
+                ps.setString(1,loser);
+                rs = ps.executeQuery();
+                int loserID = 0;
+                if(rs.next()){
+                    loserID = rs.getInt("userID");
+                }
+                ps = conn.prepareStatement("SELECT recordID, numPlayed, numWin, numLoss FROM RECORD WHERE userID=?");
+                ps.setInt(1,loserID);
+                rs = ps.executeQuery();
+                int loserRecordID = 0;
+                int loserNumPlayed = 0;
+                int loserNumWin = 0;
+                int loserNumLoss = 0;
+                if(rs.next()){
+                    loserRecordID = rs.getInt("recordID");
+                    loserNumPlayed = rs.getInt("numPlayed");
+                    loserNumWin = rs.getInt("numWin");
+                    loserNumLoss = rs.getInt("numLoss");
+                }
+                ps = conn.prepareStatement("UPDATE RECORD SET numPlayed=?, numLoss=? WHERE recordID=?");
+                ps.setInt(1,loserNumPlayed+1);
+                ps.setInt(2,loserNumLoss+1);
+                ps.setInt(3,loserRecordID);
+                ps.executeUpdate();
             } catch(ClassNotFoundException e){
                 System.out.println("ClassNotFound error in updateDatabase(): "+e.getMessage());
             } catch(SQLException e){
@@ -232,8 +282,15 @@ public class GameServer {
                     pst.setString(1, playerID);
                     pst.setString(2, password);
                     pst.executeUpdate();
-                    pst = conn.prepareStatement("INSERT INTO RECORD (userID, numPlayed, numWin, numLoss) VALUES (?, ?, ?, ?)");
+                    pst = conn.prepareStatement("SELECT userID FROM USER WHERE userName=?");
                     pst.setString(1, playerID);
+                    rs = pst.executeQuery();
+                    int newID = 0;
+                    if(rs.next()){
+                        newID = rs.getInt("userID");
+                    }
+                    pst = conn.prepareStatement("INSERT INTO RECORD (userID, numPlayed, numWin, numLoss) VALUES (?, ?, ?, ?)");
+                    pst.setInt(1, newID);
                     pst.setInt(2, 0);
                     pst.setInt(3, 0);
                     pst.setInt(4, 0);

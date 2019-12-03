@@ -45,35 +45,40 @@ public class LogInScreen  extends InputAdapter implements Screen {
 
         batch = new SpriteBatch();
 
-        backgroundPic = new Texture(Gdx.files.internal("LaserGameWithTitle.png"));
+        backgroundPic = new Texture(Gdx.files.internal("reboundBackground.jpg"));
         //titlePic = new Texture(Gdx.files.internal("LaserGameTitle.png"));
 
         Skin neon = new Skin(Gdx.files.internal("skin/neon-ui.json"));
         neon.getFont("font").getData().setScale(1.30f, 1.30f);
 
         Label usernameLabel = new Label("Username", neon);
-        usernameLabel.setPosition(width / 2 - (float)(width / 9.6) / 4,height / 2 + (float)(height / 21.6));
+        usernameLabel.setPosition(width / 2 - (float)(width / 9.6) / 4,height / 2 + (float)(height / 21.6) + 2 * (float)(height / 21.6));
         usernameLabel.setSize((float)(width / 9.6), (float)(height / 21.6) );
 
         Label passwordLabel = new Label("Password", neon);
-        passwordLabel.setPosition(width / 2 - (float)(width / 9.6) / 4,height / 2 - (float)(height / 21.6));
+        passwordLabel.setPosition(width / 2 - (float)(width / 9.6) / 4,height / 2 - (float)(height / 21.6) + 2 * (float)(height / 21.6));
         passwordLabel.setSize((float)(width / 9.6), (float)(height / 21.6) );
 
         final TextField username = new TextField("", neon);
-        username.setPosition(width / 2 - (float)(width / 9.6) / 2 ,height / 2);
+        username.setPosition(width / 2 - (float)(width / 9.6) / 2 ,height / 2 + 2 * (float)(height / 21.6));
         username.setSize((float)(width / 9.6), (float)(height / 21.6) );
 
         final TextField password = new TextField("", neon);
         //password.setStyle();
         password.setPasswordMode(true);
         password.setPasswordCharacter('*');
-        password.setPosition(width / 2 - (float)(width / 9.6) / 2,height / 2 - 2 * (float)(height / 21.6));
+        password.setPosition(width / 2 - (float)(width / 9.6) / 2,height / 2 - 2 * (float)(height / 21.6) + 2 * (float)(height / 21.6));
         password.setSize((float)(width / 9.6), (float)(height / 21.6) );
 
 
+        final Label warningLabel = new Label("", neon);
+        warningLabel.setPosition(width / 2 - (float)(width / 9.6) / 4,height / 2 + (float)(height / 21.6) + 3 * (float)(height / 21.6));
+        warningLabel.setSize((float)(width / 9.6), (float)(height / 21.6) );
+        warningLabel.setFontScale(2.0f);
+
         Button settings = new TextButton("LOG IN", neon);
         settings.setSize((float)(width / 9.6),(float)(height / 10.8));
-        settings.setPosition(width/2 - (float)(width / 9.6) / 2, (float) (height / 2 - 2.5 * (height / 10.8)));
+        settings.setPosition(width/2 - (float)(width / 9.6) / 2, (float) (height / 2 - 2.5 * (height / 10.8) + 2 * (float)(height / 21.6)));
         settings.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -93,6 +98,8 @@ public class LogInScreen  extends InputAdapter implements Screen {
                 if(newPlayer.playerID.equals(LOGIN_FAILURE_FLAG))
                 {
                     // TODO: display login failure alert
+                    // password is incorrect / username doesn't exist
+                    warningLabel.setText("Password is incorrect / Username doesn't exist");
                     newPlayer.resetPlayerID();
                 }
                 else
@@ -111,15 +118,15 @@ public class LogInScreen  extends InputAdapter implements Screen {
 
         Button register = new TextButton("REGISTER", neon);
         register.setSize((float)(width / 9.6),(float)(height / 10.8));
-        register.setPosition(width/2 - (float)(width / 9.6) / 2, height / 2 - (float) (3.5 * (height / 10.8)));
+        register.setPosition(width/2 - (float)(width / 9.6) / 2, height / 2 - (float) (3.5 * (height / 10.8)) + 2 * (float)(height / 21.6));
         register.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println(username.getText());
                 System.out.println(password.getText());
-                /*
+
                 ClientThread newPlayer = new ClientThread("localhost", GameServer.port,false,false);
-                newPlayer.getPlayer().login(username.getText(), password.getText());
+                newPlayer.getPlayer().register(username.getText(), password.getText());
 
                 while(newPlayer.playerID == null)
                 {
@@ -130,14 +137,15 @@ public class LogInScreen  extends InputAdapter implements Screen {
                 }
                 if(newPlayer.playerID.equals(LOGIN_FAILURE_FLAG))
                 {
-                    // TODO: display login failure alert
+                    // TODO: display register failure alert
+                    warningLabel.setText("Username is taken!");
                     newPlayer.resetPlayerID();
                 }
                 else
                 {
                     LaserGame.client = newPlayer;
                     game.setScreen(new MainMenuScreen(game));
-                }*/
+                }
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -147,7 +155,7 @@ public class LogInScreen  extends InputAdapter implements Screen {
 
         Button back = new TextButton("BACK", neon);
         back.setSize((float)(width / 9.6),(float)(height / 10.8));
-        back.setPosition(width / 2 - (float)(width / 9.6) / 2, height / 2 - (float) (4.5 * (height / 10.8)));
+        back.setPosition(width / 2 - (float)(width / 9.6) / 2, height / 2 - (float) (4.5 * (height / 10.8)) + 2 * (float)(height / 21.6));
         back.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -164,6 +172,7 @@ public class LogInScreen  extends InputAdapter implements Screen {
         stage.addActor(settings);
         stage.addActor(register);
         stage.addActor(username);
+        stage.addActor(warningLabel);
         stage.addActor(password);
         stage.addActor(usernameLabel);
         stage.addActor(passwordLabel);
