@@ -686,25 +686,31 @@ public abstract class AbstractGameBoard {
     
     private boolean handleLaserRotate(LaserPiece laser)
     {
+        pickedUpPiece = null;
+        
         if(local)
         {
             if(laser.equals(aLaser) && hasTurn)
             {
                 update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
+                undoMove();
                 return true;
             }
             else if(laser.equals(bLaser) && !hasTurn)
             {
                 update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
+                undoMove();
                 return true;
             }
         }
         else if(laser.equals(aLaser) && (hasTurn ^ flipBoard)) {
             update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
+            undoMove();
             return true;
         }
         else if(laser.equals(bLaser) && (hasTurn ^ flipBoard)) {
             update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
+            undoMove();
             return true;
         }
         
