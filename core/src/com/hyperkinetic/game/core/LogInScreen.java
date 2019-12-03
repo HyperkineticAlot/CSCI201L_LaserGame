@@ -117,9 +117,9 @@ public class LogInScreen  extends InputAdapter implements Screen {
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println(username.getText());
                 System.out.println(password.getText());
-                /*
+
                 ClientThread newPlayer = new ClientThread("localhost", GameServer.port,false,false);
-                newPlayer.getPlayer().login(username.getText(), password.getText());
+                newPlayer.getPlayer().register(username.getText(), password.getText());
 
                 while(newPlayer.playerID == null)
                 {
@@ -130,14 +130,14 @@ public class LogInScreen  extends InputAdapter implements Screen {
                 }
                 if(newPlayer.playerID.equals(LOGIN_FAILURE_FLAG))
                 {
-                    // TODO: display login failure alert
+                    // TODO: display register failure alert
                     newPlayer.resetPlayerID();
                 }
                 else
                 {
                     LaserGame.client = newPlayer;
                     game.setScreen(new MainMenuScreen(game));
-                }*/
+                }
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
