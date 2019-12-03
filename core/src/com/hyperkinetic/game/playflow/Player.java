@@ -58,12 +58,24 @@ public class Player{
 
     public boolean login(String playerID, String pass)
     {
-        this.playerID = playerID;
+        // this.playerID = playerID;
         GameMessage loginMessage = new GameMessage(GameMessage.messageType.LOGIN_ATTEMPT);
         loginMessage.playerID = playerID;
         loginMessage.password = pass;
 
         sendMessage(loginMessage);
+
+        return false;
+    }
+
+    public boolean register(String playerID, String pass)
+    {
+        // this.playerID = playerID;
+        GameMessage registerMessage = new GameMessage(GameMessage.messageType.REGISTER_ATTEMPT);
+        registerMessage.playerID = playerID;
+        registerMessage.password = pass;
+
+        sendMessage(registerMessage);
 
         return false;
     }
