@@ -92,10 +92,11 @@ public class ClientThread extends Thread {
                     if(message.getMessageType()==GameMessage.messageType.MOVE_SUCCESS){
                         if(!message.playerID.equals(playerID)){ // update board
                             board.update(message.x,message.y,message.moveType,message.moveX,message.moveY);
+
+                            // fire laser
+                            LaserPiece laser = board.getActiveLaser();
+                            board.fireLaser(laser.getX(),laser.getY(),laser.getOrientation());
                         }
-                        // fire laser
-                        LaserPiece laser = board.getActiveLaser();
-                        board.fireLaser(laser.getX(),laser.getY(),laser.getOrientation());
                     } else if(message.getMessageType()==GameMessage.messageType.MOVE_FAILURE){
                         if(message.playerID.equals(playerID)){
                             // undo move & wait for next

@@ -23,6 +23,7 @@ public class StandardTile extends AbstractBoardTile
     @Override
     public void loadRegion()
     {
-        super.loadRegion("board/", type);
+        //super.loadRegion("board/", type);
+        super.loadRegion("board/tile.png");
     }
 }

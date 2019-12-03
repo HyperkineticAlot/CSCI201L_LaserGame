@@ -2,6 +2,7 @@ package com.hyperkinetic.game.pieces;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.hyperkinetic.game.core.LaserGame;
 import com.hyperkinetic.game.util.Directions;
 
 public class DoubleMirrorPiece extends AbstractMirrorPiece {
@@ -37,5 +38,10 @@ public class DoubleMirrorPiece extends AbstractMirrorPiece {
         return reflectedLaserDirection;
     }
 
-
+    @Override
+    public void loadRegion()
+    {
+        textures[0] = textures[2] = LaserGame.loadTexture("pieces/doublemirror" + (!color ? "Red2.png" : "2.png"));
+        textures[1] = textures[3] = LaserGame.loadTexture("pieces/doublemirror" + (!color ? "Red1.png" : "1.png"));
+    }
 }

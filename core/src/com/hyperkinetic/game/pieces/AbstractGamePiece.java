@@ -18,7 +18,7 @@ import java.io.Serializable;
 public abstract class AbstractGamePiece
 {
 
-    private static final int IMG_DIM = 300;
+    private static final int IMG_DIM = 600;
 
     /**
      * The location of the piece on the board.
@@ -29,12 +29,13 @@ public abstract class AbstractGamePiece
      */
     protected boolean color;
 
-    private transient Texture texture;
+    protected transient Texture[] textures;
 
     public AbstractGamePiece(int x, int y, boolean c) {
         this.x = x;
         this.y = y;
         color = c;
+        textures = new Texture[4];
     }
 
     public AbstractGamePiece()
@@ -42,6 +43,7 @@ public abstract class AbstractGamePiece
         x = 0;
         y = 0;
         color = true;
+        textures = new Texture[4];
     }
 
     /**
@@ -156,30 +158,11 @@ public abstract class AbstractGamePiece
     {
         int scale = pickedUp ? 2 : 1;
 
-        sb.draw(texture, x, y, width/2F, height/2F, width, height, scale, scale, getRotation(), 0, 0, IMG_DIM, IMG_DIM, flipped, flipped);
+        sb.draw(getTexture(), x, y, width/2F, height/2F, width, height, scale, scale, 0, 0, 0, IMG_DIM, IMG_DIM, flipped, flipped);
 
     }
 
-    public void loadRegion()
-    {
-        loadRegion("pieces/singlemirror.png");
-    }
-
-    protected void loadRegion(String image)
-    {
-        texture = LaserGame.loadTexture(image);
-    }
-
-    protected void loadRegion(Class pieceType)
-    {
-        //TODO
-    }
-
-    private static String getPathFromPieceType(Class pieceType)
-    {
-        //TODO
-        return "pieces/singlemirror.png";
-    }
-
-    protected abstract float getRotation();
+    public abstract void loadRegion();
+    
+    protected abstract Texture getTexture();
 }

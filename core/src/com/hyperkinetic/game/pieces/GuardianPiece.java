@@ -1,6 +1,7 @@
 package com.hyperkinetic.game.pieces;
 
 import com.badlogic.gdx.utils.Array;
+import com.hyperkinetic.game.core.LaserGame;
 import com.hyperkinetic.game.util.Directions;
 import com.hyperkinetic.game.util.Status;
 
@@ -48,4 +49,12 @@ public class GuardianPiece extends AbstractBlockPiece {
         return null; // laser not reflected
     }
 
+    @Override
+    public void loadRegion()
+    {
+        textures[0] = LaserGame.loadTexture("pieces/guardianback" + (!color ? "Red.png" : ".png"));
+        textures[1] = LaserGame.loadTexture("pieces/guardian" + (!color ? "Red1.png" : "1.png"));
+        textures[2] = LaserGame.loadTexture("pieces/guardianfront" + (!color ? "Red.png" : ".png"));
+        textures[3] = LaserGame.loadTexture("pieces/guardian" + (!color ? "Red2.png" : "2.png"));
+    }
 }

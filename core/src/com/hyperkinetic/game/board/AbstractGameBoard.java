@@ -470,25 +470,6 @@ public abstract class AbstractGameBoard {
             }
         }
 
-        // TODO: Don't render the picked up piece here, render it at the mouse cursor
-        for(int i = 0; i < pieces.size; i++) {
-            AbstractGamePiece piece = pieces.get(i);
-            if(pickedUpPiece != null && piece == pickedUpPiece)
-            {
-                piece.render(sb, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), pieceDim, pieceDim, false, true);
-            }
-            else if(piece!=null) {
-                if(flipBoard)
-                    piece.render(sb, Gdx.graphics.getWidth() - screenX - (piece.getX()+1) * tileDim + tileDim / 10,
-                                     Gdx.graphics.getHeight() - screenY - (piece.getY()+1) * tileDim + tileDim / 10,
-                                        pieceDim, pieceDim, true);
-                else
-                    piece.render(sb, screenX + piece.getX() * tileDim + tileDim / 10,
-                        screenY + piece.getY() * tileDim + tileDim / 10,
-                        pieceDim, pieceDim, false);
-            }
-        }
-
         // TODO: render lasers here
         if(System.currentTimeMillis() > laserDuration + 2000)
             lasersToDraw.clear();
@@ -502,6 +483,24 @@ public abstract class AbstractGameBoard {
             }
 
             sb.draw(laserTexture, laser.x, laser.y, laser.width, laser.height);
+        }
+
+        for(int i = 0; i < pieces.size; i++) {
+            AbstractGamePiece piece = pieces.get(i);
+            if(pickedUpPiece != null && piece == pickedUpPiece)
+            {
+                piece.render(sb, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), pieceDim, pieceDim, false, true);
+            }
+            else if(piece!=null) {
+                if(flipBoard)
+                    piece.render(sb, Gdx.graphics.getWidth() - screenX - (piece.getX()+1) * tileDim + tileDim / 10,
+                            Gdx.graphics.getHeight() - screenY - (piece.getY()+1) * tileDim + tileDim / 10,
+                            pieceDim, pieceDim, true);
+                else
+                    piece.render(sb, screenX + piece.getX() * tileDim + tileDim / 10,
+                            screenY + piece.getY() * tileDim + tileDim / 10,
+                            pieceDim, pieceDim, false);
+            }
         }
     }
 
