@@ -141,6 +141,7 @@ public class ServerThread extends Thread {
         {
             System.out.println("ioe in run() of ServerThread " + playerID);
             System.out.println("Terminating connection with the client.");
+            room.disconnect(this);
         }
     }
 }

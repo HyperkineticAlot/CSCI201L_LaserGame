@@ -77,6 +77,8 @@ public class ClientThread extends Thread {
                     if (message.getMessageType() == GameMessage.messageType.LOGIN_SUCCESS || message.getMessageType() == GameMessage.messageType.REGISTER_SUCCESS) {
                         this.player.setPlayerID(message.playerID);
                         this.playerID = message.playerID;
+                        player.updateRecord(100,1,99);
+                        game.setScreen(new GameOverScreen(game));
                     }
                     else if (message.getMessageType() == GameMessage.messageType.LOGIN_FAILURE || message.getMessageType() == GameMessage.messageType.REGISTER_FAILURE) {
                         System.out.println(message.errorMessage);
@@ -104,7 +106,7 @@ public class ClientThread extends Thread {
                     } else if(message.getMessageType()==GameMessage.messageType.MOVE_FAILURE){
                         if(message.playerID.equals(playerID)){
                             System.out.println("You cheated!");
-                            // TODO: end game?
+                            // TODO end game
                         }
                     } else if(message.getMessageType()==GameMessage.messageType.GAME_OVER){
                         if(message.playerID.equals(playerID)){ // wins - update LaserGameScreen status

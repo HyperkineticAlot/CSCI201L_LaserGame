@@ -17,9 +17,9 @@ public class LocalGameScreen implements Screen
     private AbstractGameBoard board;
 
     private Stage stage;
-    private Game game;
+    private LaserGame game;
 
-    public LocalGameScreen(Game g)
+    public LocalGameScreen(LaserGame g)
     {
         game = g;
         stage = new Stage(new ScreenViewport());
@@ -32,7 +32,7 @@ public class LocalGameScreen implements Screen
     @Override
     public void show()
     {
-        Gdx.input.setInputProcessor(new GameInputProcessor());
+        Gdx.input.setInputProcessor(new GameInputProcessor(game));
     }
 
     @Override

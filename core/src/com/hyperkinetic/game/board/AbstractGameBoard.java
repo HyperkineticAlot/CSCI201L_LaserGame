@@ -20,7 +20,7 @@ import com.hyperkinetic.game.util.Directions;
  *
  * @author cqwillia briannlz
  */
-//TODO: Reorganize this file
+
 public abstract class AbstractGameBoard {
     /**
      * Tracks the game board currently being played on for centralized modification by various game objects.
@@ -217,10 +217,8 @@ public abstract class AbstractGameBoard {
         if(!checkClickBounds(oldX, oldY, newX, newY)) return false;
         // Open an informational piece / tile dialog?
         AbstractGamePiece piece = board.pieces.get(board.tiles.indexOf(getTileFromLocation(newX, newY), true));
-        if(piece.equals(board.aLaser))
-            board.aLaser.toggleDirection();
-        else if(piece.equals(board.bLaser))
-            board.bLaser.toggleDirection();
+        if(piece.equals(board.aLaser) || piece.equals(board.bLaser))
+            board.handleLaserRotate((LaserPiece) piece);
 
         return false;
     }
@@ -496,7 +494,6 @@ public abstract class AbstractGameBoard {
             }
         }
 
-        // TODO: render lasers here
         if(System.currentTimeMillis() > laserDuration + 1000)
             lasersToDraw.clear();
 
@@ -648,7 +645,6 @@ public abstract class AbstractGameBoard {
     {
         if(nextMove == null)
         {
-            // TODO: give some warning about making a move before ending your turn
             return false;
         }
 
@@ -681,6 +677,33 @@ public abstract class AbstractGameBoard {
             }
         }
 
+        return false;
+    }
+    
+    private boolean handleLaserRotate(LaserPiece laser)
+    {
+        if(local)
+        {
+            if(laser.equals(aLaser) && hasTurn)
+            {
+                update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
+                return true;
+            }
+            else if(laser.equals(bLaser) && !hasTurn)
+            {
+                update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
+                return true;
+            }
+        }
+        else if(laser.equals(aLaser) && (hasTurn ^ flipBoard)) {
+            update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
+            return true;
+        }
+        else if(laser.equals(bLaser) && (hasTurn ^ flipBoard)) {
+            update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
+            return true;
+        }
+        
         return false;
     }
 
@@ -741,7 +764,7 @@ public abstract class AbstractGameBoard {
         if(piece.getColor() != color) return false;
 
         if(moveType.equals("rotateL") || moveType.equals("rotateR")) {
-            return true; // TODO: not so for laser piece
+            return true;
         } else if(moveType.equals("move")) {
             if (getTileFromCoordinate(nX, nY) != null && getPieceFromCoordinate(nX, nY) == null) {
                 AbstractBoardTile tile = getTileFromCoordinate(nX, nY);

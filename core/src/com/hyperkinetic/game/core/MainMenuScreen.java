@@ -29,7 +29,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
     private float height;
     private OrthographicCamera camera;
     public static Music clickSound;
-    public static Music bgm = Gdx.audio.newMusic(Gdx.files.internal("testMusic.mp3"));
+    public static Music bgm = Gdx.audio.newMusic(Gdx.files.internal("scsv2872.mp3"));
     public static boolean playBgm = true;
     public static boolean initialPlaying = true;
 
