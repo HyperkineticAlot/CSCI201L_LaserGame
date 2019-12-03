@@ -31,7 +31,9 @@ public abstract class AbstractGameBoard {
     /**
      * Texture of the laser.
      */
-    private static Texture laserTexture;
+    private transient Texture verticalLaserTexture;
+    private transient Texture horizontalLaserTexture;
+    private transient Texture highlightTexture;
 
     /**
      * X-dimension of the board.
@@ -187,7 +189,9 @@ public abstract class AbstractGameBoard {
 
         AbstractGameBoard.board = this;
 
-        laserTexture = LaserGame.loadTexture("board/laser.png");
+        verticalLaserTexture = LaserGame.loadTexture("board/vertical_laser.png");
+        horizontalLaserTexture = LaserGame.loadTexture("board/horizontal_laser.png");
+        highlightTexture = LaserGame.loadTexture("board/highlight.png");
     }
 
     /**
@@ -457,13 +461,13 @@ public abstract class AbstractGameBoard {
             for (int j = 0; j < x; j++) {
                 if(flipBoard) {
                     if(highlight != null && highlight.contains(tiles.get(x * (y - i) - j - 1), true))
-                        sb.draw(laserTexture, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
+                        sb.draw(highlightTexture, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
                     else
                         tiles.get(x * (y - i) - j - 1).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim, true);
                 }
                 else {
                     if(highlight != null && highlight.contains(tiles.get(j + i * x), true))
-                        sb.draw(laserTexture, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
+                        sb.draw(highlightTexture, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
                     else
                         tiles.get(j + i * x).render(sb, screenX + j * tileDim, screenY + i * tileDim, tileDim, tileDim);
                 }
@@ -482,7 +486,8 @@ public abstract class AbstractGameBoard {
                 laser.y = Gdx.graphics.getHeight() - laser.y - laser.height;
             }
 
-            sb.draw(laserTexture, laser.x, laser.y, laser.width, laser.height);
+            sb.draw(laser.width > laser.height ? horizontalLaserTexture : verticalLaserTexture,
+                    laser.x, laser.y, laser.width, laser.height);
         }
 
         for(int i = 0; i < pieces.size; i++) {
@@ -493,13 +498,13 @@ public abstract class AbstractGameBoard {
             }
             else if(piece!=null) {
                 if(flipBoard)
-                    piece.render(sb, Gdx.graphics.getWidth() - screenX - (piece.getX()+1) * tileDim + tileDim / 10,
-                            Gdx.graphics.getHeight() - screenY - (piece.getY()+1) * tileDim + tileDim / 10,
-                            pieceDim, pieceDim, true);
+                    piece.render(sb, Gdx.graphics.getWidth() - screenX - (piece.getX()+1) * tileDim,
+                            Gdx.graphics.getHeight() - screenY - (piece.getY()+1) * tileDim,
+                            tileDim, tileDim, true);
                 else
-                    piece.render(sb, screenX + piece.getX() * tileDim + tileDim / 10,
-                            screenY + piece.getY() * tileDim + tileDim / 10,
-                            pieceDim, pieceDim, false);
+                    piece.render(sb, screenX + piece.getX() * tileDim,
+                            screenY + piece.getY() * tileDim,
+                            tileDim, tileDim, false);
             }
         }
     }
