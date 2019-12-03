@@ -1,11 +1,13 @@
 package com.hyperkinetic.game.board;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.core.LaserGame;
+import com.hyperkinetic.game.core.MainMenuScreen;
 import com.hyperkinetic.game.pieces.AbstractGamePiece;
 import com.hyperkinetic.game.pieces.KingPiece;
 import com.hyperkinetic.game.pieces.LaserPiece;
@@ -118,6 +120,18 @@ public abstract class AbstractGameBoard {
     private long laserDuration;
 
     /**
+     * The click sound for picking and dropping a piece
+     */
+    public static Music pieceSound = Gdx.audio.newMusic(Gdx.files.internal("piece.mp3"));
+    /**
+     * The laser sound for firing a laser
+     */
+    public static Music laserSound = Gdx.audio.newMusic(Gdx.files.internal("laser.mp3"));
+    /**
+     * The sound when a piece is destroyed
+     */
+    public static Music pieceDestroyedSound = Gdx.audio.newMusic(Gdx.files.internal("breakglass.mp3"));
+    /**
      * Variable that stores the piece that is currently picked up
      */
     private AbstractGamePiece pickedUpPiece;
@@ -188,6 +202,9 @@ public abstract class AbstractGameBoard {
         verticalLaserTexture = LaserGame.loadTexture("board/vertical_laser.png");
         horizontalLaserTexture = LaserGame.loadTexture("board/horizontal_laser.png");
         highlightTexture = LaserGame.loadTexture("board/highlight.png");
+
+        pieceSound.setVolume(2.0f);
+        pieceDestroyedSound.setVolume(2.0f);
     }
 
     /**
@@ -198,7 +215,6 @@ public abstract class AbstractGameBoard {
     public static boolean rightClick(int oldX, int oldY, int newX, int newY)
     {
         if(!checkClickBounds(oldX, oldY, newX, newY)) return false;
-
         // Open an informational piece / tile dialog?
         AbstractGamePiece piece = board.pieces.get(board.tiles.indexOf(getTileFromLocation(newX, newY), true));
         if(piece.equals(board.aLaser))
@@ -228,6 +244,7 @@ public abstract class AbstractGameBoard {
                 return false;
             else
             {
+                pieceSound.play();
                 board.pickedUpPiece = null;
                 return true;
             }
@@ -242,6 +259,7 @@ public abstract class AbstractGameBoard {
         // if the player clicks on the same square again, drop the piece
         if(piece == board.pickedUpPiece)
         {
+            pieceSound.play();
             board.pickedUpPiece = null;
         }
 
@@ -253,6 +271,7 @@ public abstract class AbstractGameBoard {
                 ((piece.getX() == board.nextMove.moveX && piece.getY() == board.nextMove.moveY) ||
                  (board.nextMove.moveType.contains("rotate")) && piece.getX() == board.nextMove.x && piece.getY() == board.nextMove.y))
         {
+            pieceSound.play();
             board.undoMove();
             return true;
         }
@@ -274,10 +293,12 @@ public abstract class AbstractGameBoard {
     {
         if(key.equals("Q"))
         {
+            pieceSound.play();
             return board.makeMove(AbstractBoardTile.ROTATE_LEFT);
         }
         else if(key.equals("E"))
         {
+            pieceSound.play();
             return board.makeMove(AbstractBoardTile.ROTATE_RIGHT);
         }
 
@@ -635,6 +656,7 @@ public abstract class AbstractGameBoard {
         {
             if(hasTurn ^ flipBoard)
             {
+                laserSound.play();
                 if(!LaserGame.IS_SERVER && LaserGame.client != null && !local)
                 {
                     nextMove.playerID = LaserGame.client.playerID;
@@ -648,6 +670,7 @@ public abstract class AbstractGameBoard {
         {
             if(!hasTurn ^ flipBoard)
             {
+                laserSound.play();
                 if(!LaserGame.IS_SERVER && LaserGame.client != null && !local)
                 {
                     nextMove.playerID = LaserGame.client.playerID;
@@ -668,6 +691,7 @@ public abstract class AbstractGameBoard {
      * @return true if success
      */
     private boolean pieceRotateLeft(AbstractGamePiece piece) {
+        pieceSound.play();
         piece.rotateLeft();
         return true;
     }
@@ -679,6 +703,7 @@ public abstract class AbstractGameBoard {
      * @return true if success
      */
     private boolean pieceRotateRight(AbstractGamePiece piece) {
+        pieceSound.play();
         piece.rotateRight();
         return true;
     }
@@ -767,6 +792,7 @@ public abstract class AbstractGameBoard {
         if(newDirections == null)
         {
             // destroy the piece
+            pieceDestroyedSound.play();
             pieces.set(startY * x + startX, null);
         
             thisTile.setPiece(null);
