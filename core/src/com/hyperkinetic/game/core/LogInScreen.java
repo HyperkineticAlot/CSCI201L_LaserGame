@@ -85,7 +85,7 @@ public class LogInScreen  extends InputAdapter implements Screen {
                 System.out.println(username.getText());
                 System.out.println(password.getText());
                 //game.setScreen(new MainMenuScreen(game));
-                ClientThread newPlayer = new ClientThread("localhost", GameServer.port,false,false);
+                ClientThread newPlayer = new ClientThread("localhost", GameServer.port,false,false, game);
                 newPlayer.getPlayer().login(username.getText(), password.getText());
 
                 while(newPlayer.playerID == null)
@@ -125,7 +125,7 @@ public class LogInScreen  extends InputAdapter implements Screen {
                 System.out.println(username.getText());
                 System.out.println(password.getText());
 
-                ClientThread newPlayer = new ClientThread("localhost", GameServer.port,false,false);
+                ClientThread newPlayer = new ClientThread("localhost", GameServer.port,false,false, game);
                 newPlayer.getPlayer().register(username.getText(), password.getText());
 
                 while(newPlayer.playerID == null)
