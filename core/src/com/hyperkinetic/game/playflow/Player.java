@@ -24,6 +24,8 @@ public class Player{
     private int numWin;
     private int numLoss;
 
+    private boolean lastGame;
+
     /**
      * If not signed in, play as guest.
      */
@@ -120,5 +122,17 @@ public class Player{
 
     public int getNumLoss(){
         return this.numLoss;
+    }
+
+    public void won() {
+        lastGame = true;
+    }
+
+    public void lost() {
+        lastGame = false;
+    }
+
+    public boolean getLastGame(){
+        return this.lastGame;
     }
 }

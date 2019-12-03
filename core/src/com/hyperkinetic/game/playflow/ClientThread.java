@@ -109,10 +109,12 @@ public class ClientThread extends Thread {
                     } else if(message.getMessageType()==GameMessage.messageType.GAME_OVER){
                         if(message.playerID.equals(playerID)){ // wins - update LaserGameScreen status
                             System.out.println(playerID+" has won!");
+                            player.won();
                             game.setScreen(new GameOverScreen(game));
                             // waiting for incoming records
                         } else { // loses - update LaserGameScreen status
                             System.out.println(playerID+" has lost.");
+                            player.lost();
                             game.setScreen(new GameOverScreen(game));
                             // waiting for incoming records
                         }
