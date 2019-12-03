@@ -64,10 +64,11 @@ public class SettingsScreen  extends InputAdapter implements Screen {
         music.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                MainMenuScreen.clickSound.play();
                 //System.out.println("touch up on music");
                 //System.out.println("printing bgm " + bgm);
-                if(!bgm.isPlaying()) {
-                    bgm.play();
+                if(!MainMenuScreen.bgm.isPlaying()) {
+                    MainMenuScreen.bgm.play();
                 }
 
                 //System.out.println("if the same instance " + bgm.);
@@ -83,9 +84,10 @@ public class SettingsScreen  extends InputAdapter implements Screen {
         noMusic.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                MainMenuScreen.clickSound.play();
                 //System.out.println("touch up on no music");
-                if(bgm.isPlaying()) {
-                    bgm.pause();
+                if(MainMenuScreen.bgm.isPlaying()) {
+                    MainMenuScreen.bgm.pause();
                 }
                 MainMenuScreen.playBgm = false;
                 MainMenuScreen.initialPlaying = false;
@@ -135,6 +137,7 @@ public class SettingsScreen  extends InputAdapter implements Screen {
         settings.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                MainMenuScreen.clickSound.play();
                 game.setScreen(new MainMenuScreen(game));
             }
             @Override

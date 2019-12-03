@@ -13,11 +13,17 @@ import com.hyperkinetic.game.board.AbstractGameBoard;
  */
 public class GameInputProcessor implements InputProcessor
 {
-    // TODO: make sure you are on the game board screen
     private int rightClickX;
     private int rightClickY;
     private int leftClickX;
     private int leftClickY;
+    
+    private LaserGame game;
+    
+    public GameInputProcessor(LaserGame g)
+    {
+        game = g;
+    }
 
     public boolean keyDown (int keycode)
     {
@@ -33,6 +39,10 @@ public class GameInputProcessor implements InputProcessor
         else if(keycode == Input.Keys.E)
         {
             return AbstractGameBoard.keyPressed("E");
+        }
+        else if(keycode == Input.Keys.ESCAPE)
+        {
+            game.returnToMenu();
         }
         return false;
     }

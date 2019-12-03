@@ -28,16 +28,18 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
     private float width;
     private float height;
     private OrthographicCamera camera;
-
-    public static Music bgm;
+    public static Music clickSound;
+    public static Music bgm = Gdx.audio.newMusic(Gdx.files.internal("scsv2872.mp3"));
     public static boolean playBgm = true;
     public static boolean initialPlaying = true;
 
     public MainMenuScreen (final LaserGame game) {
         if(initialPlaying) {
-            bgm = Gdx.audio.newMusic(Gdx.files.internal("testMusic.mp3"));
             bgm.setVolume(0.5f);                 // sets the volume to half the maximum volume
             bgm.setLooping(true);                // will repeat playback until music.stop() is called
+            clickSound = Gdx.audio.newMusic(Gdx.files.internal("buttonclick.mp3"));
+            clickSound.setVolume(1.0f);
+            clickSound.setLooping(false);
         }
 
         if(playBgm && initialPlaying) {
@@ -72,6 +74,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
             guest.addListener(new InputListener(){
                 @Override
                 public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                    clickSound.play();
                     game.setScreen(new LocalGameScreen(game));
                 }
                 @Override
@@ -87,6 +90,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
                 @Override
                 public void touchUp(InputEvent event, float x, float y, int pointer, int button)
                 {
+                    clickSound.play();
                     LaserGame.client.getPlayer().sendMatchmakingRequest();
                     game.setScreen(new LaserGameScreen(game));
                 }
@@ -106,6 +110,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
             login.addListener(new InputListener() {
                 @Override
                 public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                    clickSound.play();
                     game.setScreen(new LogInScreen(game));
                 }
 
@@ -120,6 +125,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
             login.addListener(new InputListener() {
                 @Override
                 public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                    clickSound.play();
                     LaserGame.client = null;
                     game.setScreen(new MainMenuScreen(game));
                 }
@@ -138,6 +144,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         settings.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                clickSound.play();
                 game.setScreen(new SettingsScreen(game));
             }
             @Override
@@ -154,6 +161,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         quit.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                clickSound.play();
                 Gdx.app.exit();
             }
             @Override
