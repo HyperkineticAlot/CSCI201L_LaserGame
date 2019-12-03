@@ -420,7 +420,7 @@ public abstract class AbstractGameBoard {
      * @return active laser
      */
     public LaserPiece getActiveLaser() {
-        return (hasTurn) ? this.aLaser : this.bLaser;
+        return (hasTurn ^ flipBoard) ? this.aLaser : this.bLaser;
     }
 
     /**
@@ -476,19 +476,21 @@ public abstract class AbstractGameBoard {
         }
 
         // TODO: render lasers here
-        if(System.currentTimeMillis() > laserDuration + 2000)
+        if(System.currentTimeMillis() > laserDuration + 1000)
             lasersToDraw.clear();
 
         for(Rectangle laser : lasersToDraw)
         {
+            float drawX = laser.x;
+            float drawY = laser.y;
             if(flipBoard)
             {
-                laser.x = Gdx.graphics.getWidth() - laser.x - laser.width;
-                laser.y = Gdx.graphics.getHeight() - laser.y - laser.height;
+                drawX = Gdx.graphics.getWidth() - laser.x - laser.width;
+                drawY = Gdx.graphics.getHeight() - laser.y - laser.height;
             }
 
             sb.draw(laser.width > laser.height ? horizontalLaserTexture : verticalLaserTexture,
-                    laser.x, laser.y, laser.width, laser.height);
+                    drawX, drawY, laser.width, laser.height);
         }
 
         for(int i = 0; i < pieces.size; i++) {
@@ -633,12 +635,12 @@ public abstract class AbstractGameBoard {
         {
             if(hasTurn ^ flipBoard)
             {
-                fireLaser(laser.getX(), laser.getY(), laser.getOrientation());
                 if(!LaserGame.IS_SERVER && LaserGame.client != null && !local)
                 {
                     nextMove.playerID = LaserGame.client.playerID;
                     LaserGame.client.getPlayer().sendMessage(nextMove);
                 }
+                fireLaser(laser.getX(), laser.getY(), laser.getOrientation());
                 return true;
             }
         }
@@ -646,12 +648,12 @@ public abstract class AbstractGameBoard {
         {
             if(!hasTurn ^ flipBoard)
             {
-                fireLaser(laser.getX(), laser.getY(), laser.getOrientation());
                 if(!LaserGame.IS_SERVER && LaserGame.client != null && !local)
                 {
                     nextMove.playerID = LaserGame.client.playerID;
                     LaserGame.client.getPlayer().sendMessage(nextMove);
                 }
+                fireLaser(laser.getX(), laser.getY(), laser.getOrientation());
                 return true;
             }
         }
@@ -737,60 +739,49 @@ public abstract class AbstractGameBoard {
      * @param d the direction in which the laser is being fired into the tile
      */
     public void fireLaser(int startX, int startY, Directions.Direction d) {
+        laserHelper(startX, startY, d);
+        nextMove = null;
+        hasTurn = !hasTurn;
+    }
+    
+    private void laserHelper(int startX, int startY, Directions.Direction d)
+    {
         laserDuration = System.currentTimeMillis();
-
+    
         if (startX < 0 || startY < 0 || startX >= x || startY >= y) return;
-
+    
         AbstractGamePiece thisPiece = pieces.get(startY * x + startX);
         AbstractBoardTile thisTile = tiles.get(startY * x + startX);
-
+    
         if(thisPiece == null)
         {
             drawLaser(startX, startY, d);
             startX += (d == Directions.Direction.EAST ? 1 : 0) + (d == Directions.Direction.WEST ? -1 : 0);
             startY += (d == Directions.Direction.NORTH ? 1 : 0) + (d == Directions.Direction.SOUTH ? -1 : 0);
-            fireLaser(startX, startY, d);
+            laserHelper(startX, startY, d);
             return;
         }
-
+    
         Array<Directions.Direction> newDirections = thisPiece.acceptLaser(d);
-
+    
         if(newDirections == null)
         {
             // destroy the piece
             pieces.set(startY * x + startX, null);
-            /*for(int i=0;i<aPieces.size;++i){
-                if(aPieces.get(i)==thisPiece){
-                    aPieces.removeIndex(i);
-                    break;
-                }
-            }
-            for(int i=0;i<bPieces.size;++i){
-                if(bPieces.get(i)==thisPiece){
-                    bPieces.removeIndex(i);
-                    break;
-                }
-            }*/
+        
             thisTile.setPiece(null);
             thisTile.onPieceDestroyed(thisPiece);
             return;
         }
-
+    
         for(Directions.Direction dir : newDirections)
         {
             //reflect the lasers
             drawLaser(startX, startY, dir);
             int newX = startX + (dir == Directions.Direction.EAST ? 1 : 0) + (dir == Directions.Direction.WEST ? -1 : 0);
             int newY = startY + (dir == Directions.Direction.NORTH ? 1 : 0) + (dir == Directions.Direction.SOUTH ? -1 : 0);
-            fireLaser(newX, newY, dir);
+            laserHelper(newX, newY, dir);
         }
-
-        if(local)
-            nextMove = null;
-        else
-            moveConfirmed = true;
-
-        hasTurn = !hasTurn;
     }
 
     /**
