@@ -36,21 +36,21 @@ public class LaserPiece extends AbstractBlockPiece{
         textures[3] = LaserGame.loadTexture("pieces/laserpiece" + (!color ? "Red2.png" : "2.png"));
     }
     
-    public void toggleDirection()
+    public String toggleDirection()
     {
         if(color)
         {
             if(orientation == Directions.Direction.NORTH)
-                orientation = Directions.Direction.WEST;
+                return "rotateL";
             else
-                orientation = Directions.Direction.NORTH;
+                return "rotateR";
         }
         else
         {
             if(orientation == Directions.Direction.SOUTH)
-                orientation = Directions.Direction.EAST;
+                return "rotateL";
             else
-                orientation = Directions.Direction.SOUTH;
+                return "rotateR";
         }
     }
 }

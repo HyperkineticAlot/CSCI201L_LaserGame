@@ -201,10 +201,8 @@ public abstract class AbstractGameBoard {
 
         // Open an informational piece / tile dialog?
         AbstractGamePiece piece = board.pieces.get(board.tiles.indexOf(getTileFromLocation(newX, newY), true));
-        if(piece.equals(board.aLaser))
-            board.aLaser.toggleDirection();
-        else if(piece.equals(board.bLaser))
-            board.bLaser.toggleDirection();
+        if(piece.equals(board.aLaser) || piece.equals(board.bLaser))
+            board.handleLaserRotate((LaserPiece) piece);
 
         return false;
     }
@@ -658,6 +656,33 @@ public abstract class AbstractGameBoard {
             }
         }
 
+        return false;
+    }
+    
+    private boolean handleLaserRotate(LaserPiece laser)
+    {
+        if(local)
+        {
+            if(laser.equals(aLaser) && hasTurn)
+            {
+                update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
+                return true;
+            }
+            else if(laser.equals(bLaser) && !hasTurn)
+            {
+                update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
+                return true;
+            }
+        }
+        else if(laser.equals(aLaser) && (hasTurn ^ flipBoard)) {
+            update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
+            return true;
+        }
+        else if(laser.equals(bLaser) && (hasTurn ^ flipBoard)) {
+            update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
+            return true;
+        }
+        
         return false;
     }
 
