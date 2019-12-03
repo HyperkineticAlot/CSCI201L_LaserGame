@@ -3,50 +3,31 @@ package com.hyperkinetic.game.pieces;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.core.LaserGame;
 import com.hyperkinetic.game.util.Directions;
-import com.hyperkinetic.game.util.Status;
-
-import java.security.Guard;
 
 public class GuardianPiece extends AbstractBlockPiece {
 
-    public Status.PieceStatus status;
     public GuardianPiece(int x, int y, boolean c, Directions.Direction o) {
         super(x, y, c, o);
     }
     public GuardianPiece() {}
 
-    // TODO: get rid of status
     @Override
     public Array<Directions.Direction> acceptLaser(Directions.Direction laserDirection) {
-        if (this.orientation ==  Directions.Direction.EAST){
-            if(laserDirection != Directions.Direction.WEST) // will be destroyed
-                this.status = Status.PieceStatus.DEAD;
-            else
-                this.status = Status.PieceStatus.ALIVE;
-        }
+        Array<Directions.Direction> retval = new Array<>();
+        
+        if (this.orientation ==  Directions.Direction.EAST && laserDirection != Directions.Direction.WEST)
+            return null;
 
-        else if (this.orientation ==  Directions.Direction.WEST){
-            if(laserDirection != Directions.Direction.EAST) // will be destroyed
-                this.status = Status.PieceStatus.DEAD;
-            else
-                this.status = Status.PieceStatus.ALIVE;
-        }
+        else if (this.orientation ==  Directions.Direction.WEST && laserDirection != Directions.Direction.EAST)
+            return null;
 
-        else if (this.orientation ==  Directions.Direction.NORTH){
-            if(laserDirection != Directions.Direction.SOUTH) // will be destroyed
-                this.status = Status.PieceStatus.DEAD;
-            else
-                this.status = Status.PieceStatus.ALIVE;
-        }
+        else if (this.orientation ==  Directions.Direction.NORTH && laserDirection != Directions.Direction.SOUTH)
+            return null;
 
-        else if (this.orientation ==  Directions.Direction.SOUTH){
-            if(laserDirection != Directions.Direction.NORTH) // will be destroyed
-                this.status = Status.PieceStatus.DEAD;
-            else
-                this.status = Status.PieceStatus.ALIVE;
-        }
+        else if (this.orientation ==  Directions.Direction.SOUTH && laserDirection != Directions.Direction.NORTH)
+            return null;
 
-        return null; // laser not reflected
+        return retval;
     }
 
     @Override

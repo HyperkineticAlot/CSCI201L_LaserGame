@@ -30,6 +30,27 @@ public class LaserPiece extends AbstractBlockPiece{
     @Override
     public void loadRegion()
     {
-        textures[0] = textures[1] = textures[2] = textures[3] = LaserGame.loadTexture("pieces/King.png");
+        textures[0] = LaserGame.loadTexture("pieces/laserpieceback" + (!color ? "Red.png" : ".png"));
+        textures[1] = LaserGame.loadTexture("pieces/laserpiece" + (!color ? "Red1.png" : "1.png"));
+        textures[2] = LaserGame.loadTexture("pieces/laserpiecefront" + (!color ? "Red.png" : ".png"));
+        textures[3] = LaserGame.loadTexture("pieces/laserpiece" + (!color ? "Red2.png" : "2.png"));
+    }
+    
+    public void toggleDirection()
+    {
+        if(color)
+        {
+            if(orientation == Directions.Direction.NORTH)
+                orientation = Directions.Direction.WEST;
+            else
+                orientation = Directions.Direction.NORTH;
+        }
+        else
+        {
+            if(orientation == Directions.Direction.SOUTH)
+                orientation = Directions.Direction.EAST;
+            else
+                orientation = Directions.Direction.SOUTH;
+        }
     }
 }
