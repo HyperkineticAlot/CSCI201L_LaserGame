@@ -110,12 +110,10 @@ public class ClientThread extends Thread {
                         if(message.playerID.equals(playerID)){ // wins - update LaserGameScreen status
                             System.out.println(playerID+" has won!");
                             player.won();
-                            game.setScreen(new GameOverScreen(game));
                             // waiting for incoming records
                         } else { // loses - update LaserGameScreen status
                             System.out.println(playerID+" has lost.");
                             player.lost();
-                            game.setScreen(new GameOverScreen(game));
                             // waiting for incoming records
                         }
                     } else if(message.getMessageType()==GameMessage.messageType.STATS_RESPONSE){
@@ -125,6 +123,7 @@ public class ClientThread extends Thread {
                         if(message.playerID.equals(playerID)){
                             System.out.println(playerID+" has played: " + numPlayed + "games. Wins: " + numWin + "; Losses: " + numLoss + ".");
                             player.updateRecord(numPlayed,numWin,numLoss);
+                            game.setScreen(new GameOverScreen(game));
                         }
                     }
                 }
