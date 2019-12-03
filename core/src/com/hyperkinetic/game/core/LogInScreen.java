@@ -72,9 +72,9 @@ public class LogInScreen  extends InputAdapter implements Screen {
 
 
         final Label warningLabel = new Label("", neon);
-        warningLabel.setPosition(width / 2 - (float)(width / 9.6) / 4,height / 2 + (float)(height / 21.6) + 3 * (float)(height / 21.6));
-        warningLabel.setSize((float)(width / 9.6), (float)(height / 21.6) );
-        warningLabel.setFontScale(2.0f);
+        warningLabel.setPosition(width / 2 - (float)(width / 9.6) / 3,height / 2 + (float)(height / 21.6) + 3 * (float)(height / 21.6));
+        warningLabel.setSize((float)(width / 9.6), (float)(height / 21.6));
+        //warningLabel.setFontScale(2.0f);
 
         Button settings = new TextButton("LOG IN", neon);
         settings.setSize((float)(width / 9.6),(float)(height / 10.8));
@@ -99,7 +99,8 @@ public class LogInScreen  extends InputAdapter implements Screen {
                 {
                     // TODO: display login failure alert
                     // password is incorrect / username doesn't exist
-                    warningLabel.setText("Password is incorrect / Username doesn't exist");
+                    warningLabel.setPosition(width / 2 - (float)(width / 9.6) / 3,height / 2 + (float)(height / 21.6) + 3 * (float)(height / 21.6));
+                    warningLabel.setText("Login Failure");
                     newPlayer.resetPlayerID();
                 }
                 else
@@ -138,7 +139,8 @@ public class LogInScreen  extends InputAdapter implements Screen {
                 if(newPlayer.playerID.equals(LOGIN_FAILURE_FLAG))
                 {
                     // TODO: display register failure alert
-                    warningLabel.setText("Username is taken!");
+                    warningLabel.setPosition(width / 2 - (float)(width / 9.6) / 2.5f,height / 2 + (float)(height / 21.6) + 3 * (float)(height / 21.6));
+                    warningLabel.setText("Username is taken");
                     newPlayer.resetPlayerID();
                 }
                 else
