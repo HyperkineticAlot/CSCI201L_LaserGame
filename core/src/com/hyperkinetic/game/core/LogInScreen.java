@@ -100,7 +100,6 @@ public class LogInScreen  extends InputAdapter implements Screen {
                 }
                 if(newPlayer.playerID.equals(LOGIN_FAILURE_FLAG))
                 {
-                    // TODO: display login failure alert
                     // password is incorrect / username doesn't exist
                     //warningLabel.setPosition(width / 2 - (float)(width / 9.6) / 3,height / 2 + (float)(height / 21.6) + 3 * (float)(height / 21.6));
                     warningLabel.setText("Login Failure");
@@ -143,7 +142,6 @@ public class LogInScreen  extends InputAdapter implements Screen {
                 }
                 if(newPlayer.playerID.equals(LOGIN_FAILURE_FLAG))
                 {
-                    // TODO: display register failure alert
                     //warningLabel.setPosition(width / 2 - (float)(width / 9.6) / 2.5f,height / 2 + (float)(height / 21.6) + 3 * (float)(height / 21.6));
                     warningLabel.setText("Username is taken");
                     newPlayer.resetPlayerID();

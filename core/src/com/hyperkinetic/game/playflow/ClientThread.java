@@ -112,7 +112,7 @@ public class ClientThread extends Thread {
                     } else if(message.getMessageType()==GameMessage.messageType.MOVE_FAILURE){
                         if(message.playerID.equals(playerID)){
                             System.out.println("You cheated!");
-                            // TODO: end game?
+                            // TODO end game
                         }
                     } else if(message.getMessageType()==GameMessage.messageType.GAME_OVER){
                         if(message.playerID.equals(playerID)){ // wins - update LaserGameScreen status
