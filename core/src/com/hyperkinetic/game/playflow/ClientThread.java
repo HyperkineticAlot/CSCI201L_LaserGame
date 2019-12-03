@@ -77,8 +77,6 @@ public class ClientThread extends Thread {
                     if (message.getMessageType() == GameMessage.messageType.LOGIN_SUCCESS || message.getMessageType() == GameMessage.messageType.REGISTER_SUCCESS) {
                         this.player.setPlayerID(message.playerID);
                         this.playerID = message.playerID;
-                        player.updateRecord(100,1,99);
-                        game.setScreen(new GameOverScreen(game));
                     }
                     else if (message.getMessageType() == GameMessage.messageType.LOGIN_FAILURE || message.getMessageType() == GameMessage.messageType.REGISTER_FAILURE) {
                         System.out.println(message.errorMessage);
@@ -93,6 +91,14 @@ public class ClientThread extends Thread {
                         GameMessage g = new GameMessage(GameMessage.messageType.STATS_RESPONSE);
                         g.errorMessage = "hello";
                         player.sendMessage(g);
+                    } else if(message.getMessageType()==GameMessage.messageType.STATS_RESPONSE){ // for debug
+                        int numPlayed = message.numPlayed;
+                        int numWin = message.numWin;
+                        int numLoss = message.numLoss;
+                        if(message.playerID.equals(playerID)){
+                            System.out.println(playerID+" has played: " + numPlayed + "games. Wins: " + numWin + "; Losses: " + numLoss + ".");
+                            player.updateRecord(numPlayed,numWin,numLoss);
+                        }
                     }
                 } else {
                     if(message.getMessageType()==GameMessage.messageType.MOVE_SUCCESS){
@@ -125,7 +131,6 @@ public class ClientThread extends Thread {
                         if(message.playerID.equals(playerID)){
                             System.out.println(playerID+" has played: " + numPlayed + "games. Wins: " + numWin + "; Losses: " + numLoss + ".");
                             player.updateRecord(numPlayed,numWin,numLoss);
-                            game.setScreen(new GameOverScreen(game));
                         }
                     }
                 }
@@ -140,6 +145,12 @@ public class ClientThread extends Thread {
                 System.out.println("ioe in run() of ClientThread of " + player.playerID);
             }
         }
+    }
+
+    public void requestStats(){
+        GameMessage request = new GameMessage(GameMessage.messageType.STATS_REQUEST);
+        request.playerID = playerID;
+        player.sendMessage(request);
     }
 
     public void resetPlayerID() {

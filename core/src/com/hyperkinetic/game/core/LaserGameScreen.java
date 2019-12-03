@@ -89,7 +89,11 @@ public class LaserGameScreen implements Screen {
 
         if(board != null)
         {
-            board.render(batch);
+            if(!board.isOver){
+                board.render(batch);
+            } else {
+                game.setScreen(new GameOverScreen(game));
+            }
         }
 
         batch.end();

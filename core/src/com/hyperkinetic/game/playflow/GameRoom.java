@@ -158,17 +158,6 @@ public class GameRoom {
             gm.player2ID = bThread.getPlayerID();
             gs.updateDatabase(gm);
             broadcast(gm);
-
-            GameMessage request1 = new GameMessage(messageType.STATS_REQUEST);
-            request1.playerID = aThread.getPlayerID();
-            GameMessage gm1 = gs.queryDatabase(request1);
-            broadcast(gm1);
-
-            GameMessage request2 = new GameMessage(messageType.STATS_REQUEST);
-            request2.playerID = bThread.getPlayerID();
-            GameMessage gm2 = gs.queryDatabase(request2);
-            broadcast(gm2);
-
             isOver = true;
 
             clear();

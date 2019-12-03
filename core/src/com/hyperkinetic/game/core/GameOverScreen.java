@@ -25,6 +25,9 @@ public class GameOverScreen  extends InputAdapter implements Screen {
     private OrthographicCamera camera;
 
     public GameOverScreen(final LaserGame game){
+
+        LaserGame.client.requestStats();
+
         this.game = game;
         this.width = Gdx.graphics.getWidth();
         this.height = Gdx.graphics.getHeight();
@@ -51,29 +54,28 @@ public class GameOverScreen  extends InputAdapter implements Screen {
         } else {
             record.setText("You lost!");
         }
-        record.setPosition(width / 2 - (float)(width / 9.6) / 2 + (float)(width / 9.6) / 4,height / 2 + (float)(height / 21.6) + 2 * (float)(height / 21.6));
+        record.setPosition(width / 2 - (float)(width / 9.6) / 2,height / 2 + (float)(height / 21.6) + 2 * (float)(height / 21.6));
         record.setSize((float)(width / 9.6), (float)(height / 21.6) );
 
 
         Label totalGames = new Label("", neon);
         totalGames.setText("You have played " + numPlayed + " games." );
-        totalGames.setPosition(width / 2 - (float)(width / 9.6) / 2 + (float)(width / 9.6) / 4,height / 2 - (float)(height / 21.6) + 2 * (float)(height / 21.6));
+        totalGames.setPosition(width / 2 - (float)(width / 9.6) / 2,height / 2 - (float)(height / 21.6) + 2 * (float)(height / 21.6));
         totalGames.setSize((float)(width / 9.6), (float)(height / 21.6) );
 
         Label won = new Label("", neon);
         won.setText("You have won " + numWin + " games." );
         won.setSize((float)(width / 9.6),(float)(height / 10.8));
-        won.setPosition(width/2 - (float)(width / 9.6) / 2, height / 2 - (float) (3.5 * (height / 10.8)) + 2 * (float)(height / 21.6));
+        won.setPosition(width/2 - (float)(width / 9.6) / 2, height / 2 - (float)(height / 10.8));
 
         Label loss = new Label("", neon);
         loss.setText("You have lost " + numLoss + " games." );
         loss.setSize((float)(width / 9.6),(float)(height / 10.8));
-        loss.setPosition(width / 2 - (float)(width / 9.6) / 2, height / 2 - (float) (4.5 * (height / 10.8)) + 2 * (float)(height / 21.6));
-
+        loss.setPosition(width / 2 - (float)(width / 9.6) / 2, height / 2 - (float) (3.5 * (height / 10.8)) + 2 * (float)(height / 21.6));
 
         Button back = new TextButton("BACK TO THE MAIN MENU", neon);
         back.setSize((float)(width / 9.6),(float)(height / 10.8));
-        back.setPosition(width / 2 - (float)(width / 9.6) / 2, height / 2 - (float)(height / 10.8));
+        back.setPosition(width / 2 - (float)(width / 9.6) / 2, height / 2 - (float) (4.5 * (height / 10.8)) + 2 * (float)(height / 21.6));
         back.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {

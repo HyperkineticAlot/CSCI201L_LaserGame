@@ -118,6 +118,9 @@ public class ServerThread extends Thread {
                     GameMessage message = (GameMessage) in.readObject();
                     if (message.getMessageType() == GameMessage.messageType.MATCHMAKING_REQUEST) {
                         gs.addToMatchmaking(message.playerID);
+                    } else if(message.getMessageType()==GameMessage.messageType.STATS_REQUEST) {
+                        GameMessage response = gs.queryDatabase(message);
+                        sendMessage(response);
                     }
                 } catch (ClassNotFoundException cnfe) {
                     System.out.println("cnfe in run() of ServerThread " + playerID);

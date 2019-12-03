@@ -122,6 +122,8 @@ public abstract class AbstractGameBoard {
      */
     private AbstractGamePiece pickedUpPiece;
 
+    public boolean isOver;
+
     public AbstractGameBoard(int x, int y, boolean hasTurn) {
         tiles = new Array<>();
         pieces = new Array<>();
@@ -137,6 +139,7 @@ public abstract class AbstractGameBoard {
         local = false;
         this.hasTurn = hasTurn;
         this.flipBoard = !hasTurn;
+        isOver = false;
 
         this.x = x;
         this.y = y;

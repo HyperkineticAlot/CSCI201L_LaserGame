@@ -299,13 +299,13 @@ public class GameServer {
                 }
                 retval.playerID = playerID;
             } else if(gm.getMessageType()==GameMessage.messageType.STATS_REQUEST){
+                retval = new GameMessage(GameMessage.messageType.STATS_RESPONSE);
                 String playerID = gm.playerID;
-                pst = conn.prepareStatement("SELECT * FROM RECORD WHERE userID = ?");
+                pst = conn.prepareStatement("SELECT * FROM USER u, RECORD r WHERE u.userID = r.userID AND u.userName=?");
                 pst.setString(1, playerID);
                 rs = pst.executeQuery();
-                while (rs.next()) {
-                    retval = new GameMessage(GameMessage.messageType.STATS_RESPONSE);
-                    retval.numPlayed = rs.getInt("numPlayer");
+                if (rs.next()) {
+                    retval.numPlayed = rs.getInt("numPlayed");
                     retval.numWin = rs.getInt("numWin");
                     retval.numLoss = rs.getInt("numLoss");
                 }

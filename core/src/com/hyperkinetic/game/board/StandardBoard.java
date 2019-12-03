@@ -151,8 +151,10 @@ public class StandardBoard extends AbstractGameBoard
     @Override
     public String isGameOver() {
         if(bPharaoh==null) {
+            isOver = true;
             return "AWin";
         } else if (aPharaoh==null) {
+            isOver = false;
             return "BWin";
         }
         return "NoWin";
