@@ -72,7 +72,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
             guest.addListener(new InputListener(){
                 @Override
                 public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                    game.setScreen(new LaserGameScreen(game));
+                    game.setScreen(new LocalGameScreen(game));
                 }
                 @Override
                 public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -138,8 +138,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         settings.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                //game.setScreen(new SettingsScreen(game));
-                game.setScreen(new LocalGameScreen(game));
+                game.setScreen(new SettingsScreen(game));
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -155,8 +154,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         quit.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                //Gdx.app.exit();
-                game.setScreen(new SettingsScreen(game)); // for test propose
+                Gdx.app.exit();
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {

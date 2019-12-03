@@ -6,15 +6,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.core.LaserGame;
-import com.hyperkinetic.game.pieces.AbstractBlockPiece;
 import com.hyperkinetic.game.pieces.AbstractGamePiece;
 import com.hyperkinetic.game.pieces.KingPiece;
 import com.hyperkinetic.game.pieces.LaserPiece;
 import com.hyperkinetic.game.playflow.GameMessage;
 import com.hyperkinetic.game.util.Directions;
-
-import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * A superclass for all laser game boards. Contains code to render the game board as well as static
