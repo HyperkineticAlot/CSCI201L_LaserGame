@@ -9,11 +9,13 @@ public class GameOverScreen  extends InputAdapter implements Screen {
 
     public GameOverScreen(final LaserGame game){
         this.game = game;
-
     }
 
     @Override
     public void show() {
+        int numPlayed = game.client.getPlayer().getNumPlayed();
+        int numWin = game.client.getPlayer().getNumWin();
+        int numLoss = game.client.getPlayer().getNumLoss();
 
     }
 
