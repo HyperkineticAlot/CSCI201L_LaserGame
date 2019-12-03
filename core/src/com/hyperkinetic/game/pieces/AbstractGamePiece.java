@@ -157,12 +157,15 @@ public abstract class AbstractGamePiece
     public void render(SpriteBatch sb, int x, int y, int width, int height, boolean flipped, boolean pickedUp)
     {
         int scale = pickedUp ? 2 : 1;
+        
+        if(flipped) flipOrientation();
 
-        sb.draw(getTexture(), x, y, width/2F, height/2F, width, height, scale, scale, 0, 0, 0, IMG_DIM, IMG_DIM, flipped, flipped);
+        sb.draw(getTexture(), x, y, width/2F, height/2F, width, height, scale, scale, 0, 0, 0, IMG_DIM, IMG_DIM, false, false);
 
+        if(flipped) flipOrientation();
     }
 
     public abstract void loadRegion();
-    
+    protected abstract void flipOrientation();
     protected abstract Texture getTexture();
 }

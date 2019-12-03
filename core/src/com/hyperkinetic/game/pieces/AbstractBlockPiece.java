@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.util.Directions;
 
+import static com.hyperkinetic.game.util.Directions.Direction.*;
+
 /**
  * Abstract superclass describing the behaviour of a block piece.
  *
@@ -20,7 +22,7 @@ public abstract class AbstractBlockPiece extends AbstractGamePiece
 
     public AbstractBlockPiece()
     {
-        orientation = Directions.Direction.NORTH;
+        orientation = NORTH;
     }
 
     public Directions.Direction getOrientation() {
@@ -34,14 +36,14 @@ public abstract class AbstractBlockPiece extends AbstractGamePiece
     {
         if(orientation == null) return;
 
-        if(orientation == Directions.Direction.NORTH)
+        if(orientation == NORTH)
             orientation = Directions.Direction.EAST;
         else if(orientation == Directions.Direction.EAST)
-            orientation = Directions.Direction.SOUTH;
-        else if(orientation == Directions.Direction.SOUTH)
-            orientation = Directions.Direction.WEST;
+            orientation = SOUTH;
+        else if(orientation == SOUTH)
+            orientation = WEST;
         else
-            orientation = Directions.Direction.NORTH;
+            orientation = NORTH;
     }
 
     /**
@@ -51,14 +53,14 @@ public abstract class AbstractBlockPiece extends AbstractGamePiece
     {
         if(orientation == null) return;
 
-        if(orientation == Directions.Direction.NORTH)
-            orientation = Directions.Direction.WEST;
-        else if(orientation == Directions.Direction.WEST)
-            orientation = Directions.Direction.SOUTH;
-        else if(orientation == Directions.Direction.SOUTH)
+        if(orientation == NORTH)
+            orientation = WEST;
+        else if(orientation == WEST)
+            orientation = SOUTH;
+        else if(orientation == SOUTH)
             orientation = Directions.Direction.EAST;
         else
-            orientation = Directions.Direction.NORTH;
+            orientation = NORTH;
     }
 
     /**
@@ -86,5 +88,24 @@ public abstract class AbstractBlockPiece extends AbstractGamePiece
         }
 
         return null;
+    }
+    
+    @Override
+    protected void flipOrientation()
+    {
+        switch(orientation)
+        {
+            case NORTH:
+                orientation = SOUTH;
+                break;
+            case EAST:
+                orientation = WEST;
+                break;
+            case SOUTH:
+                orientation = NORTH;
+                break;
+            case WEST:
+                orientation = EAST;
+        }
     }
 }

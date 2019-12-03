@@ -35,6 +35,7 @@ public class DoubleMirrorPiece extends AbstractMirrorPiece {
         else if (oppositeReflectionDir == null) {
             reflectedLaserDirection.add(reflectionDir);
         }
+        reflectedLaserDirection.add(laserDirection);
         return reflectedLaserDirection;
     }
 

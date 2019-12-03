@@ -84,79 +84,63 @@ public class ServerThread extends Thread {
      */
     @Override
     public void run() {
-        while (!loggedIn) {
-            try {
-                GameMessage message = (GameMessage) in.readObject();
-                gs.logMessage(message);
-                if (message.getMessageType() == GameMessage.messageType.LOGIN_ATTEMPT) {
-                    GameMessage loginMessage = gs.queryDatabase(message);
-                    if (loginMessage.getMessageType() == GameMessage.messageType.LOGIN_SUCCESS) {
-                        // Login success
-                        loggedIn = true;
-                        playerID = loginMessage.playerID;
-                        gs.loginServerThread(this);
+        try {
+            while (!loggedIn) {
+                try {
+                    GameMessage message = (GameMessage) in.readObject();
+                    gs.logMessage(message);
+                    if (message.getMessageType() == GameMessage.messageType.LOGIN_ATTEMPT) {
+                        GameMessage loginMessage = gs.queryDatabase(message);
+                        if (loginMessage.getMessageType() == GameMessage.messageType.LOGIN_SUCCESS) {
+                            // Login success
+                            loggedIn = true;
+                            playerID = loginMessage.playerID;
+                            gs.loginServerThread(this);
+                        }
+                        sendMessage(loginMessage);
+                    } else if (message.getMessageType() == GameMessage.messageType.REGISTER_ATTEMPT) {
+                        GameMessage registerMessage = gs.queryDatabase(message);
+                        if (registerMessage.getMessageType() == GameMessage.messageType.REGISTER_SUCCESS) {
+                            // Register success and automatically login
+                            loggedIn = true;
+                            playerID = registerMessage.playerID;
+                            gs.loginServerThread(this);
+                        }
+                        sendMessage(registerMessage);
                     }
-                    sendMessage(loginMessage);
+                } catch (ClassNotFoundException cnfe) {
+                    System.out.println("cnfe in run() of ServerThread " + playerID);
+                    cnfe.printStackTrace();
                 }
-                else if (message.getMessageType() == GameMessage.messageType.REGISTER_ATTEMPT) {
-                    GameMessage registerMessage = gs.queryDatabase(message);
-                    if (registerMessage.getMessageType() == GameMessage.messageType.REGISTER_SUCCESS) {
-                        // Register success and automatically login
-                        loggedIn = true;
-                        playerID = registerMessage.playerID;
-                        gs.loginServerThread(this);
+            }
+            while (room == null) {
+                try {
+                    GameMessage message = (GameMessage) in.readObject();
+                    if (message.getMessageType() == GameMessage.messageType.MATCHMAKING_REQUEST) {
+                        gs.addToMatchmaking(message.playerID);
                     }
-                    sendMessage(registerMessage);
+                } catch (ClassNotFoundException cnfe) {
+                    System.out.println("cnfe in run() of ServerThread " + playerID);
+                    cnfe.printStackTrace();
                 }
             }
-            catch (ClassNotFoundException cnfe) {
-                System.out.println("cnfe in run() of ServerThread " + playerID);
-                cnfe.printStackTrace();
-            }
-            catch(IOException ioe) {
-                System.out.println("ioe in run() of ServerThread " + playerID);
-            }
-        }
-        while(room == null)
-        {
-            try
-            {
-                GameMessage message = (GameMessage) in.readObject();
-                if(message.getMessageType() == GameMessage.messageType.MATCHMAKING_REQUEST)
-                {
-                    gs.addToMatchmaking(message.playerID);
+            while (!room.isOver) {
+                // querying for GameMessage objects
+                try {
+                    GameMessage message = (GameMessage) in.readObject();
+                    room.readMessage(message);
+                } catch (ClassNotFoundException cnfe) {
+                    System.out.println("cnfe in run() of ServerThread " + playerID);
+                    cnfe.printStackTrace();
                 }
             }
-            catch(IOException ioe)
-            {
-                System.out.println("ioe in run() of ServerThread " + playerID);
-                ioe.printStackTrace();
-            }
-            catch(ClassNotFoundException cnfe)
-            {
-                System.out.println("cnfe in run() of ServerThread " + playerID);
-                cnfe.printStackTrace();
-            }
+    
+            room = null;
         }
-        while(!room.isOver)
+        catch(IOException ioe)
         {
-            // querying for GameMessage objects
-            try
-            {
-                GameMessage message = (GameMessage) in.readObject();
-                room.readMessage(message);
-            }
-            catch (ClassNotFoundException cnfe)
-            {
-                System.out.println("cnfe in run() of ServerThread " + playerID);
-                cnfe.printStackTrace();
-            }
-            catch(IOException ioe)
-            {
-                System.out.println("ioe in run() of ServerThread " + playerID);
-            }
+            System.out.println("ioe in run() of ServerThread " + playerID);
+            System.out.println("Terminating connection with the client.");
         }
-
-        room = null;
     }
 }
