@@ -2,6 +2,8 @@ package com.hyperkinetic.game.playflow;
 
 import com.badlogic.gdx.utils.Json;
 import com.hyperkinetic.game.board.AbstractGameBoard;
+import com.hyperkinetic.game.core.GameOverScreen;
+import com.hyperkinetic.game.core.LaserGame;
 import com.hyperkinetic.game.core.LogInScreen;
 import com.hyperkinetic.game.pieces.LaserPiece;
 
@@ -32,12 +34,15 @@ public class ClientThread extends Thread {
      */
     private Socket socket;
 
-    public ClientThread(String hostname, int port, boolean isGuest, boolean isAI)
+    private LaserGame game;
+
+    public ClientThread(String hostname, int port, boolean isGuest, boolean isAI, LaserGame game)
     {
         board = null;
         this.isGuest = isGuest;
         this.isAI = isAI;
         this.playerID = null;
+        this.game = game;
 
         try
         {
@@ -74,7 +79,6 @@ public class ClientThread extends Thread {
                         this.playerID = message.playerID;
                     }
                     else if (message.getMessageType() == GameMessage.messageType.LOGIN_FAILURE || message.getMessageType() == GameMessage.messageType.REGISTER_FAILURE) {
-                        // TODO display error message
                         System.out.println(message.errorMessage);
                         this.player.setPlayerID(LogInScreen.LOGIN_FAILURE_FLAG);
                         this.playerID = LogInScreen.LOGIN_FAILURE_FLAG;
@@ -84,9 +88,7 @@ public class ClientThread extends Thread {
                         AbstractGameBoard start = message.boardClass.cast(json.fromJson(message.boardClass, message.startBoard));
                         this.board = start;
                         player.setBoard(start);
-                        GameMessage g = new GameMessage(GameMessage.messageType.STATS_RESPONSE);
-                        g.errorMessage = "hello";
-                        player.sendMessage(g);
+
                     }
                 } else {
                     if(message.getMessageType()==GameMessage.messageType.MOVE_SUCCESS){
@@ -104,11 +106,13 @@ public class ClientThread extends Thread {
                         }
                     } else if(message.getMessageType()==GameMessage.messageType.GAME_OVER){
                         if(message.playerID.equals(playerID)){ // wins - update LaserGameScreen status
-                            // TODO: handle client win (display stats?)
                             System.out.println(playerID+" has won!");
+                            game.setScreen(new GameOverScreen(game));
+                            // TODO: handle updated records
                         } else { // loses - update LaserGameScreen status
-                            // TODO: handle client loss
                             System.out.println(playerID+" has lost.");
+                            game.setScreen(new GameOverScreen(game));
+                            // TODO: handle updated records
                         }
                     } else if(message.getMessageType()==GameMessage.messageType.STATS_RESPONSE){
                         int numPlayed = message.numPlayed;
