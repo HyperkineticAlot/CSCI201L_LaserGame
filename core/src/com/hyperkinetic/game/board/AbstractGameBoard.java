@@ -18,7 +18,7 @@ import com.hyperkinetic.game.util.Directions;
  *
  * @author cqwillia briannlz
  */
-//TODO: Reorganize this file
+
 public abstract class AbstractGameBoard {
     /**
      * Tracks the game board currently being played on for centralized modification by various game objects.
@@ -473,7 +473,6 @@ public abstract class AbstractGameBoard {
             }
         }
 
-        // TODO: render lasers here
         if(System.currentTimeMillis() > laserDuration + 1000)
             lasersToDraw.clear();
 
@@ -625,7 +624,6 @@ public abstract class AbstractGameBoard {
     {
         if(nextMove == null)
         {
-            // TODO: give some warning about making a move before ending your turn
             return false;
         }
 
@@ -741,7 +739,7 @@ public abstract class AbstractGameBoard {
         if(piece.getColor() != color) return false;
 
         if(moveType.equals("rotateL") || moveType.equals("rotateR")) {
-            return true; // TODO: not so for laser piece
+            return true;
         } else if(moveType.equals("move")) {
             if (getTileFromCoordinate(nX, nY) != null && getPieceFromCoordinate(nX, nY) == null) {
                 AbstractBoardTile tile = getTileFromCoordinate(nX, nY);

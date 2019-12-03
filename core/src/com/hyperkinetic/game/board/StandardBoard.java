@@ -145,7 +145,6 @@ public class StandardBoard extends AbstractGameBoard
                 this.pieces.set(i * x + j, newPiece);
             }
         }
-        // TODO: set non-null elements of pieces to associate piece objects
     }
 
     @Override
