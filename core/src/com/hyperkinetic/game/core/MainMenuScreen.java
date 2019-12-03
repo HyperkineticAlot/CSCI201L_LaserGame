@@ -28,15 +28,13 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
     private float width;
     private float height;
     private OrthographicCamera camera;
-
-    public static Music bgm;
     public static Music clickSound;
+    public static Music bgm = Gdx.audio.newMusic(Gdx.files.internal("testMusic.mp3"));;
     public static boolean playBgm = true;
     public static boolean initialPlaying = true;
 
     public MainMenuScreen (final LaserGame game) {
         if(initialPlaying) {
-            bgm = Gdx.audio.newMusic(Gdx.files.internal("testMusic.mp3"));
             bgm.setVolume(0.5f);                 // sets the volume to half the maximum volume
             bgm.setLooping(true);                // will repeat playback until music.stop() is called
             clickSound = Gdx.audio.newMusic(Gdx.files.internal("buttonclick.mp3"));
@@ -65,7 +63,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         //titlePic = new Texture(Gdx.files.internal("LaserGameTitle.png"));
 
         Skin neon = new Skin(Gdx.files.internal("skin/neon-ui.json"));
-        neon.getFont("font").getData().setScale(1.20f, 1.20f);
+        neon.getFont("font").getData().setScale(1.20f * width / 1920, 1.20f * height / 1280);
 
 
         Button guest = new TextButton(LaserGame.client == null ? "GUEST" : "PLAY", neon);

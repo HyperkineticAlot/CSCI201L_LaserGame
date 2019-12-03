@@ -42,7 +42,7 @@ public class SettingsScreen  extends InputAdapter implements Screen {
         //titlePic = new Texture(Gdx.files.internal("LaserGameTitle.png"));
 
         Skin neon = new Skin(Gdx.files.internal("skin/neon-ui.json"));
-        neon.getFont("font").getData().setScale(1.20f, 1.20f);
+        neon.getFont("font").getData().setScale(1.20f * width / 1920, 1.20f * height / 1280);
 
         // music on and off checkbox group
         ButtonGroup musicChoiceGroup = new ButtonGroup<CheckBox>();
@@ -67,8 +67,8 @@ public class SettingsScreen  extends InputAdapter implements Screen {
                 MainMenuScreen.clickSound.play();
                 //System.out.println("touch up on music");
                 //System.out.println("printing bgm " + bgm);
-                if(!bgm.isPlaying()) {
-                    bgm.play();
+                if(!MainMenuScreen.bgm.isPlaying()) {
+                    MainMenuScreen.bgm.play();
                 }
 
                 //System.out.println("if the same instance " + bgm.);
@@ -86,8 +86,8 @@ public class SettingsScreen  extends InputAdapter implements Screen {
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 MainMenuScreen.clickSound.play();
                 //System.out.println("touch up on no music");
-                if(bgm.isPlaying()) {
-                    bgm.pause();
+                if(MainMenuScreen.bgm.isPlaying()) {
+                    MainMenuScreen.bgm.pause();
                 }
                 MainMenuScreen.playBgm = false;
                 MainMenuScreen.initialPlaying = false;

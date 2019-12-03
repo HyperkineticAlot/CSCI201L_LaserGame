@@ -49,14 +49,16 @@ public class LogInScreen  extends InputAdapter implements Screen {
         //titlePic = new Texture(Gdx.files.internal("LaserGameTitle.png"));
 
         Skin neon = new Skin(Gdx.files.internal("skin/neon-ui.json"));
-        neon.getFont("font").getData().setScale(1.30f, 1.30f);
+        Skin pink = new Skin(Gdx.files.internal("pinkSkin/neon-ui.json"));
+        neon.getFont("font").getData().setScale(1.30f * width / 1920, 1.30f * height / 1280);
+        pink.getFont("font").getData().setScale(1.30f * width / 1920, 1.30f * height / 1280);
 
         Label usernameLabel = new Label("Username", neon);
-        usernameLabel.setPosition(width / 2 - (float)(width / 9.6) / 4,height / 2 + (float)(height / 21.6) + 2 * (float)(height / 21.6));
+        usernameLabel.setPosition(width / 2 - (float)(width / 9.6) / 2 + (float)(width / 9.6) / 4,height / 2 + (float)(height / 21.6) + 2 * (float)(height / 21.6));
         usernameLabel.setSize((float)(width / 9.6), (float)(height / 21.6) );
 
         Label passwordLabel = new Label("Password", neon);
-        passwordLabel.setPosition(width / 2 - (float)(width / 9.6) / 4,height / 2 - (float)(height / 21.6) + 2 * (float)(height / 21.6));
+        passwordLabel.setPosition(width / 2 - (float)(width / 9.6) / 2 + (float)(width / 9.6) / 4,height / 2 - (float)(height / 21.6) + 2 * (float)(height / 21.6));
         passwordLabel.setSize((float)(width / 9.6), (float)(height / 21.6) );
 
         final TextField username = new TextField("", neon);
@@ -71,8 +73,8 @@ public class LogInScreen  extends InputAdapter implements Screen {
         password.setSize((float)(width / 9.6), (float)(height / 21.6) );
 
 
-        final Label warningLabel = new Label("", neon);
-        warningLabel.setPosition(width / 2 - (float)(width / 9.6) / 3,height / 2 + (float)(height / 21.6) + 3 * (float)(height / 21.6));
+        final Label warningLabel = new Label("", pink);
+        warningLabel.setPosition(width / 2 - (float)(width / 9.6) / 2 + (float)(width / 9.6) / 4,height / 2 + (float)(height / 21.6) + 3 * (float)(height / 21.6));
         warningLabel.setSize((float)(width / 9.6), (float)(height / 21.6));
         //warningLabel.setFontScale(2.0f);
 
@@ -100,7 +102,7 @@ public class LogInScreen  extends InputAdapter implements Screen {
                 {
                     // TODO: display login failure alert
                     // password is incorrect / username doesn't exist
-                    warningLabel.setPosition(width / 2 - (float)(width / 9.6) / 3,height / 2 + (float)(height / 21.6) + 3 * (float)(height / 21.6));
+                    //warningLabel.setPosition(width / 2 - (float)(width / 9.6) / 3,height / 2 + (float)(height / 21.6) + 3 * (float)(height / 21.6));
                     warningLabel.setText("Login Failure");
                     newPlayer.resetPlayerID();
                 }
@@ -141,7 +143,7 @@ public class LogInScreen  extends InputAdapter implements Screen {
                 if(newPlayer.playerID.equals(LOGIN_FAILURE_FLAG))
                 {
                     // TODO: display register failure alert
-                    warningLabel.setPosition(width / 2 - (float)(width / 9.6) / 2.5f,height / 2 + (float)(height / 21.6) + 3 * (float)(height / 21.6));
+                    //warningLabel.setPosition(width / 2 - (float)(width / 9.6) / 2.5f,height / 2 + (float)(height / 21.6) + 3 * (float)(height / 21.6));
                     warningLabel.setText("Username is taken");
                     newPlayer.resetPlayerID();
                 }
