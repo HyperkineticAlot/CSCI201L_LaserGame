@@ -30,6 +30,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
     private OrthographicCamera camera;
 
     public static Music bgm;
+    public static Music clickSound;
     public static boolean playBgm = true;
     public static boolean initialPlaying = true;
 
@@ -38,6 +39,9 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
             bgm = Gdx.audio.newMusic(Gdx.files.internal("testMusic.mp3"));
             bgm.setVolume(0.5f);                 // sets the volume to half the maximum volume
             bgm.setLooping(true);                // will repeat playback until music.stop() is called
+            clickSound = Gdx.audio.newMusic(Gdx.files.internal("buttonclick.mp3"));
+            clickSound.setVolume(1.0f);
+            clickSound.setLooping(false);
         }
 
         if(playBgm && initialPlaying) {
@@ -73,6 +77,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
                 @Override
                 public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                     game.setScreen(new LocalGameScreen(game));
+                    clickSound.play();
                 }
                 @Override
                 public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -89,6 +94,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
                 {
                     LaserGame.client.getPlayer().sendMatchmakingRequest();
                     game.setScreen(new LaserGameScreen(game));
+                    clickSound.play();
                 }
                 @Override
                 public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -107,6 +113,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
                 @Override
                 public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                     game.setScreen(new LogInScreen(game));
+                    clickSound.play();
                 }
 
                 @Override
@@ -139,6 +146,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 game.setScreen(new SettingsScreen(game));
+                clickSound.play();
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -154,6 +162,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         quit.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                clickSound.play();
                 Gdx.app.exit();
             }
             @Override
