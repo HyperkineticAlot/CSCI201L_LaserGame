@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-import static com.hyperkinetic.game.core.MainMenuScreen.bgm;
 
 //import javax.xml.soap.Text;
 
@@ -116,17 +115,17 @@ public class SettingsScreen  extends InputAdapter implements Screen {
         slider.addListener(new DragListener() {
             public void dragStart(InputEvent event, float x, float y, int pointer)
             {
-                bgm.setVolume(slider.getPercent());
+                MainMenuScreen.bgm.setVolume(slider.getPercent());
             }
 
             public void drag(InputEvent event, float x, float y, int pointer)
             {
-                bgm.setVolume(slider.getPercent());
+                MainMenuScreen.bgm.setVolume(slider.getPercent());
             }
 
             public void dragStop(InputEvent event, float x, float y, int pointer)
             {
-                bgm.setVolume(slider.getPercent());
+                MainMenuScreen.bgm.setVolume(slider.getPercent());
             }
 
         });

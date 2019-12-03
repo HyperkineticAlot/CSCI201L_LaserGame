@@ -93,14 +93,6 @@ public class LaserGameScreen implements Screen {
         }
 
         batch.end();
-
-/*
-        stage.getBatch().begin();
-        //stage.getBatch().draw(titlePic, 1920 / 2 - 958/ 2 , 1000);
-        stage.getBatch().end();
-
-        stage.act();
-        stage.draw();*/
     }
 
     @Override
