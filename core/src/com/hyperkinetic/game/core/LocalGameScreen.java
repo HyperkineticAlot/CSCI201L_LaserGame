@@ -43,6 +43,9 @@ public class LocalGameScreen implements Screen
 
         batch.begin();
         board.render(batch);
+        
+        if(!board.isGameOver().equals("NoWin"))
+            game.setScreen(new MainMenuScreen(game));
 
         batch.end();
     }

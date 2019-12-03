@@ -3,6 +3,7 @@ package com.hyperkinetic.game.playflow;
 import com.badlogic.gdx.utils.Json;
 import com.hyperkinetic.game.board.AbstractGameBoard;
 import com.hyperkinetic.game.board.StandardBoard;
+import com.hyperkinetic.game.pieces.AbstractGamePiece;
 import com.hyperkinetic.game.pieces.LaserPiece;
 import com.hyperkinetic.game.playflow.GameMessage.messageType;
 
@@ -170,7 +171,6 @@ public class GameRoom {
             gm.playerID = aThread.getPlayerID();
             gm.player2ID = bThread.getPlayerID();
             gs.updateDatabase(gm);
-            broadcast(gm);
             isOver = true;
         
             clear();
@@ -179,7 +179,6 @@ public class GameRoom {
             gm.playerID = bThread.getPlayerID();
             gm.player2ID = aThread.getPlayerID();
             gs.updateDatabase(gm);
-            broadcast(gm);
             isOver = true;
         
             clear();

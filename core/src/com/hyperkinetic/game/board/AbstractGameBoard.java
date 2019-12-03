@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.core.LaserGame;
-import com.hyperkinetic.game.core.MainMenuScreen;
 import com.hyperkinetic.game.pieces.AbstractGamePiece;
 import com.hyperkinetic.game.pieces.KingPiece;
 import com.hyperkinetic.game.pieces.LaserPiece;
@@ -103,7 +102,7 @@ public abstract class AbstractGameBoard {
     /**
      * Variable that keeps track of whether the board is flipped
      */
-    private boolean flipBoard;
+    public boolean flipBoard;
 
     /**
      * Determines if this game board describes a local game.
@@ -122,19 +121,19 @@ public abstract class AbstractGameBoard {
     /**
      * The click sound for picking and dropping a piece
      */
-    public static Music pieceSound = Gdx.audio.newMusic(Gdx.files.internal("piece.mp3"));
+    private Music pieceSound;
     /**
      * The laser sound for firing a laser
      */
-    public static Music laserSound = Gdx.audio.newMusic(Gdx.files.internal("laser.mp3"));
+    private Music laserSound;
     /**
      * The sound when a piece is destroyed
      */
-    public static Music pieceDestroyedSound = Gdx.audio.newMusic(Gdx.files.internal("breakglass.mp3"));
+    private Music pieceDestroyedSound;
     /**
      * The sound effect when a king is destroyed
      */
-    public static Music KingDestroyedSound = Gdx.audio.newMusic(Gdx.files.internal("explosion.mp3"));
+    private Music kingDestroyedSound;
     /**
      * Variable that stores the piece that is currently picked up
      */
@@ -209,9 +208,16 @@ public abstract class AbstractGameBoard {
         verticalLaserTexture = LaserGame.loadTexture("board/vertical_laser.png");
         horizontalLaserTexture = LaserGame.loadTexture("board/horizontal_laser.png");
         highlightTexture = LaserGame.loadTexture("board/highlight.png");
-
+    
+        pieceSound = Gdx.audio.newMusic(Gdx.files.internal("piece.mp3"));
         pieceSound.setVolume(2.0f);
+    
+        laserSound = Gdx.audio.newMusic(Gdx.files.internal("laser.mp3"));
+    
+        pieceDestroyedSound = Gdx.audio.newMusic(Gdx.files.internal("breakglass.mp3"));
         pieceDestroyedSound.setVolume(2.0f);
+    
+        kingDestroyedSound = Gdx.audio.newMusic(Gdx.files.internal("explosion.mp3"));
     }
 
     /**
@@ -249,7 +255,7 @@ public abstract class AbstractGameBoard {
                 return false;
             else
             {
-                pieceSound.play();
+                board.pieceSound.play();
                 board.pickedUpPiece = null;
                 return true;
             }
@@ -264,7 +270,7 @@ public abstract class AbstractGameBoard {
         // if the player clicks on the same square again, drop the piece
         if(piece == board.pickedUpPiece)
         {
-            pieceSound.play();
+            board.pieceSound.play();
             board.pickedUpPiece = null;
         }
 
@@ -276,7 +282,7 @@ public abstract class AbstractGameBoard {
                 ((piece.getX() == board.nextMove.moveX && piece.getY() == board.nextMove.moveY) ||
                  (board.nextMove.moveType.contains("rotate")) && piece.getX() == board.nextMove.x && piece.getY() == board.nextMove.y))
         {
-            pieceSound.play();
+            board.pieceSound.play();
             board.undoMove();
             return true;
         }
@@ -298,12 +304,12 @@ public abstract class AbstractGameBoard {
     {
         if(key.equals("Q"))
         {
-            pieceSound.play();
+            board.pieceSound.play();
             return board.makeMove(AbstractBoardTile.ROTATE_LEFT);
         }
         else if(key.equals("E"))
         {
-            pieceSound.play();
+            board.pieceSound.play();
             return board.makeMove(AbstractBoardTile.ROTATE_RIGHT);
         }
 
@@ -612,8 +618,12 @@ public abstract class AbstractGameBoard {
         AbstractGamePiece piece = getPieceFromCoordinate(x,y);
         if(moveType.equals("rotateL")) {
             pieceRotateLeft(piece);
+            if(!local && piece.equals(aLaser)) pieceRotateLeft(aLaser);
+            if(!local && piece.equals(bLaser)) pieceRotateLeft(bLaser);
         } else if(moveType.equals("rotateR")) {
             pieceRotateRight(piece);
+            if(!local && piece.equals(aLaser)) pieceRotateRight(aLaser);
+            if(!local && piece.equals(bLaser)) pieceRotateRight(bLaser);
         } else {
             pieceMove(piece,nX,nY);
         }
@@ -695,25 +705,25 @@ public abstract class AbstractGameBoard {
         {
             if(laser.equals(aLaser) && hasTurn)
             {
-                update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
                 undoMove();
+                update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
                 return true;
             }
             else if(laser.equals(bLaser) && !hasTurn)
             {
-                update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
                 undoMove();
+                update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
                 return true;
             }
         }
         else if(laser.equals(aLaser) && (hasTurn ^ flipBoard)) {
-            update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
             undoMove();
+            update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
             return true;
         }
         else if(laser.equals(bLaser) && (hasTurn ^ flipBoard)) {
-            update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
             undoMove();
+            update(laser.getX(), laser.getY(), laser.toggleDirection(), -1, -1);
             return true;
         }
         
@@ -727,7 +737,7 @@ public abstract class AbstractGameBoard {
      * @return true if success
      */
     private boolean pieceRotateLeft(AbstractGamePiece piece) {
-        pieceSound.play();
+        if(!LaserGame.IS_SERVER) pieceSound.play();
         piece.rotateLeft();
         return true;
     }
@@ -739,7 +749,7 @@ public abstract class AbstractGameBoard {
      * @return true if success
      */
     private boolean pieceRotateRight(AbstractGamePiece piece) {
-        pieceSound.play();
+        if(!LaserGame.IS_SERVER) pieceSound.play();
         piece.rotateRight();
         return true;
     }
@@ -828,10 +838,19 @@ public abstract class AbstractGameBoard {
         if(newDirections == null)
         {
             // destroy the piece
-            if(aPharaoh.equals(pieces.get(startY * x + startX)) || bPharaoh.equals(pieces.get(startY * x + startX)))
-                KingDestroyedSound.play();
+            if(aPharaoh.equals(pieces.get(startY * x + startX)))
+            {
+                if(!LaserGame.IS_SERVER) kingDestroyedSound.play();
+                aPharaoh = null;
+            }
+            else if(bPharaoh.equals(pieces.get(startY * x + startX)))
+            {
+                if(!LaserGame.IS_SERVER) kingDestroyedSound.play();
+                bPharaoh = null;
+            }
             else
-                pieceDestroyedSound.play();
+                if (!LaserGame.IS_SERVER) pieceDestroyedSound.play();
+            
             pieces.set(startY * x + startX, null);
         
             thisTile.setPiece(null);

@@ -153,7 +153,7 @@ public class StandardBoard extends AbstractGameBoard
             isOver = true;
             return "AWin";
         } else if (aPharaoh==null) {
-            isOver = false;
+            isOver = true;
             return "BWin";
         }
         return "NoWin";
