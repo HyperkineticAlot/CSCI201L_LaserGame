@@ -17,7 +17,7 @@ public class LaserGame extends Game {
     /**
      * The {@link SpriteBatch} object responsible for rendering textures onto the game canvas.
      */
-    private static SpriteBatch batch;
+    private SpriteBatch batch;
     /**
      * Tracks all objects (such as Textures) that implement {@link Disposable} and need to be freed.
      */
@@ -53,7 +53,7 @@ public class LaserGame extends Game {
 
         client = null;
         batch = new SpriteBatch();
-        gameInputProcessor = new GameInputProcessor();
+        gameInputProcessor = new GameInputProcessor(this);
         Gdx.input.setInputProcessor(gameInputProcessor);
         //playerA = new Player();
         //playerB = new Player();
@@ -89,5 +89,10 @@ public class LaserGame extends Game {
         Texture retval = new Texture(path);
         disposables.add(retval);
         return retval;
+    }
+    
+    public void returnToMenu()
+    {
+        this.setScreen(new MainMenuScreen(this));
     }
 }

@@ -71,7 +71,7 @@ public class LaserGameScreen implements Screen {
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(new GameInputProcessor());
+        Gdx.input.setInputProcessor(new GameInputProcessor(game));
         //Gdx.input.setInputProcessor(stage);
     }
 
