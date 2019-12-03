@@ -74,8 +74,8 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
             guest.addListener(new InputListener(){
                 @Override
                 public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                    game.setScreen(new LocalGameScreen(game));
                     clickSound.play();
+                    game.setScreen(new LocalGameScreen(game));
                 }
                 @Override
                 public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -90,9 +90,9 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
                 @Override
                 public void touchUp(InputEvent event, float x, float y, int pointer, int button)
                 {
+                    clickSound.play();
                     LaserGame.client.getPlayer().sendMatchmakingRequest();
                     game.setScreen(new LaserGameScreen(game));
-                    clickSound.play();
                 }
                 @Override
                 public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -110,8 +110,8 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
             login.addListener(new InputListener() {
                 @Override
                 public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                    game.setScreen(new LogInScreen(game));
                     clickSound.play();
+                    game.setScreen(new LogInScreen(game));
                 }
 
                 @Override
@@ -125,6 +125,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
             login.addListener(new InputListener() {
                 @Override
                 public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                    clickSound.play();
                     LaserGame.client = null;
                     game.setScreen(new MainMenuScreen(game));
                 }
@@ -143,8 +144,8 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         settings.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new SettingsScreen(game));
                 clickSound.play();
+                game.setScreen(new SettingsScreen(game));
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
