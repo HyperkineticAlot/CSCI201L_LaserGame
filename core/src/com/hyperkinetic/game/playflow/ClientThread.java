@@ -88,7 +88,9 @@ public class ClientThread extends Thread {
                         AbstractGameBoard start = message.boardClass.cast(json.fromJson(message.boardClass, message.startBoard));
                         this.board = start;
                         player.setBoard(start);
-
+                        GameMessage g = new GameMessage(GameMessage.messageType.STATS_RESPONSE);
+                        g.errorMessage = "hello";
+                        player.sendMessage(g);
                     }
                 } else {
                     if(message.getMessageType()==GameMessage.messageType.MOVE_SUCCESS){
