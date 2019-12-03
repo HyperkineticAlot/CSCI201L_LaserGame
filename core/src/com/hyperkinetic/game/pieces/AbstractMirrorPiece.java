@@ -1,5 +1,6 @@
 package com.hyperkinetic.game.pieces;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.util.Directions;
 
@@ -87,22 +88,22 @@ public abstract class AbstractMirrorPiece extends AbstractGamePiece
      * or null if the laser is not reflected.
      */
     public abstract Array<Directions.Direction> acceptLaser(Directions.Direction laserDirection);
-
+    
     @Override
-    protected float getRotation()
+    protected Texture getTexture()
     {
         switch(orientation)
         {
             case NORTHWEST:
-                return 0F;
-            case SOUTHWEST:
-                return 90F;
-            case SOUTHEAST:
-                return 180F;
+                return textures[0];
             case NORTHEAST:
-                return 270F;
+                return textures[1];
+            case SOUTHEAST:
+                return textures[2];
+            case SOUTHWEST:
+                return textures[3];
         }
-
-        return 0F;
+        
+        return null;
     }
 }

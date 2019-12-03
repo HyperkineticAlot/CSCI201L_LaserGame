@@ -15,6 +15,6 @@ public class LaserTile extends AbstractBoardTile
     @Override
     public void loadRegion()
     {
-        super.loadRegion("board/lasertile.png");
+        super.loadRegion("board/tileRed.png");
     }
 }

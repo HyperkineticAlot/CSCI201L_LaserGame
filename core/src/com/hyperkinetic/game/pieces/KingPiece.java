@@ -2,6 +2,7 @@ package com.hyperkinetic.game.pieces;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.hyperkinetic.game.core.LaserGame;
 import com.hyperkinetic.game.util.Directions;
 
 public class KingPiece extends AbstractBlockPiece {
@@ -15,4 +16,10 @@ public class KingPiece extends AbstractBlockPiece {
         return null;
     }
 
+    @Override
+    public void loadRegion()
+    {
+        textures[0] = textures[1] = textures[2] = textures[3] =
+                LaserGame.loadTexture("pieces/King" + (!color ? "Red.png" : ".png"));
+    }
 }

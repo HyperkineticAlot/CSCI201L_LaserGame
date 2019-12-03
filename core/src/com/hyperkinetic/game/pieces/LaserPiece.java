@@ -2,6 +2,7 @@ package com.hyperkinetic.game.pieces;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.hyperkinetic.game.core.LaserGame;
 import com.hyperkinetic.game.util.Directions;
 
 // can only rotate
@@ -24,5 +25,11 @@ public class LaserPiece extends AbstractBlockPiece{
         if(!(other instanceof LaserPiece)) return false;
         LaserPiece o = (LaserPiece) other;
         return o.color == this.color && o.x == this.x && o.y == this.y;
+    }
+    
+    @Override
+    public void loadRegion()
+    {
+        textures[0] = textures[1] = textures[2] = textures[3] = LaserGame.loadTexture("pieces/King.png");
     }
 }

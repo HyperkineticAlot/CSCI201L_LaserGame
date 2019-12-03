@@ -1,7 +1,9 @@
 package com.hyperkinetic.game.pieces;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.hyperkinetic.game.core.LaserGame;
 import com.hyperkinetic.game.util.Directions;
 
 /**
@@ -32,5 +34,14 @@ public class SingleMirrorPiece extends AbstractMirrorPiece
         Array<Directions.Direction> reflectedLaserDirection = new Array<>();
         reflectedLaserDirection.add(dir);
         return reflectedLaserDirection;
+    }
+    
+    @Override
+    public void loadRegion()
+    {
+        textures[0] = LaserGame.loadTexture("pieces/singlemirrorback" + (!color ? "Red1.png" : "1.png"));
+        textures[1] = LaserGame.loadTexture("pieces/singlemirrorback" + (!color ? "Red2.png" : "2.png"));
+        textures[2] = LaserGame.loadTexture("pieces/singlemirror" + (!color ? "Red2.png" : "2.png"));
+        textures[3] = LaserGame.loadTexture("pieces/singlemirror" + (!color ? "Red1.png" : "1.png"));
     }
 }

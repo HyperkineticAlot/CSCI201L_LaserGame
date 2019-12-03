@@ -1,5 +1,6 @@
 package com.hyperkinetic.game.pieces;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.util.Directions;
 
@@ -70,20 +71,20 @@ public abstract class AbstractBlockPiece extends AbstractGamePiece
     public abstract Array<Directions.Direction> acceptLaser(Directions.Direction laserDirection);
 
     @Override
-    protected float getRotation()
+    protected Texture getTexture()
     {
         switch(orientation)
         {
             case NORTH:
-                return 0F;
-            case WEST:
-                return 90F;
-            case SOUTH:
-                return 180F;
+                return textures[0];
             case EAST:
-                return 270F;
+                return textures[1];
+            case SOUTH:
+                return textures[2];
+            case WEST:
+                return textures[3];
         }
 
-        return 0F;
+        return null;
     }
 }

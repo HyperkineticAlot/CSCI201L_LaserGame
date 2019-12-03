@@ -16,7 +16,7 @@ public abstract class AbstractBoardTile implements Serializable
 {
     private static final long serialVersionUID = 2L;
 
-    private static final int IMG_DIM = 300;
+    private static final int IMG_DIM = 600;
 
     /**
      * Defines where on the board this tile resides so it can be textured correctly.
