@@ -57,7 +57,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
 
         batch = new SpriteBatch();
 
-        backgroundPic = new Texture(Gdx.files.internal("LaserGameWithTitle.png"));
+        backgroundPic = new Texture(Gdx.files.internal("reboundBackground.jpg"));
         //titlePic = new Texture(Gdx.files.internal("LaserGameTitle.png"));
 
         Skin neon = new Skin(Gdx.files.internal("skin/neon-ui.json"));
