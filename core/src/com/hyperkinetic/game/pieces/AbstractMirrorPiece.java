@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.hyperkinetic.game.util.Directions;
 
-import static com.hyperkinetic.game.util.Directions.MirrorDirection.NORTHWEST;
+import static com.hyperkinetic.game.util.Directions.MirrorDirection.*;
 
 /**
  * Abstract superclass describing the behaviour of a mirror piece.
@@ -105,5 +105,24 @@ public abstract class AbstractMirrorPiece extends AbstractGamePiece
         }
         
         return null;
+    }
+    
+    @Override
+    protected void flipOrientation()
+    {
+        switch(orientation)
+        {
+            case NORTHWEST:
+                orientation = SOUTHEAST;
+                break;
+            case NORTHEAST:
+                orientation = SOUTHWEST;
+                break;
+            case SOUTHEAST:
+                orientation = NORTHWEST;
+                break;
+            case SOUTHWEST:
+                orientation = NORTHEAST;
+        }
     }
 }

@@ -204,6 +204,11 @@ public abstract class AbstractGameBoard {
         if(!checkClickBounds(oldX, oldY, newX, newY)) return false;
 
         // Open an informational piece / tile dialog?
+        AbstractGamePiece piece = board.pieces.get(board.tiles.indexOf(getTileFromLocation(newX, newY), true));
+        if(piece.equals(board.aLaser))
+            board.aLaser.toggleDirection();
+        else if(piece.equals(board.bLaser))
+            board.bLaser.toggleDirection();
 
         return false;
     }
@@ -528,8 +533,8 @@ public abstract class AbstractGameBoard {
 
         if(board.flipBoard)
         {
-            yCoord = board.y - yCoord;
-            xCoord = board.x - xCoord;
+            yCoord = board.y - 1 - yCoord;
+            xCoord = board.x - 1 - xCoord;
         }
 
         return board.tiles.get(yCoord * board.x + xCoord);
