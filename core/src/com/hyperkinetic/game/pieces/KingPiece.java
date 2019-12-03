@@ -22,4 +22,13 @@ public class KingPiece extends AbstractBlockPiece {
         textures[0] = textures[1] = textures[2] = textures[3] =
                 LaserGame.loadTexture("pieces/King" + (!color ? "Red.png" : ".png"));
     }
+
+    @Override
+    public boolean equals(Object other)
+    {
+        if(!(other instanceof KingPiece)) return false;
+        KingPiece otherPiece = (KingPiece) other;
+        return otherPiece.color == color && otherPiece.orientation == orientation &&
+                otherPiece.x == x && otherPiece.y == y;
+    }
 }

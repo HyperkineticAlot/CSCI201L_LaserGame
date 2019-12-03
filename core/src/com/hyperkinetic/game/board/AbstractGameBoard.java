@@ -132,6 +132,10 @@ public abstract class AbstractGameBoard {
      */
     public static Music pieceDestroyedSound = Gdx.audio.newMusic(Gdx.files.internal("breakglass.mp3"));
     /**
+     * The sound effect when a king is destroyed
+     */
+    public static Music KingDestroyedSound = Gdx.audio.newMusic(Gdx.files.internal("explosion.mp3"));
+    /**
      * Variable that stores the piece that is currently picked up
      */
     private AbstractGamePiece pickedUpPiece;
@@ -815,7 +819,10 @@ public abstract class AbstractGameBoard {
         if(newDirections == null)
         {
             // destroy the piece
-            pieceDestroyedSound.play();
+            if(aPharaoh.equals(pieces.get(startY * x + startX)) || bPharaoh.equals(pieces.get(startY * x + startX)))
+                KingDestroyedSound.play();
+            else
+                pieceDestroyedSound.play();
             pieces.set(startY * x + startX, null);
         
             thisTile.setPiece(null);
