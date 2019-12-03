@@ -157,24 +157,14 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 //Gdx.app.exit();
                 game.setScreen(new SettingsScreen(game)); // for test propose
-                outputLabel.setText("touch up");
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                outputLabel.setText("touch down");
+
                 return true;
             }
         });
         stage.addActor(quit);
-
-        // test propose
-        outputLabel = new Label("Press a Button",neon);
-        outputLabel.setSize(100,100);
-        outputLabel.setPosition(0,500);
-        outputLabel.setAlignment(Align.center);
-        // test propose
-
-        stage.addActor(outputLabel);
     }
 
     @Override

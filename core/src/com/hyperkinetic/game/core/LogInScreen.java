@@ -72,8 +72,8 @@ public class LogInScreen  extends InputAdapter implements Screen {
 
 
         Button settings = new TextButton("LOG IN", neon);
-        settings.setSize(200,100);
-        settings.setPosition(width/2 - (float)(width / 9.6) / 2, height / 2 - 3 * (float)(height / 10.8));
+        settings.setSize((float)(width / 9.6),(float)(height / 10.8));
+        settings.setPosition(width/2 - (float)(width / 9.6) / 2, (float) (height / 2 - 2.5 * (height / 10.8)));
         settings.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -106,7 +106,63 @@ public class LogInScreen  extends InputAdapter implements Screen {
                 return true;
             }
         });
+
+
+
+        Button register = new TextButton("REGISTER", neon);
+        register.setSize((float)(width / 9.6),(float)(height / 10.8));
+        register.setPosition(width/2 - (float)(width / 9.6) / 2, height / 2 - (float) (3.5 * (height / 10.8)));
+        register.addListener(new InputListener(){
+            @Override
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                System.out.println(username.getText());
+                System.out.println(password.getText());
+                /*
+                ClientThread newPlayer = new ClientThread("localhost", GameServer.port,false,false);
+                newPlayer.getPlayer().login(username.getText(), password.getText());
+
+                while(newPlayer.playerID == null)
+                {
+                    try
+                    {
+                        Thread.sleep(1000);
+                    } catch(InterruptedException e) { e.printStackTrace(); }
+                }
+                if(newPlayer.playerID.equals(LOGIN_FAILURE_FLAG))
+                {
+                    // TODO: display login failure alert
+                    newPlayer.resetPlayerID();
+                }
+                else
+                {
+                    LaserGame.client = newPlayer;
+                    game.setScreen(new MainMenuScreen(game));
+                }*/
+            }
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+
+        Button back = new TextButton("BACK", neon);
+        back.setSize((float)(width / 9.6),(float)(height / 10.8));
+        back.setPosition(width / 2 - (float)(width / 9.6) / 2, height / 2 - (float) (4.5 * (height / 10.8)));
+        back.addListener(new InputListener(){
+            @Override
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                game.setScreen(new MainMenuScreen(game));
+            }
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+
+
+        stage.addActor(back);
         stage.addActor(settings);
+        stage.addActor(register);
         stage.addActor(username);
         stage.addActor(password);
         stage.addActor(usernameLabel);

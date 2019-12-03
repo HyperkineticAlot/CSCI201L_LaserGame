@@ -46,11 +46,11 @@ public class SettingsScreen  extends InputAdapter implements Screen {
 
         CheckBox music = new CheckBox("Music", neon);
         music.setSize((float)(width / 9.6),(float)(height / 10.8));
-        music.setPosition(width / 2 - (float)(width / 9.6) / 2, height / 2);
+        music.setPosition(width / 2 - 2 * (float)(width / 9.6) / 2, height / 2);
 
         CheckBox noMusic = new CheckBox("No Music", neon);
         noMusic.setSize((float)(width / 9.6),(float)(height / 10.8));
-        noMusic.setPosition(width / 2 - (float)(width / 9.6) / 2 + (float)(width / 9.6) , height / 2);
+        noMusic.setPosition(width / 2 - 2 * (float)(width / 9.6) / 2 + (float)(width / 9.6) , height / 2);
 
         musicChoiceGroup.add(noMusic);
         musicChoiceGroup.add(music);
@@ -80,7 +80,7 @@ public class SettingsScreen  extends InputAdapter implements Screen {
         noMusic.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("touch up on no music");
+                //System.out.println("touch up on no music");
                 if(MainMenuScreen.bgm.isPlaying()) {
                     MainMenuScreen.bgm.pause();
                 }
@@ -100,7 +100,7 @@ public class SettingsScreen  extends InputAdapter implements Screen {
         }
 
 
-        Button settings = new TextButton("Back", neon);
+        Button settings = new TextButton("BACK", neon);
         settings.setSize((float)(width / 9.6),(float)(height / 10.8));
         settings.setPosition(width / 2 - (float)(width / 9.6) / 2, height / 2 - (float)(height / 10.8));
         settings.addListener(new InputListener(){
@@ -162,6 +162,5 @@ public class SettingsScreen  extends InputAdapter implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
-        //bgm.dispose();
     }
 }

@@ -1,8 +1,5 @@
 package com.hyperkinetic.game.playflow;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.hyperkinetic.game.core.LaserGame;
 
 import java.io.BufferedReader;
