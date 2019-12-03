@@ -84,6 +84,7 @@ public class LogInScreen  extends InputAdapter implements Screen {
         settings.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                MainMenuScreen.clickSound.play();
                 System.out.println(username.getText());
                 System.out.println(password.getText());
                 //game.setScreen(new MainMenuScreen(game));
@@ -125,6 +126,7 @@ public class LogInScreen  extends InputAdapter implements Screen {
         register.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                MainMenuScreen.clickSound.play();
                 System.out.println(username.getText());
                 System.out.println(password.getText());
 
@@ -163,6 +165,7 @@ public class LogInScreen  extends InputAdapter implements Screen {
         back.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                MainMenuScreen.clickSound.play();
                 game.setScreen(new MainMenuScreen(game));
             }
             @Override
