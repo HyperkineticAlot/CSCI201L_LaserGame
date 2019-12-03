@@ -20,6 +20,11 @@ public class Player{
     private ObjectOutputStream out;
     private AbstractGameBoard board;
 
+    private int numPlayed;
+    private int numWin;
+    private int numLoss;
+
+    private boolean lastGame;
 
     /**
      * If not signed in, play as guest.
@@ -99,5 +104,35 @@ public class Player{
         GameMessage request = new GameMessage(GameMessage.messageType.MATCHMAKING_REQUEST);
         request.playerID = playerID;
         sendMessage(request);
+    }
+
+    public void updateRecord(int numPlayed,int numWin,int numLoss){
+        this.numPlayed = numPlayed;
+        this.numWin = numWin;
+        this.numLoss = numLoss;
+    }
+
+    public int getNumPlayed(){
+        return this.numPlayed;
+    }
+
+    public int getNumWin(){
+        return this.numWin;
+    }
+
+    public int getNumLoss(){
+        return this.numLoss;
+    }
+
+    public void won() {
+        lastGame = true;
+    }
+
+    public void lost() {
+        lastGame = false;
+    }
+
+    public boolean getLastGame(){
+        return this.lastGame;
     }
 }

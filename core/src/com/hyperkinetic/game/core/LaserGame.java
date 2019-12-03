@@ -90,6 +90,4 @@ public class LaserGame extends Game {
         disposables.add(retval);
         return retval;
     }
-
-
 }

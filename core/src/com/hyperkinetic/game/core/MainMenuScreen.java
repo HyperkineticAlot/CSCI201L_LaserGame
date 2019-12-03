@@ -61,7 +61,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
         //titlePic = new Texture(Gdx.files.internal("LaserGameTitle.png"));
 
         Skin neon = new Skin(Gdx.files.internal("skin/neon-ui.json"));
-        neon.getFont("font").getData().setScale(1.20f, 1.20f);
+        neon.getFont("font").getData().setScale(1.20f * width / 1920, 1.20f * height / 1280);
 
 
         Button guest = new TextButton(LaserGame.client == null ? "GUEST" : "PLAY", neon);

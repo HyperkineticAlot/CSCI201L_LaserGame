@@ -103,26 +103,27 @@ public class ClientThread extends Thread {
                         }
                     } else if(message.getMessageType()==GameMessage.messageType.MOVE_FAILURE){
                         if(message.playerID.equals(playerID)){
-                            // undo move & wait for next
-                            //board.undoMove();
+                            System.out.println("You cheated!");
+                            // TODO: end game?
                         }
                     } else if(message.getMessageType()==GameMessage.messageType.GAME_OVER){
                         if(message.playerID.equals(playerID)){ // wins - update LaserGameScreen status
                             System.out.println(playerID+" has won!");
-                            game.setScreen(new GameOverScreen(game));
-                            // TODO: handle updated records
+                            player.won();
+                            // waiting for incoming records
                         } else { // loses - update LaserGameScreen status
                             System.out.println(playerID+" has lost.");
-                            game.setScreen(new GameOverScreen(game));
-                            // TODO: handle updated records
+                            player.lost();
+                            // waiting for incoming records
                         }
                     } else if(message.getMessageType()==GameMessage.messageType.STATS_RESPONSE){
                         int numPlayed = message.numPlayed;
                         int numWin = message.numWin;
                         int numLoss = message.numLoss;
                         if(message.playerID.equals(playerID)){
-                            // TODO: display records in a nicely fashion
                             System.out.println(playerID+" has played: " + numPlayed + "games. Wins: " + numWin + "; Losses: " + numLoss + ".");
+                            player.updateRecord(numPlayed,numWin,numLoss);
+                            game.setScreen(new GameOverScreen(game));
                         }
                     }
                 }

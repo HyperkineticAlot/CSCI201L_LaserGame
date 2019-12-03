@@ -42,7 +42,7 @@ public class SettingsScreen  extends InputAdapter implements Screen {
         //titlePic = new Texture(Gdx.files.internal("LaserGameTitle.png"));
 
         Skin neon = new Skin(Gdx.files.internal("skin/neon-ui.json"));
-        neon.getFont("font").getData().setScale(1.20f, 1.20f);
+        neon.getFont("font").getData().setScale(1.20f * width / 1920, 1.20f * height / 1280);
 
         // music on and off checkbox group
         ButtonGroup musicChoiceGroup = new ButtonGroup<CheckBox>();
