@@ -29,13 +29,12 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
     private float height;
     private OrthographicCamera camera;
 
-    public static Music bgm;
+    public static Music bgm = Gdx.audio.newMusic(Gdx.files.internal("testMusic.mp3"));;
     public static boolean playBgm = true;
     public static boolean initialPlaying = true;
 
     public MainMenuScreen (final LaserGame game) {
         if(initialPlaying) {
-            bgm = Gdx.audio.newMusic(Gdx.files.internal("scsv2872.mp3"));
             bgm.setVolume(0.5f);                 // sets the volume to half the maximum volume
             bgm.setLooping(true);                // will repeat playback until music.stop() is called
         }

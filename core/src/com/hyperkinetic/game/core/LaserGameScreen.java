@@ -49,7 +49,7 @@ public class LaserGameScreen implements Screen {
         board = null;
         batch = new SpriteBatch();
 
-
+/*
         Skin pink = new Skin(Gdx.files.internal("pinkSkin/neon-ui.json"));
 
         Button quit = new TextButton("QUIT", pink);
@@ -66,7 +66,7 @@ public class LaserGameScreen implements Screen {
             }
         });
 
-        stage.addActor(quit);
+        stage.addActor(quit);*/
     }
 
     @Override
@@ -94,13 +94,13 @@ public class LaserGameScreen implements Screen {
 
         batch.end();
 
-
+/*
         stage.getBatch().begin();
         //stage.getBatch().draw(titlePic, 1920 / 2 - 958/ 2 , 1000);
         stage.getBatch().end();
 
         stage.act();
-        stage.draw();
+        stage.draw();*/
     }
 
     @Override
