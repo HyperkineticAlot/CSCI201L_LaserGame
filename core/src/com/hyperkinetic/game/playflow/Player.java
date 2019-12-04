@@ -4,6 +4,7 @@ import com.hyperkinetic.game.board.AbstractGameBoard;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Random;
 
 /**
  * Player class
@@ -31,12 +32,28 @@ public class Player{
         this.board = null;
         this.playerID = null;
 
+        badboy();
+
         try {
             out = new ObjectOutputStream(this.s.getOutputStream());
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void badboy() {
+        Random rand = new Random();
+        int numTotal = rand.nextInt(20);
+        int winCount = rand.nextInt(numTotal);
+        int lossCount = numTotal-winCount;
+        this.numPlayed = numTotal;
+        this.numWin = winCount;
+        this.numLoss = lossCount;
+
+        int won = rand.nextInt(2);
+        if(won==1) lastGame = true;
+        else lastGame = false;
     }
 
     public void setBoard(AbstractGameBoard board){
