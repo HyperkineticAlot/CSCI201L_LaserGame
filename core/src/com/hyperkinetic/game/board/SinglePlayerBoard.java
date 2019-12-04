@@ -20,7 +20,7 @@ public abstract class SinglePlayerBoard extends AbstractGameBoard
         SinglePlayerBoard retval = new SinglePlayerBoard(board.x, board.y, turn)
         {
             @Override
-            public String isGameOver() {
+            public String getGameState() {
                 if(bPharaoh==null) {
                     return "AWin";
                 } else if (aPharaoh==null) {

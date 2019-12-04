@@ -108,7 +108,7 @@ public class LogInScreen  extends InputAdapter implements Screen {
                 else
                 {
                     LaserGame.client = newPlayer;
-                    newPlayer.requestStats();
+                    newPlayer.getPlayer().requestStats();
                     game.setScreen(new MainMenuScreen(game));
                 }
             }

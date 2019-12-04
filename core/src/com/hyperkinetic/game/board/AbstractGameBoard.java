@@ -604,7 +604,7 @@ public abstract class AbstractGameBoard {
      *
      * @return "AWin" or "BWin" or "NoWin"
      */
-    public abstract String isGameOver();
+    public abstract String getGameState();
 
     /**
      * Update the board configuration
@@ -672,7 +672,7 @@ public abstract class AbstractGameBoard {
                 laserSound.play();
                 if(!LaserGame.IS_SERVER && LaserGame.client != null && !local)
                 {
-                    nextMove.playerID = LaserGame.client.playerID;
+                    nextMove.userName = LaserGame.client.playerID;
                     LaserGame.client.getPlayer().sendMessage(nextMove);
                 }
                 fireLaser(laser.getX(), laser.getY(), laser.getOrientation());
@@ -686,7 +686,7 @@ public abstract class AbstractGameBoard {
                 laserSound.play();
                 if(!LaserGame.IS_SERVER && LaserGame.client != null && !local)
                 {
-                    nextMove.playerID = LaserGame.client.playerID;
+                    nextMove.userName = LaserGame.client.playerID;
                     LaserGame.client.getPlayer().sendMessage(nextMove);
                 }
                 fireLaser(laser.getX(), laser.getY(), laser.getOrientation());
@@ -842,11 +842,13 @@ public abstract class AbstractGameBoard {
             {
                 if(!LaserGame.IS_SERVER) kingDestroyedSound.play();
                 aPharaoh = null;
+                isOver = true;
             }
             else if(bPharaoh.equals(pieces.get(startY * x + startX)))
             {
                 if(!LaserGame.IS_SERVER) kingDestroyedSound.play();
                 bPharaoh = null;
+                isOver = true;
             }
             else
                 if (!LaserGame.IS_SERVER) pieceDestroyedSound.play();

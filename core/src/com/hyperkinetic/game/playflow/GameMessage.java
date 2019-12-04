@@ -1,7 +1,6 @@
 package com.hyperkinetic.game.playflow;
 
 import com.hyperkinetic.game.board.AbstractGameBoard;
-
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -11,8 +10,8 @@ public class GameMessage implements Serializable {
     private String timeStamp;
     private GameMessage.messageType type;
 
-    public String playerID="";
-    public String player2ID="";
+    public String userName ="";
+    public String userName2 ="";
     public int x=-1;
     public int y=-1;
     public String moveType="";
@@ -68,36 +67,36 @@ public class GameMessage implements Serializable {
     public String getMessage(){
         /*...other types of messages...*/
         if(type==messageType.PLAYER_MOVE){
-            return timeStamp+" "+playerID+" selects piece at "+x
+            return timeStamp+" "+ userName +" selects piece at "+x
                     +", "+y+", moveType="+moveType+", moveX="+moveX+", moveY="+moveY+".";
         } else if(type==messageType.GAME_OVER){
-            return timeStamp+" Game is over. Winner is "+playerID+". Loser is "+player2ID+".";
+            return timeStamp+" Game is over. Winner is "+ userName +". Loser is "+ userName2 +".";
         } else if(type==messageType.ROOM_CREATE){
-            return timeStamp+" Game room with players "+playerID+", "+player2ID+" is created.";
+            return timeStamp+" Game room with players "+ userName +", "+ userName2 +" is created.";
         } else if(type==messageType.MOVE_SUCCESS){
-            return timeStamp+" "+playerID+" selects piece at "+x
+            return timeStamp+" "+ userName +" selects piece at "+x
                     +", "+y+", moveType="+moveType+", moveX="+moveX+", moveY="+moveY+" is approved.";
         } else if(type==messageType.MOVE_FAILURE){
-            return timeStamp+" "+playerID+" selects piece at "+x+", "+y+", moveType="
+            return timeStamp+" "+ userName +" selects piece at "+x+", "+y+", moveType="
                     +moveType+", moveX="+moveX+", moveY="+moveY+" is disapproved because "+errorMessage+".";
         } else if(type==messageType.LOGIN_ATTEMPT){
-            return timeStamp+" User "+playerID+" attempts to log in with password "+password+".";
+            return timeStamp+" User "+ userName +" attempts to log in with password "+password+".";
         } else if(type==messageType.LOGIN_SUCCESS){
-            return timeStamp+" User "+playerID+" is successfully logged in.";
+            return timeStamp+" User "+ userName +" is successfully logged in.";
         } else if(type==messageType.LOGIN_FAILURE){
-            return timeStamp+" User "+playerID+" is not logged in with error "+errorMessage+".";
+            return timeStamp+" User "+ userName +" is not logged in with error "+errorMessage+".";
         } else if(type==messageType.REGISTER_ATTEMPT){
-            return timeStamp+" User "+playerID+" wants to create an account with password "+password+".";
+            return timeStamp+" User "+ userName +" wants to create an account with password "+password+".";
         } else if(type==messageType.REGISTER_SUCCESS){
-            return timeStamp+" User "+playerID+"  has successfully created an account.";
+            return timeStamp+" User "+ userName +"  has successfully created an account.";
         } else if(type==messageType.REGISTER_FAILURE){
-            return timeStamp+" User "+playerID+"  has failed to create an account with error "+errorMessage+".";
+            return timeStamp+" User "+ userName +"  has failed to create an account with error "+errorMessage+".";
         } else if(type==messageType.STATS_REQUEST){
-            return timeStamp+" User "+playerID+" is requesting his records.";
+            return timeStamp+" User "+ userName +" is requesting his records.";
         } else if(type==messageType.STATS_RESPONSE){
-            return timeStamp+" User "+playerID+"'s records: Game Played: " + numPlayed + "; Wins: " + numWin + "; Losses: " + numLoss + ".";
+            return timeStamp+" User "+ userName +"'s records: Game Played: " + numPlayed + "; Wins: " + numWin + "; Losses: " + numLoss + ".";
         } else if(type == messageType.MATCHMAKING_REQUEST) {
-            return timeStamp+" User "+playerID+" is requesting an online match.";
+            return timeStamp+" User "+ userName +" is requesting an online match.";
         }
         return "";
     }

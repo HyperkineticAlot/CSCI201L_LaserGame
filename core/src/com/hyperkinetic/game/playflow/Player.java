@@ -1,12 +1,9 @@
 package com.hyperkinetic.game.playflow;
 
-import com.badlogic.gdx.InputProcessor;
 import com.hyperkinetic.game.board.AbstractGameBoard;
-
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Random;
 
 /**
  * Player class
@@ -16,14 +13,13 @@ public class Player{
     public String playerID;
     private ClientThread ct;
   
-    private Socket socket;
+    private Socket s;
     private ObjectOutputStream out;
     private AbstractGameBoard board;
 
     private int numPlayed;
     private int numWin;
     private int numLoss;
-
     private boolean lastGame;
 
     /**
@@ -31,12 +27,12 @@ public class Player{
      */
     public Player(Socket socket, ClientThread ct) {
         this.ct = ct;
-        this.socket = socket;
+        this.s = socket;
         this.board = null;
         this.playerID = null;
 
         try {
-            out = new ObjectOutputStream(socket.getOutputStream());
+            out = new ObjectOutputStream(this.s.getOutputStream());
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,7 +61,7 @@ public class Player{
     {
         this.playerID = playerID;
         GameMessage loginMessage = new GameMessage(GameMessage.messageType.LOGIN_ATTEMPT);
-        loginMessage.playerID = playerID;
+        loginMessage.userName = playerID;
         loginMessage.password = pass;
 
         sendMessage(loginMessage);
@@ -77,12 +73,18 @@ public class Player{
     {
         this.playerID = playerID;
         GameMessage registerMessage = new GameMessage(GameMessage.messageType.REGISTER_ATTEMPT);
-        registerMessage.playerID = playerID;
+        registerMessage.userName = playerID;
         registerMessage.password = pass;
 
         sendMessage(registerMessage);
 
         return false;
+    }
+
+    public void requestStats(){
+        GameMessage request = new GameMessage(GameMessage.messageType.STATS_REQUEST);
+        request.userName = playerID;
+        sendMessage(request);
     }
 
     public void sendMessage(GameMessage message)
@@ -102,7 +104,7 @@ public class Player{
     public void sendMatchmakingRequest()
     {
         GameMessage request = new GameMessage(GameMessage.messageType.MATCHMAKING_REQUEST);
-        request.playerID = playerID;
+        request.userName = playerID;
         sendMessage(request);
     }
 

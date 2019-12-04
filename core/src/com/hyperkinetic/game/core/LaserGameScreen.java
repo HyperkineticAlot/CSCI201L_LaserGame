@@ -1,26 +1,13 @@
 package com.hyperkinetic.game.core;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.hyperkinetic.game.board.AbstractGameBoard;
-import com.hyperkinetic.game.board.StandardBoard;
-import com.hyperkinetic.game.playflow.ClientThread;
-import com.hyperkinetic.game.playflow.GameRoom;
 
 public class LaserGameScreen implements Screen {
 
@@ -89,10 +76,10 @@ public class LaserGameScreen implements Screen {
 
         if(board != null)
         {
-            if(board.isGameOver().equals("NoWin")){
+            if(board.getGameState().equals("NoWin")){
                 board.render(batch);
             } else {
-                if(board.isGameOver().equals("AWin") ^ board.flipBoard)
+                if(board.getGameState().equals("AWin") ^ board.flipBoard)
                     LaserGame.client.getPlayer().won();
                 else
                     LaserGame.client.getPlayer().lost();

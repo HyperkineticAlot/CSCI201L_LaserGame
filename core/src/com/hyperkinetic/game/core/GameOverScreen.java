@@ -26,7 +26,7 @@ public class GameOverScreen  extends InputAdapter implements Screen {
 
     public GameOverScreen(final LaserGame game){
 
-        LaserGame.client.requestStats();
+        LaserGame.client.getPlayer().requestStats();
 
         this.game = game;
         this.width = Gdx.graphics.getWidth();

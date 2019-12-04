@@ -3,7 +3,6 @@ package com.hyperkinetic.game.playflow;
 import com.badlogic.gdx.utils.Json;
 import com.hyperkinetic.game.board.AbstractGameBoard;
 import com.hyperkinetic.game.board.StandardBoard;
-import com.hyperkinetic.game.pieces.AbstractGamePiece;
 import com.hyperkinetic.game.pieces.LaserPiece;
 import com.hyperkinetic.game.playflow.GameMessage.messageType;
 
@@ -44,8 +43,7 @@ public class GameRoom {
 
         aThread = a;
         bThread = b;
-        // aThread.setColor(true);
-        // bThread.setColor(false);
+
         aThread.enterGame(this);
         bThread.enterGame(this);
 
@@ -57,16 +55,16 @@ public class GameRoom {
         StandardBoard board1 = new StandardBoard(true);
         gm1.startBoard = json.toJson(board1);
         gm1.boardClass = StandardBoard.class;
-        gm1.playerID = aThread.getPlayerID();
-        gm1.player2ID = bThread.getPlayerID();
+        gm1.userName = aThread.getPlayerID();
+        gm1.userName2 = bThread.getPlayerID();
         aThread.sendMessage(gm1);
 
         GameMessage gm2 = new GameMessage(messageType.ROOM_CREATE);
         StandardBoard board2 = new StandardBoard(false);
         gm2.startBoard = json.toJson(board2);
         gm2.boardClass = StandardBoard.class;
-        gm2.playerID = aThread.getPlayerID();
-        gm2.player2ID = bThread.getPlayerID();
+        gm2.userName = aThread.getPlayerID();
+        gm2.userName2 = bThread.getPlayerID();
         bThread.sendMessage(gm2);
     }
 
@@ -82,7 +80,7 @@ public class GameRoom {
      * @param message the message to be broadcast to each client
      */
     public void broadcast(GameMessage message) {
-        // broadcast message to both PlayerThreads
+        gs.logMessage(message);
         aThread.sendMessage(message);
         bThread.sendMessage(message);
     }
@@ -94,24 +92,22 @@ public class GameRoom {
     public synchronized void handleMoveAttempt(GameMessage move){
         if(move.getMessageType() != GameMessage.messageType.PLAYER_MOVE) return;
 
-        // validate move, send move_success/failure message to server
-        if(move.playerID.equals(getActivePlayerID())) {
+        if(move.userName.equals(getActivePlayerID())) {
             if(board.isValidMove(turn, move.x, move.y, move.moveType, move.moveX, move.moveY)) {
-                GameMessage gm = new GameMessage(messageType.MOVE_SUCCESS);
-                gm.playerID = getActivePlayerID();
-                gm.x = move.x;
-                gm.y = move.y;
-                gm.moveType = move.moveType;
-                gm.moveX = move.moveX;
-                gm.moveY = move.moveY;
-                broadcast(gm);
+                GameMessage success = new GameMessage(messageType.MOVE_SUCCESS);
+                success.userName = getActivePlayerID();
+                success.x = move.x;
+                success.y = move.y;
+                success.moveType = move.moveType;
+                success.moveX = move.moveX;
+                success.moveY = move.moveY;
+                broadcast(success);
 
                 updateBoard(move.x, move.y, move.moveType, move.moveX, move.moveY);
-            }
-            else
-            {
+
+            } else {
                 GameMessage fail = new GameMessage(messageType.MOVE_FAILURE);
-                fail.playerID = getActivePlayerID();
+                fail.userName = getActivePlayerID();
                 fail.x = move.x;
                 fail.y = move.y;
                 fail.moveType = move.moveType;
@@ -119,18 +115,21 @@ public class GameRoom {
                 fail.moveY = move.moveY;
                 fail.errorMessage = "illegal move";
                 broadcast(fail);
+
+                // TODO: game over
             }
         } else {
-            // move attempt invalid - wrong turn
             GameMessage gm = new GameMessage(messageType.MOVE_FAILURE);
-            gm.playerID = move.playerID;
+            gm.userName = move.userName;
             gm.x = move.x;
             gm.y = move.y;
             gm.moveType = move.moveType;
             gm.moveX = move.moveX;
             gm.moveY = move.moveY;
-            gm.errorMessage = "move attempt has wrong turn";
+            gm.errorMessage = "wrong turn";
             broadcast(gm);
+
+            // TODO: game over
         }
     }
 
@@ -144,15 +143,13 @@ public class GameRoom {
      */
     private void updateBoard(int x,int y,String moveType,int nX,int nY) {
         board.update(x,y,moveType,nX,nY);
-        // LaserPiece laser = board.getActiveLaser();
-        // board.fireLaser(laser.getX(),laser.getY(),laser.getOrientation());
         LaserPiece aLaser = board.getALaser();
         LaserPiece bLaser = board.getBLaser();
         if(turn) board.fireLaser(aLaser.getX(), aLaser.getY(), aLaser.getOrientation());
         else board.fireLaser(bLaser.getX(), bLaser.getY(), bLaser.getOrientation());
         turn = !turn;
 
-        String res = board.isGameOver();
+        String res = board.getGameState();
         endGame(res);
     }
     
@@ -168,19 +165,29 @@ public class GameRoom {
     {
         if(res.equals("AWin")){
             GameMessage gm = new GameMessage(messageType.GAME_OVER);
-            gm.playerID = aThread.getPlayerID();
-            gm.player2ID = bThread.getPlayerID();
+            gm.userName = aThread.getPlayerID();
+            gm.userName2 = bThread.getPlayerID();
             gs.updateDatabase(gm);
             isOver = true;
-        
+
+            // TODO: send game over & updated stats to client
+
+            aThread.leaveGame();
+            bThread.leaveGame();
+
             clear();
         } else if(res.equals("BWin")){
             GameMessage gm = new GameMessage(messageType.GAME_OVER);
-            gm.playerID = bThread.getPlayerID();
-            gm.player2ID = aThread.getPlayerID();
+            gm.userName = bThread.getPlayerID();
+            gm.userName2 = aThread.getPlayerID();
             gs.updateDatabase(gm);
             isOver = true;
-        
+
+            // TODO: send game over & updated stats to client
+
+            aThread.leaveGame();
+            bThread.leaveGame();
+
             clear();
         }
     }
@@ -193,9 +200,6 @@ public class GameRoom {
     {
         if(message.getMessageType()==messageType.PLAYER_MOVE){
             handleMoveAttempt(message);
-        } else if(message.getMessageType()==messageType.STATS_REQUEST){
-            GameMessage gm = gs.queryDatabase(message);
-            broadcast(gm);
         }
     }
 
@@ -210,12 +214,5 @@ public class GameRoom {
 
     public void clear(){
         gs.deleteRoom(this);
-    }
-  
-    /**
-     * Player fires the laser, end and switch the turn.
-     */
-    public void fireLaser(){
-        // laser firing called by updateBoard
     }
 }

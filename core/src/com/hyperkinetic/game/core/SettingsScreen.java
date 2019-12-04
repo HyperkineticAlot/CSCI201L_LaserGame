@@ -14,9 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-
-//import javax.xml.soap.Text;
-
 public class SettingsScreen  extends InputAdapter implements Screen {
     LaserGame game;
     private Stage stage;

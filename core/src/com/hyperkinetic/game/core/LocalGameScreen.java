@@ -1,6 +1,5 @@
 package com.hyperkinetic.game.core;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -44,7 +43,7 @@ public class LocalGameScreen implements Screen
         batch.begin();
         board.render(batch);
         
-        if(!board.isGameOver().equals("NoWin"))
+        if(!board.getGameState().equals("NoWin"))
             game.setScreen(new MainMenuScreen(game));
 
         batch.end();
