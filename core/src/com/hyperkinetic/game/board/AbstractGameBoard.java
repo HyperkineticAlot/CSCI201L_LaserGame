@@ -672,7 +672,7 @@ public abstract class AbstractGameBoard {
                 laserSound.play();
                 if(!LaserGame.IS_SERVER && LaserGame.client != null && !local)
                 {
-                    nextMove.userName = LaserGame.client.playerID;
+                    nextMove.userName = LaserGame.client.userName;
                     LaserGame.client.getPlayer().sendMessage(nextMove);
                 }
                 fireLaser(laser.getX(), laser.getY(), laser.getOrientation());
@@ -686,7 +686,7 @@ public abstract class AbstractGameBoard {
                 laserSound.play();
                 if(!LaserGame.IS_SERVER && LaserGame.client != null && !local)
                 {
-                    nextMove.userName = LaserGame.client.playerID;
+                    nextMove.userName = LaserGame.client.userName;
                     LaserGame.client.getPlayer().sendMessage(nextMove);
                 }
                 fireLaser(laser.getX(), laser.getY(), laser.getOrientation());

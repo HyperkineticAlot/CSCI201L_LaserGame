@@ -4,6 +4,7 @@ import com.hyperkinetic.game.board.AbstractGameBoard;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Vector;
 
 public class GameMessage implements Serializable {
     public static final long serialVersionUID = 1;
@@ -25,6 +26,8 @@ public class GameMessage implements Serializable {
     public int numPlayed;
     public int numWin;
     public int numLoss;
+
+    public Vector<GameMessage> attached;
 
     public enum messageType implements Serializable {
         LOGIN_ATTEMPT,
@@ -70,7 +73,7 @@ public class GameMessage implements Serializable {
             return timeStamp+" "+ userName +" selects piece at "+x
                     +", "+y+", moveType="+moveType+", moveX="+moveX+", moveY="+moveY+".";
         } else if(type==messageType.GAME_OVER){
-            return timeStamp+" Game is over. Winner is "+ userName +". Loser is "+ userName2 +".";
+            return timeStamp+" Game is over. Winner is "+ userName +". Loser is "+ userName2 +". Check the updated stats attached.";
         } else if(type==messageType.ROOM_CREATE){
             return timeStamp+" Game room with players "+ userName +", "+ userName2 +" is created.";
         } else if(type==messageType.MOVE_SUCCESS){

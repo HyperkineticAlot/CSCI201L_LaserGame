@@ -8,7 +8,7 @@ public class ServerThread extends Thread {
     private GameServer gs;
     private ObjectInputStream in;
     private ObjectOutputStream out;
-    private String playerID;
+    private String userName;
     private GameRoom room;
     private boolean loggedIn;
 
@@ -65,9 +65,9 @@ public class ServerThread extends Thread {
      * Getter of the playerID
      * @return
      */
-    public String getPlayerID()
+    public String getUserName()
     {
-        return playerID;
+        return userName;
     }
 
     /**
@@ -86,7 +86,7 @@ public class ServerThread extends Thread {
                             GameMessage loginResponse = gs.queryDatabase(message);
                             if (loginResponse.getMessageType() == GameMessage.messageType.LOGIN_SUCCESS) {
                                 loggedIn = true;
-                                playerID = loginResponse.userName;
+                                userName = loginResponse.userName;
                                 gs.loginServerThread(this);
                             }
                             sendMessage(loginResponse);
@@ -94,7 +94,7 @@ public class ServerThread extends Thread {
                             GameMessage registerResponse = gs.queryDatabase(message);
                             if (registerResponse.getMessageType() == GameMessage.messageType.REGISTER_SUCCESS) {
                                 loggedIn = true;
-                                playerID = registerResponse.userName;
+                                userName = registerResponse.userName;
                                 gs.loginServerThread(this);
                             }
                             sendMessage(registerResponse);
@@ -117,7 +117,7 @@ public class ServerThread extends Thread {
                             sendMessage(response);
                         }
                     } catch (ClassNotFoundException cnfe) {
-                        System.out.println("cnfe in run() of ServerThread " + playerID);
+                        System.out.println("cnfe in run() of ServerThread " + userName);
                         cnfe.printStackTrace();
                     }
                 }
@@ -128,7 +128,7 @@ public class ServerThread extends Thread {
                         gs.logMessage(message);
                         room.readMessage(message);
                     } catch (ClassNotFoundException cnfe) {
-                        System.out.println("cnfe in run() of ServerThread " + playerID);
+                        System.out.println("cnfe in run() of ServerThread " + userName);
                         cnfe.printStackTrace();
                     }
                 }

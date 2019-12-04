@@ -8,6 +8,7 @@ import com.hyperkinetic.game.pieces.LaserPiece;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.util.Vector;
 
 public class ClientThread extends Thread {
     /**
@@ -19,7 +20,7 @@ public class ClientThread extends Thread {
      */
     private AbstractGameBoard board;
 
-    public String playerID;
+    public String userName;
     public boolean isGuest;
     public boolean isAI;
 
@@ -41,7 +42,7 @@ public class ClientThread extends Thread {
         board = null;
         this.isGuest = isGuest;
         this.isAI = isAI;
-        this.playerID = null;
+        this.userName = null;
         this.game = game;
         loggedIn = false;
 
@@ -64,7 +65,7 @@ public class ClientThread extends Thread {
     }
 
     public void resetPlayerID() {
-        playerID = null;
+        userName = null;
         player.setPlayerID(null);
     }
 
@@ -84,12 +85,12 @@ public class ClientThread extends Thread {
 
                         if (message.getMessageType() == GameMessage.messageType.LOGIN_SUCCESS || message.getMessageType() == GameMessage.messageType.REGISTER_SUCCESS) {
                             this.player.setPlayerID(message.userName);
-                            this.playerID = message.userName;
+                            this.userName = message.userName;
                             loggedIn = true;
                         } else if (message.getMessageType() == GameMessage.messageType.LOGIN_FAILURE || message.getMessageType() == GameMessage.messageType.REGISTER_FAILURE) {
                             System.out.println(message.errorMessage);
                             this.player.setPlayerID(LogInScreen.LOGIN_FAILURE_FLAG);
-                            this.playerID = LogInScreen.LOGIN_FAILURE_FLAG;
+                            this.userName = LogInScreen.LOGIN_FAILURE_FLAG;
                         }
 
                     } catch (ClassNotFoundException cnfe) {
@@ -108,6 +109,11 @@ public class ClientThread extends Thread {
                             AbstractGameBoard start = message.boardClass.cast(json.fromJson(message.boardClass, message.startBoard));
                             this.board = start;
                             player.setBoard(start);
+
+                            // CORE CODE GOES HERE!
+                            GameMessage g = new GameMessage(GameMessage.messageType.STATS_RESPONSE);
+                            g.errorMessage = "hello";
+                            player.sendMessage(g);
                         }
 
                     } catch (ClassNotFoundException cnfe) {
@@ -122,25 +128,29 @@ public class ClientThread extends Thread {
                         System.out.println("Message received: "+message.getMessage());
 
                         if(message.getMessageType()==GameMessage.messageType.MOVE_SUCCESS){
-                            if(!message.userName.equals(playerID)){
+                            if(!message.userName.equals(userName)){
                                 board.update(message.x,message.y,message.moveType,message.moveX,message.moveY);
                                 LaserPiece laser = board.getActiveLaser();
                                 board.fireLaser(laser.getX(),laser.getY(),laser.getOrientation());
                             }
-                        } else if(message.getMessageType()==GameMessage.messageType.MOVE_FAILURE){
-                            if(message.userName.equals(playerID)){
-                                System.out.println("You cheated! You lost!");
-                                // TODO end game
+                        }  else if(message.getMessageType()==GameMessage.messageType.GAME_OVER){
+                            Vector<GameMessage> attached = message.attached;
+                            for(GameMessage gm : attached){
+                                if(gm.getMessageType()==GameMessage.messageType.STATS_RESPONSE && gm.userName.equals(userName))
+                                {
+                                    int numPlayed = gm.numPlayed;
+                                    int numWin = gm.numWin;
+                                    int numLoss = gm.numLoss;
+                                    player.updateRecord(numPlayed,numWin,numLoss);
+                                    break;
+                                }
                             }
-                        } else if(message.getMessageType()==GameMessage.messageType.GAME_OVER){
-                            if(message.userName.equals(playerID)){ // wins - update LaserGameScreen status
-                                System.out.println(playerID+" has won!");
+                            if(message.userName.equals(userName)){
+                                System.out.println("You have won! "+userName);
                                 player.won();
-                                // waiting for incoming records
-                            } else { // loses - update LaserGameScreen status
-                                System.out.println(playerID+" has lost.");
+                            } else {
+                                System.out.println("You have lost! "+userName);
                                 player.lost();
-                                // waiting for incoming records
                             }
                         }
 
@@ -156,71 +166,3 @@ public class ClientThread extends Thread {
         }
     }
 }
-
-/*
-                GameMessage message = (GameMessage) in.readObject();
-                System.out.println("Message received: "+message.getMessage());
-
-                if(board==null){
-                    if (message.getMessageType() == GameMessage.messageType.LOGIN_SUCCESS || message.getMessageType() == GameMessage.messageType.REGISTER_SUCCESS) {
-                        this.player.setPlayerID(message.userName);
-                        this.playerID = message.userName;
-                    }
-                    else if (message.getMessageType() == GameMessage.messageType.LOGIN_FAILURE || message.getMessageType() == GameMessage.messageType.REGISTER_FAILURE) {
-                        System.out.println(message.errorMessage);
-                        this.player.setPlayerID(LogInScreen.LOGIN_FAILURE_FLAG);
-                        this.playerID = LogInScreen.LOGIN_FAILURE_FLAG;
-                    }
-                    else if(message.getMessageType()==GameMessage.messageType.ROOM_CREATE){
-                        Json json = new Json();
-                        AbstractGameBoard start = message.boardClass.cast(json.fromJson(message.boardClass, message.startBoard));
-                        this.board = start;
-                        player.setBoard(start);
-                        GameMessage g = new GameMessage(GameMessage.messageType.STATS_REQUEST);
-                        g.userName = playerID;
-                        player.sendMessage(g);
-                    } else if(message.getMessageType()==GameMessage.messageType.STATS_RESPONSE){
-                        int numPlayed = message.numPlayed;
-                        int numWin = message.numWin;
-                        int numLoss = message.numLoss;
-                        if(message.userName.equals(playerID)){
-                            System.out.println(playerID+" has played: " + numPlayed + " games. Wins: " + numWin + "; Losses: " + numLoss + ".");
-                            player.updateRecord(numPlayed,numWin,numLoss);
-                        }
-                    }
-                } else {
-                    if(message.getMessageType()==GameMessage.messageType.MOVE_SUCCESS){
-                        if(!message.userName.equals(playerID)){ // update board
-                            board.update(message.x,message.y,message.moveType,message.moveX,message.moveY);
-
-                            // fire laser
-                            LaserPiece laser = board.getActiveLaser();
-                            board.fireLaser(laser.getX(),laser.getY(),laser.getOrientation());
-                        }
-                    } else if(message.getMessageType()==GameMessage.messageType.MOVE_FAILURE){
-                        if(message.userName.equals(playerID)){
-                            System.out.println("You cheated!");
-                            // TODO end game
-                        }
-                    } else if(message.getMessageType()==GameMessage.messageType.GAME_OVER){
-                        if(message.userName.equals(playerID)){ // wins - update LaserGameScreen status
-                            System.out.println(playerID+" has won!");
-                            player.won();
-                            // waiting for incoming records
-                        } else { // loses - update LaserGameScreen status
-                            System.out.println(playerID+" has lost.");
-                            player.lost();
-                            // waiting for incoming records
-                        }
-                    } else if(message.getMessageType()==GameMessage.messageType.STATS_RESPONSE){
-                        int numPlayed = message.numPlayed;
-                        int numWin = message.numWin;
-                        int numLoss = message.numLoss;
-                        if(message.userName.equals(playerID)){
-                            System.out.println(playerID+" has played: " + numPlayed + "games. Wins: " + numWin + "; Losses: " + numLoss + ".");
-                            player.updateRecord(numPlayed,numWin,numLoss);
-                        }
-                    }
-                }
-            }
-*/

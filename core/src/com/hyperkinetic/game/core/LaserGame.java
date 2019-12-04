@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.hyperkinetic.game.board.AbstractGameBoard;
-import com.hyperkinetic.game.board.StandardBoard;
 import com.hyperkinetic.game.playflow.ClientThread;
 import com.hyperkinetic.game.playflow.GameRoom;
 import com.hyperkinetic.game.playflow.Player;
@@ -49,19 +48,11 @@ public class LaserGame extends Game {
 
 
     public void create() {
-        // board = new StandardBoard();
-
         client = null;
         batch = new SpriteBatch();
         gameInputProcessor = new GameInputProcessor(this);
         Gdx.input.setInputProcessor(gameInputProcessor);
-        //playerA = new Player();
-        //playerB = new Player();
-        //gameRoom = new GameRoom(playerA, playerB,1, board); // trivial roomID
         this.setScreen(new MainMenuScreen(this));
-
-
-
     }
 
     public void render() {

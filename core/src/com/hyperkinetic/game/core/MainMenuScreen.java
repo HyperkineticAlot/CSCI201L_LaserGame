@@ -12,8 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 //import javax.xml.soap.Text;
@@ -145,8 +143,7 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 clickSound.play();
-                // game.setScreen(new SettingsScreen(game));
-                game.setScreen(new GameOverScreen(game));
+                game.setScreen(new SettingsScreen(game));
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -186,7 +183,6 @@ public class MainMenuScreen  extends InputAdapter implements Screen {
 
         stage.getBatch().begin();
         stage.getBatch().draw(backgroundPic, 0, 0, width, height);
-        //stage.getBatch().draw(titlePic, width / 2 - 958/ 2 , height - 4 * 86);
         stage.getBatch().end();
 
         stage.act();

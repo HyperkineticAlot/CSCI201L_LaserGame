@@ -76,6 +76,7 @@ public class LaserGameScreen implements Screen {
 
         if(board != null)
         {
+            /*
             if(board.getGameState().equals("NoWin")){
                 board.render(batch);
             } else {
@@ -85,6 +86,12 @@ public class LaserGameScreen implements Screen {
                     LaserGame.client.getPlayer().lost();
                 
                 game.setScreen(new GameOverScreen(game));
+            }
+            */
+            if(LaserGame.client.getPlayer().getBoard().isOver){
+                game.setScreen(new GameOverScreen(game));
+            } else {
+                board.render(batch);
             }
         }
 

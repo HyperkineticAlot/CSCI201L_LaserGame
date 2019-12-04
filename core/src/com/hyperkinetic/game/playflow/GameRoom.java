@@ -6,6 +6,8 @@ import com.hyperkinetic.game.board.StandardBoard;
 import com.hyperkinetic.game.pieces.LaserPiece;
 import com.hyperkinetic.game.playflow.GameMessage.messageType;
 
+import java.util.Vector;
+
 /**
  * GameRoom class, implements basic game flow - this version only supports local mode
  */
@@ -55,16 +57,16 @@ public class GameRoom {
         StandardBoard board1 = new StandardBoard(true);
         gm1.startBoard = json.toJson(board1);
         gm1.boardClass = StandardBoard.class;
-        gm1.userName = aThread.getPlayerID();
-        gm1.userName2 = bThread.getPlayerID();
+        gm1.userName = aThread.getUserName();
+        gm1.userName2 = bThread.getUserName();
         aThread.sendMessage(gm1);
 
         GameMessage gm2 = new GameMessage(messageType.ROOM_CREATE);
         StandardBoard board2 = new StandardBoard(false);
         gm2.startBoard = json.toJson(board2);
         gm2.boardClass = StandardBoard.class;
-        gm2.userName = aThread.getPlayerID();
-        gm2.userName2 = bThread.getPlayerID();
+        gm2.userName = aThread.getUserName();
+        gm2.userName2 = bThread.getUserName();
         bThread.sendMessage(gm2);
     }
 
@@ -114,22 +116,20 @@ public class GameRoom {
                 fail.moveX = move.moveX;
                 fail.moveY = move.moveY;
                 fail.errorMessage = "illegal move";
-                broadcast(fail);
 
-                // TODO: game over
+                endGame(turn ? "BWin" : "AWin", fail);
             }
         } else {
-            GameMessage gm = new GameMessage(messageType.MOVE_FAILURE);
-            gm.userName = move.userName;
-            gm.x = move.x;
-            gm.y = move.y;
-            gm.moveType = move.moveType;
-            gm.moveX = move.moveX;
-            gm.moveY = move.moveY;
-            gm.errorMessage = "wrong turn";
-            broadcast(gm);
+            GameMessage fail = new GameMessage(messageType.MOVE_FAILURE);
+            fail.userName = move.userName;
+            fail.x = move.x;
+            fail.y = move.y;
+            fail.moveType = move.moveType;
+            fail.moveX = move.moveX;
+            fail.moveY = move.moveY;
+            fail.errorMessage = "wrong turn";
 
-            // TODO: game over
+            endGame(turn ? "BWin" : "AWin", fail);
         }
     }
 
@@ -150,27 +150,40 @@ public class GameRoom {
         turn = !turn;
 
         String res = board.getGameState();
-        endGame(res);
+        endGame(res,null);
     }
     
     public void disconnect(ServerThread st)
     {
         if(st == aThread)
-            endGame("BWin");
+            endGame("BWin",null);
         else if(st == bThread)
-            endGame("AWin");
+            endGame("AWin",null);
     }
-    
-    public void endGame(String res)
+
+    // if game over, send gameover message with updated stats (and reason) attached
+    public void endGame(String res, GameMessage reason)
     {
         if(res.equals("AWin")){
             GameMessage gm = new GameMessage(messageType.GAME_OVER);
-            gm.userName = aThread.getPlayerID();
-            gm.userName2 = bThread.getPlayerID();
+            gm.userName = aThread.getUserName();
+            gm.userName2 = bThread.getUserName();
             gs.updateDatabase(gm);
             isOver = true;
 
-            // TODO: send game over & updated stats to client
+            GameMessage statsRequest = new GameMessage(messageType.STATS_REQUEST);
+            statsRequest.userName = aThread.getUserName();
+            GameMessage statsResponseA = gs.queryDatabase(statsRequest);
+            statsRequest.userName = bThread.getUserName();
+            GameMessage statsResponseB = gs.queryDatabase(statsRequest);
+
+            Vector<GameMessage> attached = new Vector<>();
+            if(reason!=null) attached.add(reason);
+            attached.add(statsResponseA);
+            attached.add(statsResponseB);
+
+            gm.attached = attached;
+            broadcast(gm);
 
             aThread.leaveGame();
             bThread.leaveGame();
@@ -178,12 +191,24 @@ public class GameRoom {
             clear();
         } else if(res.equals("BWin")){
             GameMessage gm = new GameMessage(messageType.GAME_OVER);
-            gm.userName = bThread.getPlayerID();
-            gm.userName2 = aThread.getPlayerID();
+            gm.userName = bThread.getUserName();
+            gm.userName2 = aThread.getUserName();
             gs.updateDatabase(gm);
             isOver = true;
 
-            // TODO: send game over & updated stats to client
+            GameMessage statsRequest = new GameMessage(messageType.STATS_REQUEST);
+            statsRequest.userName = aThread.getUserName();
+            GameMessage statsResponseA = gs.queryDatabase(statsRequest);
+            statsRequest.userName = bThread.getUserName();
+            GameMessage statsResponseB = gs.queryDatabase(statsRequest);
+
+            Vector<GameMessage> attached = new Vector<>();
+            if(reason!=null) attached.add(reason);
+            attached.add(statsResponseA);
+            attached.add(statsResponseB);
+
+            gm.attached = attached;
+            broadcast(gm);
 
             aThread.leaveGame();
             bThread.leaveGame();
@@ -209,7 +234,7 @@ public class GameRoom {
      */
     private String getActivePlayerID()
     {
-        return turn ? aThread.getPlayerID() : bThread.getPlayerID();
+        return turn ? aThread.getUserName() : bThread.getUserName();
     }
 
     public void clear(){

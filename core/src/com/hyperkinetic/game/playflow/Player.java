@@ -52,11 +52,6 @@ public class Player{
         this.playerID = playerID;
     }
 
-    public String getPlayerID()
-    {
-        return playerID;
-    }
-
     public boolean login(String playerID, String pass)
     {
         this.playerID = playerID;
@@ -81,32 +76,20 @@ public class Player{
         return false;
     }
 
-    public void requestStats(){
-        GameMessage request = new GameMessage(GameMessage.messageType.STATS_REQUEST);
-        request.userName = playerID;
-        sendMessage(request);
-    }
-
-    public void sendMessage(GameMessage message)
-    {
-        try
-        {
-            out.writeObject(message);
-            out.flush();
-        }
-        catch(IOException ioe)
-        {
-            System.out.println("ioe in sendMessage() of ClientThread " + playerID);
-            ioe.printStackTrace();
-        }
-    }
-
     public void sendMatchmakingRequest()
     {
         GameMessage request = new GameMessage(GameMessage.messageType.MATCHMAKING_REQUEST);
         request.userName = playerID;
         sendMessage(request);
     }
+
+    /*
+    public void requestStats(){
+        GameMessage request = new GameMessage(GameMessage.messageType.STATS_REQUEST);
+        request.userName = playerID;
+        sendMessage(request);
+    }
+    */
 
     public void updateRecord(int numPlayed,int numWin,int numLoss){
         this.numPlayed = numPlayed;
@@ -136,5 +119,19 @@ public class Player{
 
     public boolean getLastGame(){
         return this.lastGame;
+    }
+
+    public void sendMessage(GameMessage message)
+    {
+        try
+        {
+            out.writeObject(message);
+            out.flush();
+        }
+        catch(IOException ioe)
+        {
+            System.out.println("ioe in Player sendMessage(): ");
+            ioe.printStackTrace();
+        }
     }
 }

@@ -289,7 +289,7 @@ public class GameServer {
     {
         for(ServerThread st : loggedInQueue)
         {
-            if(st.getPlayerID().equals(playerID))
+            if(st.getUserName().equals(playerID))
             {
                 loggedInQueue.remove(st);
                 matchingQueue.add(st);
@@ -307,7 +307,7 @@ public class GameServer {
             matchingQueue.get(i+1).enterGame(gr);
             gameRooms.add(gr);
             // DEBUG
-            System.out.println(matchingQueue.get(i).getPlayerID()+" and "+matchingQueue.get(i+1).getPlayerID()+" have been put in match.");
+            System.out.println(matchingQueue.get(i).getUserName()+" and "+matchingQueue.get(i+1).getUserName()+" have been put in match.");
         }
         if(matchingQueue.size() % 2 == 0)
         {

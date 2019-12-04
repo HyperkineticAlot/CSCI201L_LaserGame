@@ -25,9 +25,6 @@ public class GameOverScreen  extends InputAdapter implements Screen {
     private OrthographicCamera camera;
 
     public GameOverScreen(final LaserGame game){
-
-        LaserGame.client.getPlayer().requestStats();
-
         this.game = game;
         this.width = Gdx.graphics.getWidth();
         this.height = Gdx.graphics.getHeight();

@@ -11,13 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.hyperkinetic.game.playflow.ClientThread;
 import com.hyperkinetic.game.playflow.GameServer;
-
-//import javax.xml.soap.Text;
 
 public class LogInScreen  extends InputAdapter implements Screen {
     public static final String LOGIN_FAILURE_FLAG = "LOGIN_FAILURE";
@@ -46,7 +42,6 @@ public class LogInScreen  extends InputAdapter implements Screen {
         batch = new SpriteBatch();
 
         backgroundPic = new Texture(Gdx.files.internal("reboundBackground.jpg"));
-        //titlePic = new Texture(Gdx.files.internal("LaserGameTitle.png"));
 
         Skin neon = new Skin(Gdx.files.internal("skin/neon-ui.json"));
         Skin pink = new Skin(Gdx.files.internal("pinkSkin/neon-ui.json"));
@@ -66,7 +61,6 @@ public class LogInScreen  extends InputAdapter implements Screen {
         username.setSize((float)(width / 9.6), (float)(height / 21.6) );
 
         final TextField password = new TextField("", neon);
-        //password.setStyle();
         password.setPasswordMode(true);
         password.setPasswordCharacter('*');
         password.setPosition(width / 2 - (float)(width / 9.6) / 2,height / 2 - 2 * (float)(height / 21.6) + 2 * (float)(height / 21.6));
@@ -85,30 +79,26 @@ public class LogInScreen  extends InputAdapter implements Screen {
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 MainMenuScreen.clickSound.play();
-                System.out.println(username.getText());
-                System.out.println(password.getText());
-                //game.setScreen(new MainMenuScreen(game));
+                // System.out.println(username.getText());
+                // System.out.println(password.getText());
                 ClientThread newPlayer = new ClientThread("localhost", GameServer.port,false,false, game);
                 newPlayer.getPlayer().login(username.getText(), password.getText());
 
-                while(newPlayer.playerID == null)
+                while(newPlayer.userName == null)
                 {
                     try
                     {
                         Thread.sleep(1000);
                     } catch(InterruptedException e) { e.printStackTrace(); }
                 }
-                if(newPlayer.playerID.equals(LOGIN_FAILURE_FLAG))
+                if(newPlayer.userName.equals(LOGIN_FAILURE_FLAG))
                 {
-                    // password is incorrect / username doesn't exist
-                    //warningLabel.setPosition(width / 2 - (float)(width / 9.6) / 3,height / 2 + (float)(height / 21.6) + 3 * (float)(height / 21.6));
                     warningLabel.setText("Login Failure");
                     newPlayer.resetPlayerID();
                 }
                 else
                 {
                     LaserGame.client = newPlayer;
-                    newPlayer.getPlayer().requestStats();
                     game.setScreen(new MainMenuScreen(game));
                 }
             }
@@ -127,22 +117,21 @@ public class LogInScreen  extends InputAdapter implements Screen {
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 MainMenuScreen.clickSound.play();
-                System.out.println(username.getText());
-                System.out.println(password.getText());
+                // System.out.println(username.getText());
+                // System.out.println(password.getText());
 
                 ClientThread newPlayer = new ClientThread("localhost", GameServer.port,false,false, game);
                 newPlayer.getPlayer().register(username.getText(), password.getText());
 
-                while(newPlayer.playerID == null)
+                while(newPlayer.userName == null)
                 {
                     try
                     {
                         Thread.sleep(1000);
                     } catch(InterruptedException e) { e.printStackTrace(); }
                 }
-                if(newPlayer.playerID.equals(LOGIN_FAILURE_FLAG))
+                if(newPlayer.userName.equals(LOGIN_FAILURE_FLAG))
                 {
-                    //warningLabel.setPosition(width / 2 - (float)(width / 9.6) / 2.5f,height / 2 + (float)(height / 21.6) + 3 * (float)(height / 21.6));
                     warningLabel.setText("Username is taken");
                     newPlayer.resetPlayerID();
                 }
@@ -198,7 +187,6 @@ public class LogInScreen  extends InputAdapter implements Screen {
 
         stage.getBatch().begin();
         stage.getBatch().draw(backgroundPic, 0, 0, width, height);
-        //stage.getBatch().draw(titlePic, 1920 / 2 - 958/ 2 , 1000);
         stage.getBatch().end();
 
         stage.act();
