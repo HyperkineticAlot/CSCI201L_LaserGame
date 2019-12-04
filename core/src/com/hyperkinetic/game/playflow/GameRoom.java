@@ -11,6 +11,9 @@ import com.hyperkinetic.game.playflow.GameMessage.messageType;
  * GameRoom class, implements basic game flow - this version only supports local mode
  */
 public class GameRoom {
+    /**
+     * Port used for connection
+     */
     public static final int PORT = 8000;
 
     /**
