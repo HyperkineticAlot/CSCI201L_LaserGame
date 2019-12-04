@@ -134,6 +134,7 @@ public class ClientThread extends Thread {
                                 board.fireLaser(laser.getX(),laser.getY(),laser.getOrientation());
                             }
                         }  else if(message.getMessageType()==GameMessage.messageType.GAME_OVER){
+                            // code below never reached
                             Vector<GameMessage> attached = message.attached;
                             for(GameMessage gm : attached){
                                 if(gm.getMessageType()==GameMessage.messageType.STATS_RESPONSE && gm.userName.equals(userName))
