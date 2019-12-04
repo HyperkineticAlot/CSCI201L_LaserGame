@@ -14,8 +14,14 @@ import java.io.Serializable;
  */
 public abstract class AbstractBoardTile implements Serializable
 {
+    /**
+     * Serial ID
+     */
     private static final long serialVersionUID = 2L;
 
+    /**
+     * Dimension of each tile.
+     */
     private static final int IMG_DIM = 600;
 
     /**
@@ -34,7 +40,13 @@ public abstract class AbstractBoardTile implements Serializable
         LR_CORNER
     }
 
+    /**
+     * A new tile instance for left rotation.
+     */
     public static final AbstractBoardTile ROTATE_LEFT = new AbstractBoardTile(){};
+    /**
+     * A new tile instance for right rotation.
+     */
     public static final AbstractBoardTile ROTATE_RIGHT = new AbstractBoardTile(){};
 
     /**
@@ -113,7 +125,8 @@ public abstract class AbstractBoardTile implements Serializable
     }
 
     /**
-     * Render the tile, using the draw method of SpriteBatch class.
+     * Render the board
+     *
      * @param sb the board SpriteBatch
      * @param x the x-coordinate of tile
      * @param y the y-coordinate of tile
@@ -125,6 +138,16 @@ public abstract class AbstractBoardTile implements Serializable
         render(sb, x, y, width, height, false);
     }
 
+    /**
+     * Render the tile, using the draw method of SpriteBatch class.
+     *
+     * @param sb the board SpriteBatch
+     * @param x the x-coordinate of tile
+     * @param y the y-coordinate of tile
+     * @param width the width(dimention) of the tile
+     * @param height the height(dimension) of the tile
+     * @param flipped boolean of whether the board is flipped
+     */
     public void render(SpriteBatch sb, int x, int y, int width, int height, boolean flipped)
     {
         sb.draw(texture, x, y, width/2F, height/2F, width, height, 1, 1, 0, 0, 0, IMG_DIM, IMG_DIM, flipped, flipped);

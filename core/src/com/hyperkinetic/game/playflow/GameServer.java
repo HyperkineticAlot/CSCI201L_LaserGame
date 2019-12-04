@@ -376,8 +376,4 @@ public class GameServer {
         }
     }
 
-    //private static class ServerWindow extends ApplicationAdapter
-    //{
-
-    //}
 }
