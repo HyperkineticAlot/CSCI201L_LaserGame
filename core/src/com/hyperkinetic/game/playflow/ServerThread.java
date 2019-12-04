@@ -4,13 +4,37 @@ import java.io.*;
 import java.net.Socket;
 
 public class ServerThread extends Thread {
+    /**
+     * A reference to the game server
+     */
     private GameServer gs;
+    /**
+     * The id of the player
+     */
     private String playerID;
+    /**
+     * A reference to the game room
+     */
     private GameRoom room;
+    /**
+     * The color of this player
+     */
     private boolean color;
+    /**
+     * Variable that checks whether is player is logged in
+     */
     private boolean loggedIn;
+    /**
+     * The socket of this thread
+     */
     private Socket socket;
+    /**
+     * Input stream from the client
+     */
     private ObjectInputStream in;
+    /**
+     * Output stream to the client
+     */
     private ObjectOutputStream out;
 
     public ServerThread(Socket s, GameServer gs){

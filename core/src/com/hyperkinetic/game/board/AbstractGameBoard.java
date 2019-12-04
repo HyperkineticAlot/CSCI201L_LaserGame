@@ -26,10 +26,16 @@ public abstract class AbstractGameBoard {
      */
     private static AbstractGameBoard board = null;
     /**
-     * Texture of the laser.
+     * Texture of the vertical laser.
      */
     private transient Texture verticalLaserTexture;
+    /**
+     * Texture of the horizontal laser.
+     */
     private transient Texture horizontalLaserTexture;
+    /**
+     * Texture of the highlighted part of laser.
+     */
     private transient Texture highlightTexture;
 
     /**
@@ -138,7 +144,9 @@ public abstract class AbstractGameBoard {
      * Variable that stores the piece that is currently picked up
      */
     private AbstractGamePiece pickedUpPiece;
-
+    /**
+     * Variable that keeps track on whether the game is over
+     */
     public boolean isOver;
 
     public AbstractGameBoard(int x, int y, boolean hasTurn) {
@@ -637,6 +645,9 @@ public abstract class AbstractGameBoard {
         this.nextMove = move;
     }
 
+    /**
+     * Undo the move that is not confirmed by the player.
+     */
     private void undoMove()
     {
         if(nextMove == null) return;
@@ -658,6 +669,11 @@ public abstract class AbstractGameBoard {
         nextMove = null;
     }
 
+    /**
+     * Function dealing with clicking on the laser piece
+     * @param laser the laser piece that is to be clicked
+     * @return true if click is valid and laser is fired
+     */
     private boolean handleLaserClick(LaserPiece laser)
     {
         if(nextMove == null)
@@ -696,7 +712,12 @@ public abstract class AbstractGameBoard {
 
         return false;
     }
-    
+
+    /**
+     * Function dealing with rotation of the laser source.
+     * @param laser the laser source piece
+     * @return true if laser piece has successfully rotated
+     */
     private boolean handleLaserRotate(LaserPiece laser)
     {
         pickedUpPiece = null;
@@ -758,8 +779,8 @@ public abstract class AbstractGameBoard {
      * Move a selected piece on the board.
      *
      * @param piece chosen piece to move, matches pID
-     * @param x     new x location
-     * @param y     new y location
+     * @param x new x location
+     * @param y new y location
      * @return true if success
      */
     private boolean pieceMove(AbstractGamePiece piece, int x, int y) {
@@ -773,13 +794,13 @@ public abstract class AbstractGameBoard {
     /**
      * Check whether the movement of a player on a piece is valid.
      *
-     * @param color the
-     * @param x
-     * @param y
-     * @param moveType
-     * @param nX
-     * @param nY
-     * @return
+     * @param color the identifier of the player that has the turn
+     * @param x the x position of the piece
+     * @param y the y position of the piece
+     * @param moveType the type of the move
+     * @param nX the x position of the desination
+     * @param nY the y position of the destination
+     * @return whether the move is valid or not
      */
     public boolean isValidMove(boolean color, int x, int y, String moveType, int nX, int nY) {
         AbstractGamePiece piece = getPieceFromCoordinate(x,y);
@@ -814,7 +835,13 @@ public abstract class AbstractGameBoard {
         nextMove = null;
         hasTurn = !hasTurn;
     }
-    
+
+    /**
+     * A recursive fucntion for drawing the laser onto the board.
+     * @param startX the x coordinate of the starting point of laser
+     * @param startY the y coordinate of the starting point of laser
+     * @param d the direction of the laser that is to be drawn
+     */
     private void laserHelper(int startX, int startY, Directions.Direction d)
     {
         laserDuration = System.currentTimeMillis();

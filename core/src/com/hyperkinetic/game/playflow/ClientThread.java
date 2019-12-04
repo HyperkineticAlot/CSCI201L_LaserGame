@@ -20,9 +20,17 @@ public class ClientThread extends Thread {
      * A reference to the game board
      */
     private AbstractGameBoard board;
-
+    /**
+     * The id of the player that is held by this client thread
+     */
     public String playerID;
+    /**
+     * Variable that checks whether the user is a guest
+     */
     public boolean isGuest;
+    /**
+     * Variable that checks whether the user is a game bot
+     */
     public boolean isAI;
 
     /**
@@ -33,7 +41,9 @@ public class ClientThread extends Thread {
      * The socket of the player
      */
     private Socket socket;
-
+    /**
+     * A reference of the LaserGame class the this player is in
+     */
     private LaserGame game;
 
     public ClientThread(String hostname, int port, boolean isGuest, boolean isAI, LaserGame game)
@@ -58,6 +68,10 @@ public class ClientThread extends Thread {
         }
     }
 
+    /**
+     * Getter of the player
+     * @return
+     */
     public Player getPlayer(){
         return player;
     }
@@ -147,25 +161,20 @@ public class ClientThread extends Thread {
         }
     }
 
+    /**
+     * Function that sends a request for the user stats to the server.
+     */
     public void requestStats(){
         GameMessage request = new GameMessage(GameMessage.messageType.STATS_REQUEST);
         request.playerID = playerID;
         player.sendMessage(request);
     }
 
+    /**
+     * Function that resets the user of this client thread.
+     */
     public void resetPlayerID() {
         playerID = null;
         player.setPlayerID(null);
     }
 }
-
-// account login/register messaging
-/*else if(message.getMessageType()==GameMessage.messageType.LOGIN_SUCCESS){
-    // updates LaserGame state/Player state (?)
-} else if(message.getMessageType()==GameMessage.messageType.LOGIN_FAILURE){
-    //
-} else if(message.getMessageType()==GameMessage.messageType.ACCOUNT_CREATE_SUCCESS){
-    //
-} else if(message.getMessageType()==GameMessage.messageType.ACCOUNT_CREATE_FAILURE){
-    //
-} */

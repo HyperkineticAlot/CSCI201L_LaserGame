@@ -155,7 +155,11 @@ public class GameRoom {
         String res = board.isGameOver();
         endGame(res);
     }
-    
+
+    /**
+     * Disconnect the server threads after the game is over
+     * @param st
+     */
     public void disconnect(ServerThread st)
     {
         if(st == aThread)
@@ -163,7 +167,11 @@ public class GameRoom {
         else if(st == bThread)
             endGame("AWin");
     }
-    
+
+    /**
+     * End the current game.
+     * @param res the result of the game
+     */
     public void endGame(String res)
     {
         if(res.equals("AWin")){
@@ -208,14 +216,11 @@ public class GameRoom {
         return turn ? aThread.getPlayerID() : bThread.getPlayerID();
     }
 
+    /**
+     * Delete the game room.
+     */
     public void clear(){
         gs.deleteRoom(this);
     }
-  
-    /**
-     * Player fires the laser, end and switch the turn.
-     */
-    public void fireLaser(){
-        // laser firing called by updateBoard
-    }
+
 }

@@ -17,7 +17,9 @@ import java.io.Serializable;
  */
 public abstract class AbstractGamePiece
 {
-
+    /**
+     * The dimension of the piece
+     */
     private static final int IMG_DIM = 600;
 
     /**
@@ -28,7 +30,9 @@ public abstract class AbstractGamePiece
      * The color of the piece. True = white, false = black.
      */
     protected boolean color;
-
+    /**
+     * The texture of the piece of different orientations.
+     */
     protected transient Texture[] textures;
 
     public AbstractGamePiece(int x, int y, boolean c) {
@@ -149,11 +153,30 @@ public abstract class AbstractGamePiece
         render(sb, x, y, width, height, false, false);
     }
 
+    /**
+     * Render the flipped piece
+     * @param sb the SpriteBatch of the piece
+     * @param x the x position of the piece
+     * @param y the y position of the piece
+     * @param width the width of the piece
+     * @param height the height of the piece
+     * @param flipped whether the piece is flipped
+     */
     public void render(SpriteBatch sb, int x, int y, int width, int height, boolean flipped)
     {
         render(sb, x, y, width, height, flipped, false);
     }
 
+    /**
+     * Render the picked up piece and flipped piece
+     * @param sb the SpriteBatch of the piece
+     * @param x the x position of the piece
+     * @param y the y position of the piece
+     * @param width the width of the piece
+     * @param height the height of the piece
+     * @param flipped whether the piece is flipped
+     * @param pickedUp whether the piece is picked up
+     */
     public void render(SpriteBatch sb, int x, int y, int width, int height, boolean flipped, boolean pickedUp)
     {
         int scale = pickedUp ? 2 : 1;
@@ -165,7 +188,19 @@ public abstract class AbstractGamePiece
         if(flipped) flipOrientation();
     }
 
+    /**
+     * Abstract function of loading the region of the specific piece.
+     */
     public abstract void loadRegion();
+
+    /**
+     * Abstract function of flipping the orientation of the piece.
+     */
     protected abstract void flipOrientation();
+
+    /**
+     * Abstract function of getting the texture of the specific piece.
+     * @return
+     */
     protected abstract Texture getTexture();
 }
